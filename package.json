@@ -1,0 +1,15 @@
+{
+  "name": "@process-engine/consumer_api_meta",
+  "version": "1.0.0-rc1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "minstall ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "meta-npm": "0.0.18",
+    "minstall": "^3.0.3"
+  }
+}
