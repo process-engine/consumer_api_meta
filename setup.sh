@@ -15,9 +15,9 @@ npm install --no-package-lock
 meta exec "npm run build" --exclude consumer_api_meta
 
 # create a database
-cd skeleton/database
-node postgres_docker.js reset demo
-cd ../..
+# cd skeleton/database
+# node postgres_docker.js reset demo
+# cd ../..
 
 # tell the user how to run stuff
 # echo "run 'npm start' in 'skeleton/process-engine-server-demo' to run the process-engine"
