@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/consumer_api_meta",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
