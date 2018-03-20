@@ -82,8 +82,14 @@ module.exports.resolveAsync = async(moduleName) => {
 };
 
 module.exports.createContext = async(role) => {
-  const iamService = await container.resolveAsync('IamService');
-  const roleToCreateContextFor = role || 'system';
-  const context = await iamService.createInternalContext(roleToCreateContextFor);
-  return context;
+  // const iamService = await container.resolveAsync('IamService');
+  // const roleToCreateContextFor = role || 'system';
+  // const context = await iamService.createInternalContext(roleToCreateContextFor);
+  // return context;
+
+  // TODO: Create and use an actual token ASAP
+  const dummyToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIyNjcxZWZkZS1hMzE5LTRmZmQtOTMyOS00ZDZlNzY3MzYzYzMiLCJpYXQiOjE1MjE1NTE5MDUsImV4cCI6MTUyMTU4MDcwNX0.yyYR42AMwNEZXmeaWKXyRgmqUcjtA5eGH_KDDL1czhE';
+  return {
+    authorization: dummyToken,
+  }
 };
