@@ -5,7 +5,6 @@ const logger = require('loggerhythm').Logger.createLogger('test:bootstrapper');
 const path = require('path');
 
 const iocModuleNames = [
-  '@essential-projects/services',
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
   '@essential-projects/caching',
@@ -30,6 +29,7 @@ const iocModuleNames = [
   '@essential-projects/metadata',
   '@essential-projects/pki_service',
   '@essential-projects/security_service',
+  '@essential-projects/services',
   '@essential-projects/routing',
   '@essential-projects/timing',
   '@essential-projects/validation',
