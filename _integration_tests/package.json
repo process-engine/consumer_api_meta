@@ -44,6 +44,7 @@
     "@essential-projects/timing": "^1.0.0",
     "@essential-projects/validation": "^1.0.0",
     "@process-engine/consumer_api_client": "feature~apply_consumer_api_concept",
+    "@process-engine/consumer_api_contracts": "feature~apply_consumer_api_concept",
     "@process-engine/consumer_api_core": "feature~apply_consumer_api_concept",
     "@process-engine/consumer_api_http": "feature~apply_consumer_api_concept",
     "@process-engine/process_engine": "^1.0.0",
