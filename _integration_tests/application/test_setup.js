@@ -47,6 +47,7 @@ const iocModules = iocModuleNames.map((moduleName) => {
 });
 
 let container;
+let bootstrapper;
 
 module.exports.initializeBootstrapper = async() => {
 
@@ -66,7 +67,16 @@ module.exports.initializeBootstrapper = async() => {
     process.env.CONFIG_PATH = path.resolve(__dirname, 'config');
     process.env.NODE_ENV = 'development';
     const appPath = path.resolve(__dirname);
-    const bootstrapper = await container.resolveAsync('HttpIntegrationTestBootstrapper', [appPath]);
+
+    bootstrapper = await container.resolveAsync('HttpIntegrationTestBootstrapper', [appPath]);
+
+    const identityFixtures = [{
+      name: 'testuser',
+      password: 'testpass',
+      roles: ['user'],
+    }];
+
+    bootstrapper.addFixtures('User', identityFixtures);
   
     logger.info('Bootstrapper started.');
   
@@ -81,15 +91,11 @@ module.exports.resolveAsync = async(moduleName) => {
   return container.resolveAsync(moduleName);
 };
 
-module.exports.createContext = async(role) => {
-  // const iamService = await container.resolveAsync('IamService');
-  // const roleToCreateContextFor = role || 'system';
-  // const context = await iamService.createInternalContext(roleToCreateContextFor);
-  // return context;
+module.exports.createContext = async() => {
 
-  // TODO: Create and use an actual token ASAP
-  const dummyToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIyNjcxZWZkZS1hMzE5LTRmZmQtOTMyOS00ZDZlNzY3MzYzYzMiLCJpYXQiOjE1MjE1NTE5MDUsImV4cCI6MTUyMTU4MDcwNX0.yyYR42AMwNEZXmeaWKXyRgmqUcjtA5eGH_KDDL1czhE';
+  const authToken = await bootstrapper.getTokenFromAuth('testuser', 'testpass');
+
   return {
-    authorization: dummyToken,
+    authorization: authToken,
   }
 };

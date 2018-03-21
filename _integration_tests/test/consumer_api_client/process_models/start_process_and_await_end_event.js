@@ -13,21 +13,19 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
 
   let httpBootstrapper;
   let consumerApiClientService;
+  let executionContext;
   
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
-
+    executionContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
-  
-  afterEach(async () => {
-    await httpBootstrapper.reset();
   });
 
   after(async () => {
+    await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
   });
 
@@ -40,8 +38,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-
-    const executionContext = await testSetup.createContext('user');
     
     const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
 
@@ -57,8 +53,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const payload = {
       input_values: {},
     };
-
-    const executionContext = await testSetup.createContext('user');
     
     const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
 
@@ -80,13 +74,14 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent({}, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
-      // TODO: The HttpClient needlessly wrappes received HttpErrors into a standard Error object. This needs to be removed before this can work.
-      // const expectedErrorCode = 401;
-      // should(error.code).match(expectedErrorCode);
-      should(error.message).match(/no auth token provided/i);
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
     }
   });
 
+  // TODO: Use different role
   it.skip('should fail to start the process, when the user forbidden to start it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
@@ -96,8 +91,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-
-    const guestContext = await testSetup.createContext('guest');
 
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(guestContext, processModelKey, startEventKey, endEventKey, payload);
@@ -121,8 +114,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       input_values: {},
     };
 
-    const executionContext = await testSetup.createContext('user');
-
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
@@ -144,8 +135,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
@@ -169,8 +158,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       input_values: {},
     };
 
-    const executionContext = await testSetup.createContext('user');
-
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
@@ -189,8 +176,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = 'i am missing vital properties';
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
@@ -214,8 +199,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);
@@ -241,8 +224,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
         causeError: true,
       },
     };
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(executionContext, processModelKey, startEventKey, endEventKey, payload);

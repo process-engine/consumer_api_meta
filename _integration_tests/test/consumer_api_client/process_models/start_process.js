@@ -13,21 +13,19 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
 
   let httpBootstrapper;
   let consumerApiClientService;
+  let executionContext;
   
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
-
+    executionContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
-  
-  afterEach(async () => {
-    await httpBootstrapper.reset();
   });
 
   after(async () => {
+    await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
   });
 
@@ -40,8 +38,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       input_values: {},
     };
     const returnOn = returnOnOptions.onProcessInstanceStarted;
-
-    const executionContext = await testSetup.createContext('user');
     
     const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -58,8 +54,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       input_values: {},
     };
     const returnOn = returnOnOptions.onProcessInstanceFinished;
-
-    const executionContext = await testSetup.createContext('user');
     
     const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -75,8 +69,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       input_values: {},
     };
     const returnOn = returnOnOptions.onProcessInstanceStarted;
-
-    const executionContext = await testSetup.createContext('user');
     
     const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -101,13 +93,14 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
       const result = await consumerApiClientService.startProcess({}, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
-      // TODO: The HttpClient needlessly wrappes received HttpErrors into a standard Error object. This needs to be removed before this can work.
-      // const expectedErrorCode = 401;
-      // should(error.code).match(expectedErrorCode);
-      should(error.message).match(/no auth token provided/i);
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
     }
   });
 
+  // TODO: Use different role
   it.skip('should fail to start the process, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
@@ -120,8 +113,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     
     const returnOn = returnOnOptions.onProcessInstanceStarted;
-
-    const executionContext = await testSetup.createContext('guest');
 
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
@@ -146,8 +137,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
 
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
-    const executionContext = await testSetup.createContext('user');
-
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
@@ -171,8 +160,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
-    const executionContext = await testSetup.createContext('user');
-
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
@@ -195,8 +182,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     
     const returnOn = 'invalid_return_on_param';
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
@@ -244,8 +229,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
-    const executionContext = await testSetup.createContext('user');
-
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
@@ -271,8 +254,6 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     
     const returnOn = returnOnOptions.onProcessInstanceStarted;
-
-    const executionContext = await testSetup.createContext('user');
 
     try {
       const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
