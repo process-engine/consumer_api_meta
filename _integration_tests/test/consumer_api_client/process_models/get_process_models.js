@@ -45,7 +45,7 @@ describe('Consumer API:   GET  ->  /process_models', function() {
   it('should fail the retrieve a list of process models, when the user is unauthorized', async () => {
     try {
       const processModelList = await consumerApiClientService.getProcessModels({});
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModelList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
@@ -54,11 +54,14 @@ describe('Consumer API:   GET  ->  /process_models', function() {
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail the retrieve a list of process models, when the user forbidden to retrieve it', async () => {
+  // TODO: Not implemented yet
+  it.skip('should filter out processes models that the user is not authorized to see', async () => {
+
+    const restrictedContext = await testSetup.createRestrictedContext();
+
     try {
-      const processModelList = await consumerApiClientService.getProcessModels(consumerContext);
-      should.fail(result, undefined, 'This request should have failed!');
+      const processModelList = await consumerApiClientService.getProcessModels(restrictedContext);
+      should.fail(processModelList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i

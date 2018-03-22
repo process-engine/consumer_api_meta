@@ -78,8 +78,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to start the process, when the user forbidden to start it', async () => {
+  it('should fail to start the process, when the user forbidden to start it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
@@ -89,8 +88,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
 
+    const restrictedContext = await testSetup.createRestrictedContext();
+
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(guestContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(restrictedContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -100,8 +101,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to start the process, if the given process_model_key does not exist', async () => {
+  it('should fail to start the process, if the given process_model_key does not exist', async () => {
 
     const processModelKey = 'invalidProcessModelKey';
     const startEventKey = 'StartEvent_1';
@@ -122,8 +122,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to start the process, if the given start_event_key does not exist', async () => {
+  it('should fail to start the process, if the given start_event_key does not exist', async () => {
 
     const processModelKey = 'processModelKey';
     const startEventKey = 'invalidStartEventKey';
@@ -167,6 +166,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   });
 
   // TODO: Bad Path not implemented yet
+  // TODO: What exactly constitutes a valid payload anyway?
   it.skip('should fail to start the process, if the given payload is invalid', async () => {
 
     const processModelKey = 'processModelKey';
