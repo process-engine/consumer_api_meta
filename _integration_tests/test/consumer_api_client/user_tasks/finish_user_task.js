@@ -2,8 +2,6 @@
 
 const should = require('should');
 
-const returnOnOptions = require('@process-engine/consumer_api_contracts').ProcessStartReturnOnOptions;
-
 const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
@@ -12,21 +10,19 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
   let httpBootstrapper;
   let consumerApiClientService;
+  let consumerContext;
   
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
-
+    consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
-  
-  afterEach(async () => {
-    await httpBootstrapper.reset();
   });
 
   after(async () => {
+    await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
   });
 
@@ -38,7 +34,44 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskId = 'userTaskId';
     const userTaskResult = {};
     
-    await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+    await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+  });
+
+  it('should fail finish the user task, when the user is unauthorized', async () => {
+
+    const processModelKey = 'test_consumer_api_user_task_finish';
+    const correlationId = 'correlationId';
+    const userTaskId = 'userTaskId';
+    const userTaskResult = {};
+    
+    try {
+      await consumerApiClientService.finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
+  });
+
+  // TODO: Use different consumerContext
+  it.skip('should fail finish the user task, when the user forbidden to retrieve it', async () => {
+
+    const processModelKey = 'test_consumer_api_user_task_finish';
+    const correlationId = 'correlationId';
+    const userTaskId = 'userTaskId';
+    const userTaskResult = {};
+    
+    try {
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
   });
 
   // TODO: Bad Path not implemented yet
@@ -51,7 +84,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -71,7 +104,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -91,7 +124,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -111,7 +144,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -132,7 +165,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
@@ -140,14 +173,6 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
-  });
-
-  it.skip('should fail finish the user task, when the user is unauthorized', async () => {
-    // TODO: AuthChecks are currently not implemented.
-  });
-
-  it.skip('should fail finish the user task, when the user forbidden to retrieve it', async () => {
-    // TODO: AuthChecks are currently not implemented.
   });
 
 });

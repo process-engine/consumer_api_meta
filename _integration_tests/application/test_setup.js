@@ -92,10 +92,10 @@ module.exports.resolveAsync = async(moduleName) => {
 };
 
 module.exports.createContext = async() => {
-
+  // TODO: Allow for multiple customerContext to verify IAM functionality. 
   const authToken = await bootstrapper.getTokenFromAuth('testuser', 'testpass');
 
   return {
-    authorization: authToken,
+    authorization: `Bearer ${authToken}`,
   }
 };

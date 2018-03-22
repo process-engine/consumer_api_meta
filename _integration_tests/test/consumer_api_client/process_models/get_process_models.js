@@ -10,27 +10,25 @@ describe('Consumer API:   GET  ->  /process_models', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
+  let consumerContext;
   
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
-
+    consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
-  
-  afterEach(async () => {
-    await httpBootstrapper.reset();
   });
 
   after(async () => {
+    await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
   });
 
   it('should return process models through the consumer api', async () => {
     
-    const processModelList = await consumerApiClientService.getProcessModels();
+    const processModelList = await consumerApiClientService.getProcessModels(consumerContext);
 
     should(processModelList).have.property('process_models');
 
@@ -44,12 +42,29 @@ describe('Consumer API:   GET  ->  /process_models', function() {
     });
   });
 
-  it.skip('should fail the retrieve a list of process models, when the user is unauthorized', async () => {
-    // TODO: AuthChecks are currently not implemented.
+  it('should fail the retrieve a list of process models, when the user is unauthorized', async () => {
+    try {
+      const processModelList = await consumerApiClientService.getProcessModels({});
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
   });
 
+  // TODO: Use different consumerContext
   it.skip('should fail the retrieve a list of process models, when the user forbidden to retrieve it', async () => {
-    // TODO: AuthChecks are currently not implemented.
+    try {
+      const processModelList = await consumerApiClientService.getProcessModels(consumerContext);
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
   });
 
 });
