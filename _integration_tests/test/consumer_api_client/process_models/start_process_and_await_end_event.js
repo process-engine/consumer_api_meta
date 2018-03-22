@@ -116,7 +116,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model key not found/i
+      const expectedErrorMessage = /key.*?not found/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -124,7 +124,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
 
   it('should fail to start the process, if the given start_event_key does not exist', async () => {
 
-    const processModelKey = 'processModelKey';
+    const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'invalidStartEventKey';
     const endEventKey = 'EndEvent_Success';
     const payload = {
@@ -137,7 +137,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /start event not found/i
+      const expectedErrorMessage = /start event.*?not found/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -146,7 +146,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   // TODO: Bad Path not implemented yet
   it.skip('should fail to start the process, if the given end_event_key does not exist', async () => {
 
-    const processModelKey = 'processModelKey';
+    const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'invalidEndEventKey';
     const payload = {
@@ -169,7 +169,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   // TODO: What exactly constitutes a valid payload anyway?
   it.skip('should fail to start the process, if the given payload is invalid', async () => {
 
-    const processModelKey = 'processModelKey';
+    const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = 'i am missing vital properties';

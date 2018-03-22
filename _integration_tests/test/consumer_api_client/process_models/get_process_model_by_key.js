@@ -59,7 +59,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
       const processModel = await consumerApiClientService.getProcessModelByKey(restrictedContext, processModelKey);
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
-      console.log(error);
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
       should(error.code).match(expectedErrorCode);
