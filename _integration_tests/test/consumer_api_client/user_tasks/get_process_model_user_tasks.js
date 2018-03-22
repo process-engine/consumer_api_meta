@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe.only('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
+describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
