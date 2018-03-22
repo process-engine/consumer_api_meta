@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key', function() {
+describe.only('Consumer API:   GET  ->  /process_models/:process_model_key', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -41,7 +41,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
 
     try {
       const processModel = await consumerApiClientService.getProcessModelByKey({}, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
@@ -50,14 +50,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the process model, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the process model, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
+    const restrictedContext = await testSetup.createRestrictedContext();
 
     try {
-      const processModel = await consumerApiClientService.getProcessModelByKey(consumerContext, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      const processModel = await consumerApiClientService.getProcessModelByKey(restrictedContext, processModelKey);
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -66,14 +66,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the process model, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve the process model, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
     
     try {
       const processModel = await consumerApiClientService.getProcessModelByKey(consumerContext, invalidProcessModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i

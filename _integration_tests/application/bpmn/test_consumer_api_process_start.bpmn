@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler"
-  exporterVersion="1.8.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:collaboration id="Collaboration_1cidyxu">
-    <bpmn:participant id="Participant_0px403d" name="test_consumer_api_process_start" processRef="test_consumer_api_process_start"
-    /></bpmn:collaboration>
+    <bpmn:participant id="Participant_0px403d" name="test_consumer_api_process_start" processRef="test_consumer_api_process_start" />
+  </bpmn:collaboration>
   <bpmn:process id="test_consumer_api_process_start" name="test_consumer_api_process_start" isExecutable="false">
     <bpmn:laneSet>
       <bpmn:lane id="Lane_1xzf0d3" name="Lane">
+        <bpmn:extensionElements>
+          <camunda:properties>
+            <camunda:property name="role" value="user" />
+          </camunda:properties>
+        </bpmn:extensionElements>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0bnj53e</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>scriptTask_SimulateProcessError</bpmn:flowNodeRef>
@@ -36,9 +38,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0s3n7ck</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0aopc8s</bpmn:outgoing>
-      <bpmn:script>
-        <![CDATA[throw new Error('Critical error during task!');]]>
-      </bpmn:script>
+      <bpmn:script><![CDATA[throw new Error('Critical error during task!');]]></bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_0dbx7lk" name="" sourceRef="ExclusiveGateway_0bnj53e" targetRef="scriptTask_WriteConsoleLog">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">token.history.StartEvent_1.causeError === false</bpmn:conditionExpression>
@@ -46,9 +46,7 @@
     <bpmn:scriptTask id="scriptTask_WriteConsoleLog" name="Write Log">
       <bpmn:incoming>SequenceFlow_0dbx7lk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dqpbny</bpmn:outgoing>
-      <bpmn:script>
-        <![CDATA[console.log('Successfully started the process!');]]>
-      </bpmn:script>
+      <bpmn:script><![CDATA[console.log('Successfully started the process!');]]></bpmn:script>
     </bpmn:scriptTask>
     <bpmn:endEvent id="EndEvent_Success" name="">
       <bpmn:incoming>SequenceFlow_0dqpbny</bpmn:incoming>
@@ -57,7 +55,8 @@
     <bpmn:sequenceFlow id="SequenceFlow_0aopc8s" sourceRef="scriptTask_SimulateProcessError" targetRef="EndEvent_Error" />
     <bpmn:endEvent id="EndEvent_Error" name="">
       <bpmn:incoming>SequenceFlow_0aopc8s</bpmn:incoming>
-      <bpmn:errorEventDefinition /></bpmn:endEvent>
+      <bpmn:errorEventDefinition />
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cidyxu">
@@ -80,16 +79,16 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0vspoh6_di" bpmnElement="SequenceFlow_0vspoh6">
-        <di:waypoint x="135" y="173" />
-        <di:waypoint x="217" y="173" />
+        <di:waypoint xsi:type="dc:Point" x="135" y="173" />
+        <di:waypoint xsi:type="dc:Point" x="217" y="173" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="176" y="151" width="0" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0s3n7ck_di" bpmnElement="SequenceFlow_0s3n7ck">
-        <di:waypoint x="242" y="148" />
-        <di:waypoint x="242" y="73" />
-        <di:waypoint x="351" y="73" />
+        <di:waypoint xsi:type="dc:Point" x="242" y="148" />
+        <di:waypoint xsi:type="dc:Point" x="242" y="73" />
+        <di:waypoint xsi:type="dc:Point" x="351" y="73" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="257" y="104" width="0" height="13" />
         </bpmndi:BPMNLabel>
@@ -98,9 +97,9 @@
         <dc:Bounds x="351" y="33" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0dbx7lk_di" bpmnElement="SequenceFlow_0dbx7lk">
-        <di:waypoint x="242" y="198" />
-        <di:waypoint x="242" y="257" />
-        <di:waypoint x="351" y="257" />
+        <di:waypoint xsi:type="dc:Point" x="242" y="198" />
+        <di:waypoint xsi:type="dc:Point" x="242" y="257" />
+        <di:waypoint xsi:type="dc:Point" x="351" y="257" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="257" y="221" width="0" height="13" />
         </bpmndi:BPMNLabel>
@@ -115,15 +114,15 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0dqpbny_di" bpmnElement="SequenceFlow_0dqpbny">
-        <di:waypoint x="451" y="257" />
-        <di:waypoint x="608" y="257" />
+        <di:waypoint xsi:type="dc:Point" x="451" y="257" />
+        <di:waypoint xsi:type="dc:Point" x="608" y="257" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="529.5" y="235" width="0" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0aopc8s_di" bpmnElement="SequenceFlow_0aopc8s">
-        <di:waypoint x="451" y="73" />
-        <di:waypoint x="608" y="73" />
+        <di:waypoint xsi:type="dc:Point" x="451" y="73" />
+        <di:waypoint xsi:type="dc:Point" x="608" y="73" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="529.5" y="51.5" width="0" height="13" />
         </bpmndi:BPMNLabel>

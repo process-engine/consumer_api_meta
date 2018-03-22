@@ -74,6 +74,10 @@ module.exports.initializeBootstrapper = async() => {
       name: 'testuser',
       password: 'testpass',
       roles: ['user'],
+    },{
+      name: 'restrictedUser',
+      password: 'testpass',
+      roles: ['dummy'],
     }];
 
     bootstrapper.addFixtures('User', identityFixtures);
@@ -92,8 +96,15 @@ module.exports.resolveAsync = async(moduleName) => {
 };
 
 module.exports.createContext = async() => {
-  // TODO: Allow for multiple customerContext to verify IAM functionality. 
   const authToken = await bootstrapper.getTokenFromAuth('testuser', 'testpass');
+
+  return {
+    authorization: `Bearer ${authToken}`,
+  }
+};
+
+module.exports.createRestrictedContext = async() => {
+  const authToken = await bootstrapper.getTokenFromAuth('restrictedUser', 'testpass');
 
   return {
     authorization: `Bearer ${authToken}`,

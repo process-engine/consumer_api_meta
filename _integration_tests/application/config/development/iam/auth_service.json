@@ -33,11 +33,12 @@
         "rolesInherited": ["user"]
       },
       "guest": {
-        "rolesInherited": [
-          "user"
-        ]
+        "rolesInherited": []
       },
       "user": {
+        "rolesInherited": []
+      },
+      "dummy": {
         "rolesInherited": []
       },
       "agent": {
