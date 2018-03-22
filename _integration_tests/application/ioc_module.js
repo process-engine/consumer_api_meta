@@ -7,7 +7,8 @@ const registerInContainer = (container) => {
 
   // TODO: Add processes for use in the integrationtests
   const processes = [
-    'test_consumer_api_process_start'
+    'test_consumer_api_process_start',
+    'test_consumer_api_lanes',
   ];
 
   return processes.map((processFilename) => registerProcess(processFilename, container));
