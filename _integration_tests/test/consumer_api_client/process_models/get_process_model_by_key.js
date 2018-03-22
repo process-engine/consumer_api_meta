@@ -29,7 +29,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
   it('should return a process model by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
-    
+
     const processModel = await consumerApiClientService.getProcessModelByKey(consumerContext, processModelKey);
     should(processModel).have.property('key');
     should(processModel).have.property('startEvents');

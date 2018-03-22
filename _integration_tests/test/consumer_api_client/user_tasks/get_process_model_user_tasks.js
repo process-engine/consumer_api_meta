@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
+describe.only('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -28,14 +28,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
 
   it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'consumer_api_lane_test';
     
-    const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(consumerContext, processModelKey);
+    const laneContext = await testSetup.createLaneContext();
+    const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(laneContext, processModelKey);
 
     should(userTaskList).have.property('user_tasks');
-
     should(userTaskList.user_tasks).be.instanceOf(Array);
-    // TODO: Reenable when a matching BPMN exists
+    // TODO: Reenable when a userTask is started
     //should(userTaskList.user_tasks.length).be.greaterThan(0);
 
     userTaskList.user_tasks.forEach((userTask) => {
@@ -48,7 +48,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
 
   it('should fail to retrieve the process model\'s user tasks, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModel({}, processModelKey);
@@ -61,13 +61,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
+    const restrictedContext = await testSetup.createRestrictedContext();
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(consumerContext, processModelKey);
+      const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(restrictedContext, processModelKey);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -77,8 +77,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
     
