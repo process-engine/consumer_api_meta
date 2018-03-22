@@ -3,6 +3,7 @@
 const InvocationContainer = require('addict-ioc').InvocationContainer;
 const logger = require('loggerhythm').Logger.createLogger('test:bootstrapper');
 const path = require('path');
+const {ConsumerApiIamService} = require('@process-engine/consumer_api_core');
 
 const iocModuleNames = [
   '@essential-projects/bootstrapper',
@@ -78,10 +79,21 @@ module.exports.initializeBootstrapper = async() => {
       name: 'restrictedUser',
       password: 'testpass',
       roles: ['dummy'],
+    },{
+      name: 'laneuser',
+      password: 'testpass',
+      roles: ['dummy'],
     }];
 
+    const claimConfig = {
+      testuser: ['can_start_process'],
+      laneuser: ['Lane A', 'Lane C', 'Lane D']
+    }
+
     bootstrapper.addFixtures('User', identityFixtures);
-  
+
+    container.resolve('ConsumerApiService')._processEngineAdapter._consumerApiIamService = new ConsumerApiIamService(claimConfig);
+
     logger.info('Bootstrapper started.');
   
     return bootstrapper;
@@ -105,6 +117,14 @@ module.exports.createContext = async() => {
 
 module.exports.createRestrictedContext = async() => {
   const authToken = await bootstrapper.getTokenFromAuth('restrictedUser', 'testpass');
+
+  return {
+    authorization: `Bearer ${authToken}`,
+  }
+};
+
+module.exports.createLaneContext = async() => {
+  const authToken = await bootstrapper.getTokenFromAuth('laneuser', 'testpass');
 
   return {
     authorization: `Bearer ${authToken}`,
