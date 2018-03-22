@@ -8,19 +8,18 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-// TODO: Implement context into other integrationtests
-describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function() {
+describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
-  let executionContext;
+  let customerContext;
   
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
-    executionContext = await testSetup.createContext();
+    customerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
   });
 
@@ -39,7 +38,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     const returnOn = returnOnOptions.onProcessInstanceStarted;
     
-    const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+    const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.equal(payload.correlation_id);
@@ -55,7 +54,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     const returnOn = returnOnOptions.onProcessInstanceFinished;
     
-    const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+    const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.equal(payload.correlation_id);
@@ -70,7 +69,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     };
     const returnOn = returnOnOptions.onProcessInstanceStarted;
     
-    const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+    const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.a.String();
@@ -100,7 +99,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     }
   });
 
-  // TODO: Use different role
+  // TODO: Use different customerContext
   it.skip('should fail to start the process, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
@@ -115,7 +114,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
@@ -138,7 +137,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -161,7 +160,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -184,7 +183,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = 'invalid_return_on_param';
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -203,10 +202,10 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
-    const executionContext = await testSetup.createContext('user');
+    const customerContext = await testSetup.createContext('user');
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -230,7 +229,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
@@ -256,7 +255,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     const returnOn = returnOnOptions.onProcessInstanceStarted;
 
     try {
-      const result = await consumerApiClientService.startProcess(executionContext, processModelKey, startEventKey, payload, returnOn);
+      const result = await consumerApiClientService.startProcess(customerContext, processModelKey, startEventKey, payload, returnOn);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
