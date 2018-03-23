@@ -85,14 +85,7 @@ module.exports.initializeBootstrapper = async() => {
       roles: ['dummy'],
     }];
 
-    const claimConfig = {
-      testuser: ['can_start_process'],
-      laneuser: ['Lane A', 'Lane C', 'Lane D']
-    }
-
     bootstrapper.addFixtures('User', identityFixtures);
-
-    container.resolve('ConsumerApiService')._processEngineAdapter._consumerApiIamService = new ConsumerApiIamService(claimConfig);
 
     logger.info('Bootstrapper started.');
   

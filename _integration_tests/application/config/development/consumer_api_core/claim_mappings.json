@@ -1,0 +1,10 @@
+{
+  "testuser": [
+    "can_start_process"
+  ],
+  "laneuser": [
+    "Lane A",
+    "Lane C",
+    "Lane D"
+  ]
+}
