@@ -261,7 +261,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    // NOTE: This test case can by its very definition never work with "onProcessInstanceStarted".
+    const returnOn = returnOnOptions.onProcessInstanceFinished;
 
     try {
       const result = await consumerApiClientService.startProcess(consumerContext, processModelKey, startEventKey, payload, returnOn);
