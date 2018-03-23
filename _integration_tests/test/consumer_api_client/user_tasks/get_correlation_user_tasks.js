@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function() {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -58,7 +58,7 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForCorrelation({}, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i
@@ -82,7 +82,7 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(restrictedContext, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -106,7 +106,7 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     
     try {
       const processModel = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i

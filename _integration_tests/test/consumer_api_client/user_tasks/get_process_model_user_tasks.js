@@ -52,7 +52,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModel({}, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i
@@ -68,7 +68,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(restrictedContext, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -83,7 +83,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const processModel = await consumerApiClientService.getUserTasksForProcessModel(consumerContext, invalidProcessModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i
