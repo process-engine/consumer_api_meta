@@ -26,7 +26,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     await httpBootstrapper.shutdown();
   });
 
-  it.only('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
+  it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
     const laneContext = await testSetup.createLaneContext();
