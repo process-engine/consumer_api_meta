@@ -66,34 +66,29 @@ module.exports.initializeBootstrapper = async() => {
     container.validateDependencies();
   
     process.env.CONFIG_PATH = path.resolve(__dirname, 'config');
-    process.env.NODE_ENV = 'development';
+    process.env.NODE_ENV = 'test';
     const appPath = path.resolve(__dirname);
 
     bootstrapper = await container.resolveAsync('HttpIntegrationTestBootstrapper', [appPath]);
 
     const identityFixtures = [{
+      // Default User, used to test happy paths
       name: 'testuser',
       password: 'testpass',
       roles: ['user'],
     },{
+      // Restricted user without access rights to any lanes
       name: 'restrictedUser',
       password: 'testpass',
       roles: ['dummy'],
     },{
+      // Used to test access rights to 
       name: 'laneuser',
       password: 'testpass',
       roles: ['dummy'],
     }];
 
     bootstrapper.addFixtures('User', identityFixtures);
-
-    // claimconfigs can be overwritten like this
-    /*
-    (await container.resolveAsync('ConsumerApiService'))._processEngineAdapter._consumerApiIamService.config.claimConfig = {
-      "testuser": ["can_start_process"],
-      "laneuser": ["Lane A", "Lane C", "Lane D"]
-    };
-    */
 
     logger.info('Bootstrapper started.');
   
