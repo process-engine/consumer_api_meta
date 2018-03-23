@@ -26,14 +26,10 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     await httpBootstrapper.shutdown();
   });
 
-  it.only('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
+  it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
 
     const processName = 'consumer_api_lane_test';
-    const correlationId = 'some_correlation_id';
-
-    await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3', {
-      correlationId: correlationId
-    });
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -43,7 +39,6 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
 
     const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
 
-    /*
     should(userTaskList).have.property('user_tasks');
 
     should(userTaskList.user_tasks).be.instanceOf(Array);
@@ -55,7 +50,6 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
       should(userTask).have.property('process_instance_id');
       should(userTask).have.property('data');
     });
-    */
   });
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
@@ -73,13 +67,21 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const correlationId = 'test_consumer_api_process_start';
+    const processName = 'consumer_api_lane_test';
+    const restrictedContext = await testSetup.createRestrictedContext();
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
+      const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(restrictedContext, correlationId);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -89,13 +91,21 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
+
+    const processName = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
 
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
-      const processModel = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, invalidcorrelationId);
+      const processModel = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
