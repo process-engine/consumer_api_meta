@@ -54,7 +54,6 @@ describe('Consumer API:   GET  ->  /process_models', function() {
     }
   });
 
-  // TODO: Not implemented yet
   it('should filter out processes models that the user is not authorized to see', async () => {
 
     const restrictedContext = await testSetup.createRestrictedContext();
@@ -66,7 +65,7 @@ describe('Consumer API:   GET  ->  /process_models', function() {
   
       processModelList.process_models.forEach((processModel) => {
         should(processModel).have.property('key');
-        sould(processModelList.process_models.key).not.be('test_consumer_api_process_start')
+        should(processModelList.process_models.key).not.be('test_consumer_api_process_start')
         should(processModel).have.property('startEvents');
         should(processModel.startEvents).be.instanceOf(Array);
       });

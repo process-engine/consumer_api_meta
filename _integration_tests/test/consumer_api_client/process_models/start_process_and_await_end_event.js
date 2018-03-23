@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function() {
+describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/end_event/:end_event_key/start_and_resolve_by_end_event', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -42,7 +42,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     should(result.correlation_id).be.equal(payload.correlation_id);
   });
 
-  it('should start the process and return a generated correlation ID, after the given end event was reached', async () => {
+  it('should start the process, wait until the end event was reached and return a generated correlation ID, when none is provided', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
@@ -143,8 +143,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to start the process, if the given end_event_key does not exist', async () => {
+  it('should fail to start the process, if the given end_event_key does not exist', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
@@ -159,7 +158,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /end event not found/i
+      const expectedErrorMessage = /end event.*?not found/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -186,7 +185,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   });
 
   // TODO: Bad Path not implemented yet
-  // TODO: Find a way to simulate a process error
+  // TODO: Find a way to simulate a start event error
   it.skip('should fail, if starting the request caused an error', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
@@ -209,7 +208,6 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   });
 
   // TODO: Bad Path not implemented yet
-  // TODO: Find a way to simulate a process error
   it.skip('should fail, if the request was aborted before the desired EndEvent was reached', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
@@ -226,6 +224,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
+      console.log(error);
       const expectedErrorCode = 500;
       const expectedErrorMessage = /critical error/i
       should(error.code).match(expectedErrorCode);
