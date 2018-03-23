@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function() {
+describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -26,10 +26,20 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     await httpBootstrapper.shutdown();
   });
 
-  it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
+  it.only('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
 
-    const correlationId = 'test_get_user_tasks';
-    
+    const processName = 'consumer_api_lane_test';
+    const correlationId = 'some_correlation_id';
+    const laneContext = await testSetup.createLaneContext();
+
+    await consumerApiClientService.startProcess(laneContext, processName, 'StartEvent_0yfvdj3', {
+      correlationId: correlationId
+    });
+
+    await new Promise((resolve) => {
+      setTimeout(() => resolve, 300);
+    })
+
     const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
 
     should(userTaskList).have.property('user_tasks');
@@ -47,7 +57,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
-    const correlationId = 'test_get_user_tasks';
+    const correlationId = 'test_consumer_api_process_start';
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForCorrelation({}, correlationId);
@@ -63,7 +73,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   // TODO: Use different consumerContext
   it.skip('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const correlationId = 'test_get_user_tasks';
+    const correlationId = 'test_consumer_api_process_start';
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);

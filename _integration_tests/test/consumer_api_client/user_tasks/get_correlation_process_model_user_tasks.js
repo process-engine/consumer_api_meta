@@ -28,7 +28,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
   it('should return a list of user tasks for a given process model in a given correlation', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
     const correlationId = 'correlationId';
     
     const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
@@ -48,7 +48,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
     const correlationId = 'correlationId';
     
     try {
@@ -62,10 +62,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
     const correlationId = 'correlationId';
     
     try {
@@ -79,8 +78,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
     const correlationId = 'correlationId';
@@ -96,10 +94,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'test_consumer_api_process_start';
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
