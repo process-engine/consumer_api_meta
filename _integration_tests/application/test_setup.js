@@ -87,6 +87,14 @@ module.exports.initializeBootstrapper = async() => {
 
     bootstrapper.addFixtures('User', identityFixtures);
 
+    // claimconfigs can be overwritten like this
+    /*
+    (await container.resolveAsync('ConsumerApiService'))._processEngineAdapter._consumerApiIamService.config.claimConfig = {
+      "testuser": ["can_start_process"],
+      "laneuser": ["Lane A", "Lane C", "Lane D"]
+    };
+    */
+
     logger.info('Bootstrapper started.');
   
     return bootstrapper;
