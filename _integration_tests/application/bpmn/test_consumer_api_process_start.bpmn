@@ -43,7 +43,13 @@
     <bpmn:endEvent id="EndEvent_Success" name="">
       <bpmn:incoming>SequenceFlow_0dqpbny</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0dqpbny" sourceRef="scriptTask_WriteConsoleLog" targetRef="EndEvent_Success" />
+    <bpmn:sequenceFlow id="SequenceFlow_0dqpbny" sourceRef="scriptTask_WriteConsoleLog" targetRef="EndEvent_Success">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="mapper" value="&#34;EndEvent_Success&#34;" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0aopc8s" sourceRef="scriptTask_SimulateProcessError" targetRef="EndEvent_Error" />
     <bpmn:endEvent id="EndEvent_Error" name="">
       <bpmn:incoming>SequenceFlow_0aopc8s</bpmn:incoming>
