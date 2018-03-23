@@ -26,17 +26,24 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     await httpBootstrapper.shutdown();
   });
 
-  it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
+  it.only('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    
     const laneContext = await testSetup.createLaneContext();
+
+    await consumerApiClientService.startProcess(laneContext, processModelKey, 'StartEvent_1');
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
     const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(laneContext, processModelKey);
 
     should(userTaskList).have.property('user_tasks');
     should(userTaskList.user_tasks).be.instanceOf(Array);
-    // TODO: Reenable when a userTask is started
-    //should(userTaskList.user_tasks.length).be.greaterThan(0);
+    should(userTaskList.user_tasks.length).be.greaterThan(0);
 
     userTaskList.user_tasks.forEach((userTask) => {
       should(userTask).have.property('key');

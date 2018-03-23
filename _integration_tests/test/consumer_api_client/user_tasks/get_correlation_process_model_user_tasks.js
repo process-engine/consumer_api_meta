@@ -135,7 +135,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, invalidCorrelationId);
-      console.log('userTaskList')
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
