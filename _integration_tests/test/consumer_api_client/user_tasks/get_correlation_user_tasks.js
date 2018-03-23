@@ -30,15 +30,16 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks
 
     const processName = 'consumer_api_lane_test';
     const correlationId = 'some_correlation_id';
-    const laneContext = await testSetup.createLaneContext();
 
-    await consumerApiClientService.startProcess(laneContext, processName, 'StartEvent_0yfvdj3', {
+    await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3', {
       correlationId: correlationId
     });
 
     await new Promise((resolve) => {
-      setTimeout(() => resolve, 300);
-    })
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
 
     const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
 

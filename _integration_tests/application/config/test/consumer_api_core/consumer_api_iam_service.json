@@ -1,7 +1,9 @@
 {
   "claimConfig": {
     "testuser": [
-      "can_start_process"
+      "can_start_process",
+      "Lane A",
+      "Lane B"
     ],
     "laneuser": [
       "Lane A",
