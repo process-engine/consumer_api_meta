@@ -2,6 +2,7 @@
   "claimConfig": {
     "testuser": [
       "can_start_process",
+      "can_view_usertask",
       "Lane A",
       "Lane B"
     ],
