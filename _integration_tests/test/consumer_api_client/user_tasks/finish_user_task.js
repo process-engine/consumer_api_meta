@@ -26,7 +26,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     await httpBootstrapper.shutdown();
   });
 
-  it('should successfully finish the given user task.', async () => {
+  it.skip('should successfully finish the given user task.', async () => {
 
     // TODO: Replace with real values
     const processModelKey = 'test_consumer_api_user_task_finish';
