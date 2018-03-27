@@ -27,8 +27,25 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
   });
 
   it('should successfully finish the given user task.', async () => {
+    const processModelKey = 'consumer_api_usertask_test';
 
-    // TODO: Replace with real values
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      Form_XGSVBgio: true,
+    };
+    await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+  });
+
+  it('should fail finish the user task, when the user is unauthorized', async () => {
+
     const processModelKey = 'consumer_api_usertask_test';
     
     const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
@@ -41,17 +58,8 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: 'testResult',
+      Form_XGSVBgio: true,
     };
-    await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
-  });
-
-  it('should fail finish the user task, when the user is unauthorized', async () => {
-
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
     
     try {
       await consumerApiClientService.finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
@@ -64,16 +72,26 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail finish the user task, when the user forbidden to retrieve it', async () => {
+  it('should fail finish the user task, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
-    
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      Form_XGSVBgio: true,
+    };
+
+    const restrictedContext = testSetup.createRestrictedContext();
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -83,17 +101,27 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to finish the user task, if the given process_model_key does not exist', async () => {
+  it('should fail to finish the user task, if the given process_model_key does not exist', async () => {
 
-    // TODO: Replace with real values
-    const processModelKey = 'invalidProcessModelKey';
-    const correlationId = 'correlationId';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      Form_XGSVBgio: true,
+    };
+
+    const invalidProcessModelKey = 'invalidProcessModelKey';
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, invalidProcessModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -103,17 +131,27 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to finish the user task, if the given correlation_id does not exist', async () => {
+  it('should fail to finish the user task, if the given correlation_id does not exist', async () => {
 
-    // TODO: Replace with real values
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'invalidcorrelation';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      Form_XGSVBgio: true,
+    };
+
+    const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, invalidCorrelationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -123,17 +161,25 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to finish the user task, if the given user_task_id does not exist', async () => {
+  it('should fail to finish the user task, if the given user_task_id does not exist', async () => {
 
-    // TODO: Replace with real values
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'invalidUserTaskId';
-    const userTaskResult = {};
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const invalidUserTaskId = 'invalidUserTaskId';
+    const userTaskResult = {
+      Form_XGSVBgio: true,
+    };
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, invalidUserTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -143,14 +189,20 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to finish the user task, if the given payload is invalid', async () => {
+  it('should fail to finish the user task, if the given payload is invalid', async () => {
 
-    // TODO: Replace with real values
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = 'invalidUserTaskResult';
 
     try {
       await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
