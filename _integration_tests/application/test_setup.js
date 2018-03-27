@@ -107,7 +107,7 @@ module.exports.createContext = async() => {
   const authToken = await bootstrapper.getTokenFromAuth('testuser', 'testpass');
 
   return {
-    authorization: authToken,
+    identity: authToken,
   }
 };
 
@@ -115,7 +115,7 @@ module.exports.createRestrictedContext = async() => {
   const authToken = await bootstrapper.getTokenFromAuth('restrictedUser', 'testpass');
 
   return {
-    authorization: authToken,
+    identity: authToken,
   }
 };
 
@@ -123,6 +123,6 @@ module.exports.createLaneContext = async() => {
   const authToken = await bootstrapper.getTokenFromAuth('laneuser', 'testpass');
 
   return {
-    authorization: authToken,
+    identity: authToken,
   }
 };
