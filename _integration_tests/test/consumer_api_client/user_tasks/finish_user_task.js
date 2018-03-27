@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish', function() {
+describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -26,14 +26,23 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     await httpBootstrapper.shutdown();
   });
 
-  it.skip('should successfully finish the given user task.', async () => {
+  it('should successfully finish the given user task.', async () => {
 
     // TODO: Replace with real values
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'userTaskId';
-    const userTaskResult = {};
+    const processModelKey = 'consumer_api_usertask_test';
     
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      Form_XGSVBgio: 'testResult',
+    };
     await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
   });
 
