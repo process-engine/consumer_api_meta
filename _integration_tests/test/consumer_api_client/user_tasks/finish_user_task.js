@@ -6,7 +6,7 @@ const testSetup = require('../../../application/test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
-describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish', function() {
+describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish', function() {
 
   let httpBootstrapper;
   let consumerApiClientService;
@@ -39,7 +39,9 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
     await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
   });
@@ -58,7 +60,9 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
     
     try {
@@ -86,10 +90,12 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
 
-    const restrictedContext = testSetup.createRestrictedContext();
+    const restrictedContext = await testSetup.createRestrictedContext();
     try {
       await consumerApiClientService.finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
       should.fail(result, undefined, 'This request should have failed!');
@@ -115,7 +121,9 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
@@ -125,7 +133,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model key not found/i
+      const expectedErrorMessage = /not part of/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -145,7 +153,9 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
 
     const invalidCorrelationId = 'invalidCorrelationId';
@@ -155,7 +165,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model key not found/i
+      const expectedErrorMessage = /not found/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -175,7 +185,9 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
 
     const invalidUserTaskId = 'invalidUserTaskId';
     const userTaskResult = {
-      Form_XGSVBgio: true,
+      form_fields: {
+        Form_XGSVBgio: true,
+      }
     };
 
     try {
@@ -183,7 +195,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /user task id not found/i
+      const expectedErrorMessage = /UserTask .+ not found/i
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
@@ -209,9 +221,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/corr
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      const expectedErrorMessage = /invalid arguments/i
       should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
     }
   });
 
