@@ -46,7 +46,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
   });
 
-  it('should fail finish the user task, when the user is unauthorized', async () => {
+  it('should fail to finish the user task, when the user is unauthorized', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
     
@@ -76,7 +76,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     }
   });
 
-  it('should fail finish the user task, when the user forbidden to retrieve it', async () => {
+  it('should fail to finish the user task, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
 
