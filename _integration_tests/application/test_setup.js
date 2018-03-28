@@ -64,11 +64,8 @@ module.exports.initializeBootstrapper = async() => {
     }
   
     container.validateDependencies();
-  
-    process.env.CONFIG_PATH = path.resolve(__dirname, 'config');
-    process.env.NODE_ENV = 'test';
-    const appPath = path.resolve(__dirname);
 
+    const appPath = path.resolve(__dirname);
     bootstrapper = await container.resolveAsync('HttpIntegrationTestBootstrapper', [appPath]);
 
     const identityFixtures = [{
@@ -91,7 +88,7 @@ module.exports.initializeBootstrapper = async() => {
     bootstrapper.addFixtures('User', identityFixtures);
 
     logger.info('Bootstrapper started.');
-  
+
     return bootstrapper;
   } catch (error) {
     logger.error('Failed to start bootstrapper!', error);
