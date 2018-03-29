@@ -29,14 +29,21 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
   it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    
     const laneContext = await testSetup.createLaneContext();
+
+    await consumerApiClientService.startProcess(laneContext, processModelKey, 'StartEvent_1');
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
     const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(laneContext, processModelKey);
 
     should(userTaskList).have.property('user_tasks');
     should(userTaskList.user_tasks).be.instanceOf(Array);
-    // TODO: Reenable when a userTask is started
-    //should(userTaskList.user_tasks.length).be.greaterThan(0);
+    should(userTaskList.user_tasks.length).be.greaterThan(0);
 
     userTaskList.user_tasks.forEach((userTask) => {
       should(userTask).have.property('key');
@@ -52,7 +59,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModel({}, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i
@@ -68,7 +75,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(restrictedContext, processModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -83,7 +90,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     
     try {
       const processModel = await consumerApiClientService.getUserTasksForProcessModel(consumerContext, invalidProcessModelKey);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i

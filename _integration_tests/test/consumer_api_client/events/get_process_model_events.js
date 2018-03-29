@@ -26,7 +26,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     await httpBootstrapper.shutdown();
   });
 
-  it('should return a process model\'s events by its process_model_key through the consumer api', async () => {
+  it('should return a process models events by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'test_get_events_for_process_model';
     

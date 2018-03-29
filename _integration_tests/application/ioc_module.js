@@ -9,6 +9,7 @@ const registerInContainer = (container) => {
   const processes = [
     'test_consumer_api_process_start',
     'test_consumer_api_lanes',
+    'test_consumer_api_usertask',
   ];
 
   return processes.map((processFilename) => registerProcess(processFilename, container));

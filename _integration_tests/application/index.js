@@ -65,12 +65,10 @@ async function start() {
     }
   
     container.validateDependencies();
-  
-    process.env.CONFIG_PATH = path.resolve(__dirname, 'config');
-    process.env.NODE_ENV = 'test';
+    
     const appPath = path.resolve(__dirname);
     const bootstrapper = await container.resolveAsync('AppBootstrapper', [appPath]);
-  
+
     logger.info('Bootstrapper started.');
   
     await bootstrapper.start();

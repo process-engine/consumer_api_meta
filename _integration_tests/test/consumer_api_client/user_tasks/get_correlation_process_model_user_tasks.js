@@ -28,9 +28,15 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
   it('should return a list of user tasks for a given process model in a given correlation', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
-    const correlationId = 'correlationId';
-    
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
     const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
 
     should(userTaskList).have.property('user_tasks');
@@ -48,12 +54,18 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
-    const correlationId = 'correlationId';
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation({}, processModelKey, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i
@@ -62,15 +74,21 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
-    const correlationId = 'correlationId';
+    const processModelKey = 'consumer_api_lane_test';
+    const restrictedContext = await testSetup.createRestrictedContext();
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(restrictedContext, processModelKey, correlationId);
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -79,32 +97,45 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
-    const correlationId = 'correlationId';
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
     
     try {
-      const processModel = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, invalidProcessModelKey, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, invalidProcessModelKey, correlationId);
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
+      const expectedErrorMessage = /not part of/i;
       should(error.code).match(expectedErrorCode);
       should(error.message).match(expectedErrorMessage);
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
 
-    const processModelKey = 'test_get_user_tasks';
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
-      const processModel = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, invalidcorrelationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      const userTaskList = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, invalidCorrelationId);
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i

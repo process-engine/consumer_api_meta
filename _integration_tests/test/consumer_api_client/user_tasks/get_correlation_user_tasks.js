@@ -28,8 +28,15 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
 
-    const correlationId = 'test_get_user_tasks';
-    
+    const processName = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
+
     const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
 
     should(userTaskList).have.property('user_tasks');
@@ -47,11 +54,11 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
-    const correlationId = 'test_get_user_tasks';
+    const correlationId = 'test_consumer_api_process_start';
     
     try {
       const userTaskList = await consumerApiClientService.getUserTasksForCorrelation({}, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i
@@ -60,14 +67,22 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     }
   });
 
-  // TODO: Use different consumerContext
-  it.skip('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const correlationId = 'test_get_user_tasks';
+    const processName = 'consumer_api_lane_test';
+    const restrictedContext = await testSetup.createRestrictedContext();
+
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, correlationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      const userTaskList = await consumerApiClientService.getUserTasksForCorrelation(restrictedContext, correlationId);
+      should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i
@@ -76,14 +91,22 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
+
+    const processName = 'consumer_api_lane_test';
+    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 300);
+    });
 
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
-      const processModel = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, invalidcorrelationId);
-      should.fail(result, undefined, 'This request should have failed!');
+      const processModel = await consumerApiClientService.getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
+      should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i
