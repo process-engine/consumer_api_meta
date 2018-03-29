@@ -7,7 +7,7 @@ This folder contains integration tests for the process engine ConsumerAPI
 The goal of this is to make sure that the ConsumerAPI is behaving as described
 in the concept document it is based on.
 
-## Relevant URLs (*)
+## Relevant URLs
 
 - https://github.com/process-engine/consumer_api_contracts
 - https://github.com/process-engine/consumer_api_core
