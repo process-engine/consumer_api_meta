@@ -39,7 +39,7 @@ in the concept document it is based on.
 
 ### Seeding
 
-before running the tests, you need to perform a database migration, so that the
+Before running the tests, you need to perform a database migration, so that the
 database is setup correctly. To do so:
 
 1. Run `npm start` in this folder
