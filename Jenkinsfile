@@ -1,51 +1,51 @@
 def cleanup_workspace() {
-  cleanWs()
+  cleanWs();
   dir("${env.WORKSPACE}@tmp") {
-    deleteDir()
+    deleteDir();
   }
   dir("${env.WORKSPACE}@script") {
-    deleteDir()
+    deleteDir();
   }
   dir("${env.WORKSPACE}@script@tmp") {
-    deleteDir()
+    deleteDir();
   }
 }
 
 def cleanup_docker() {
-  sh "docker stop ${dbContainerId}"
-  sh "docker rm ${dbContainerId}"
-  sh "docker rmi ${serverImageId} ${dbImageId}"
+  sh(script: "docker stop ${dbContainerId}");
+  sh(script: "docker rm ${dbContainerId}");
+  sh(script: "docker rmi ${serverImageId} ${dbImageId}");
 
   // Build stages in dockerfiles leave dangling images behind (see https://github.com/moby/moby/issues/34151).
   // Dangling images are images that are not used anywhere and don't have a tag. It is safe to remove them (see https://stackoverflow.com/a/45143234).
   // This removes all dangling images
-  sh "docker image prune --force"
+  sh(script: "docker image prune --force");
 
   // Some Dockerfiles create volumes using the `VOLUME` command (see https://docs.docker.com/engine/reference/builder/#volume)
   // running the speedtests creates two dangling volumes. One is from postgres (which contains data), but i don't know about the other one (which is empty)
   // Dangling volumes are volumes that are not used anywhere. It is safe to remove them.
   // This removes all dangling volumes
-  sh "docker volume prune --force"
+  sh(script: "docker volume prune --force");
 }
 
 def slack_send_summary() {
-  def cleanedString = testresults.replace('\n', '\\n').replace('"', '\\"')
+  def cleanedString = testresults.replace('\n', '\\n').replace('"', '\\"');
   def passing = sh(script: "echo \"${cleanedString}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
   def failing = sh(script: "echo \"${cleanedString}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
   def pending = sh(script: "echo \"${cleanedString}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
 
   def color_string     =  '"color":"good"';
-  def markdown_string  =  '"mrkdwn_in":["text","title"]'
-  def title_string     =  "\"title\":\":white_check_mark: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
-  def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\""
-  def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
+  def markdown_string  =  '"mrkdwn_in":["text","title"]';
+  def title_string     =  "\"title\":\":white_check_mark: Consumer tests for ${env.BRANCH_NAME} succeeded!\"";
+  def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\"";
+  def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]";
 
   if (test_failed == true) {
     color_string = '"color":"danger"';
-    title_string =  "\"title\":\":boom: Consumer tests for ${env.BRANCH_NAME} failed!\""
+    title_string =  "\"title\":\":boom: Consumer tests for ${env.BRANCH_NAME} failed!\"";
   }
 
-  slackSend attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]"
+  slackSend(attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]");
 }
 
 def slack_send_testlog() {
@@ -56,14 +56,14 @@ def slack_send_testlog() {
       "content=${testresults}",
       "filename=consumer_api_integration_tests.txt",
       "channels=process-engine_ci"
-    ]
+    ];
 
     httpRequest(
       url: 'https://slack.com/api/files.upload',
       httpMode: 'POST',
       contentType: 'APPLICATION_FORM',
       requestBody: requestBody.join('&')
-    )
+    );
   }
 }
 
@@ -75,25 +75,25 @@ pipeline {
       steps {
         script {
 
-          def first_seven_digits_of_git_hash = env.GIT_COMMIT.substring(0, 8)
-          def safe_branch_name = env.BRANCH_NAME.replace("/", "_")
-          def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}"
+          def first_seven_digits_of_git_hash = env.GIT_COMMIT.substring(0, 8);
+          def safe_branch_name = env.BRANCH_NAME.replace("/", "_");
+          def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}";
 
-          dbImage       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests')
-          serverImage   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests')
+          dbImage       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests');
+          serverImage   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests');
 
-          dbImageId     = dbImage.id
-          serverImageId = serverImage.id
+          dbImageId     = dbImage.id;
+          serverImageId = serverImage.id;
 
           dbContainerId = dbImage
                             .run('--env POSTGRES_USER=admin --env POSTGRES_PASSWORD=admin --env POSTGRES_DB=processengine')
-                            .id
+                            .id;
 
           // wait for the DB to start up
           docker
             .image('postgres')
             .inside("--link ${dbContainerId}:db") {
-              sh 'while ! pg_isready -U postgres -h db ; do sleep 5; done'
+              sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
           }
         }
       }
@@ -118,7 +118,7 @@ pipeline {
       steps {
         script {
           // Print the result to the jobs console
-          println testresults;
+          println(testresults);
           slack_send_summary();
           slack_send_testlog();
         }
@@ -138,9 +138,9 @@ pipeline {
     always {
       script {
 
-        cleanup_workspace()
+        cleanup_workspace();
 
-        cleanup_docker()
+        cleanup_docker();
       }
     }
   }
