@@ -19,12 +19,12 @@ describe('Consumer API:   GET  ->  /process_models', function() {
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
+  }).timeout(0);
 
   after(async () => {
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  });
+  }).timeout(0);
 
   it('should return process models through the consumer api', async () => {
 

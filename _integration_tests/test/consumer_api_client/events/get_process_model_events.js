@@ -19,12 +19,12 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
+  }).timeout(0);
 
   after(async () => {
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  });
+  }).timeout(0);
 
   it('should return a process models events by its process_model_key through the consumer api', async () => {
 

@@ -19,12 +19,12 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
+  }).timeout(0);
 
   after(async () => {
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  });
+  }).timeout(0);
 
   it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
 

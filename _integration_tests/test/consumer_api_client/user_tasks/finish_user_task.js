@@ -19,12 +19,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
+  }).timeout(0);
 
   after(async () => {
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  });
+  }).timeout(0);
 
   it('should successfully finish the given user task.', async () => {
     const processModelKey = 'consumer_api_usertask_test';

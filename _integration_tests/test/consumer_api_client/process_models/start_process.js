@@ -21,12 +21,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  });
+  }).timeout(0);
 
   after(async () => {
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  });
+  }).timeout(0);
 
   it('should start the process and return the correlation ID (return_on = on_process_instance_started)', async () => {
 
