@@ -79,14 +79,15 @@ pipeline {
           // Print the result to the jobs console
           println testresults;
 
-          def requestBody = [
-            "token=${SLACK_TOKEN}",
-            "content=${testresults}",
-            "filename=${consumer_api_integration_tests.txt}",
-            "channels=process-engine_ci"
-          ]
-
           withCredentials([string(credentialsId: 'slack-file-poster-token', variable: 'SLACK_TOKEN')]) {
+
+            def requestBody = [
+              "token=${SLACK_TOKEN}",
+              "content=${testresults}",
+              "filename=${consumer_api_integration_tests.txt}",
+              "channels=process-engine_ci"
+            ]
+
             httpRequest(
               url: 'https://slack.com/api/files.upload',
               httpMode: 'POST',
