@@ -12,9 +12,9 @@ def cleanup_workspace() {
 }
 
 def cleanup_docker() {
-  sh "docker stop ${serverContainerId} ${dbContainerId}"
-  sh "docker rm ${serverContainerId} ${dbContainerId}"
-  sh "docker rmi ${testsImageId} ${serverImageId} ${dbImageId}"
+  sh "docker stop ${dbContainerId}"
+  sh "docker rm ${dbContainerId}"
+  sh "docker rmi ${serverImageId} ${dbImageId}"
 
   // Build stages in dockerfiles leave dangling images behind (see https://github.com/moby/moby/issues/34151).
   // Dangling images are images that are not used anywhere and don't have a tag. It is safe to remove them (see https://stackoverflow.com/a/45143234).
@@ -63,7 +63,7 @@ pipeline {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
-          serverImageId.inside() {
+          serverImage.inside() {
             testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/**/*.js --exit", returnStdout: true).trim();
           }
         }
@@ -77,7 +77,7 @@ pipeline {
 
           color_string     =  '"color":"good"';
           markdown_string  =  '"mrkdwn_in":["text","title"]'
-          title_string     =  "\"title\":\":zap: Speed tests for ${env.BRANCH_NAME} done!\""
+          title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} done!\""
           result_string    =  "\"text\":\"```${testresults.replace('\n','\\n')}```\""
           action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
 
