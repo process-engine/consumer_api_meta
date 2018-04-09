@@ -103,7 +103,14 @@ pipeline {
           }
 
           // TODO: grep number of passing and failing from testresults and put them as result_string
+          def passing = sh(script: "echo ${testresults} | grep passing", returnStdout: true).trim();
+          def failing = sh(script: "echo ${testresults} | grep failing", returnStdout: true).trim();
+          def pending = sh(script: "echo ${testresults} | grep pending", returnStdout: true).trim();
           
+          println passing;
+          println failing;
+          println pending;
+
           def color_string     =  '"color":"good"';
           def markdown_string  =  '"mrkdwn_in":["text","title"]'
           def title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
