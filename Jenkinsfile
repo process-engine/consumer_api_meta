@@ -63,7 +63,7 @@ pipeline {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
-          serverImage.inside() {
+          serverImage.inside("--env NODE_ENV=test --env CONFIG_PATH=/usr/src/app/application/config") {
             testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit", returnStdout: true).trim();
           }
         }
