@@ -83,7 +83,7 @@ pipeline {
 
             def requestBody = [
               "token=${SLACK_TOKEN}",
-              "content=${testresults}",
+              "content=${testresults.replace('\n','\\n')}",
               "filename=${consumer_api_integration_tests.txt}",
               "channels=process-engine_ci"
             ]
