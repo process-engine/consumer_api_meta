@@ -115,7 +115,7 @@ pipeline {
           def color_string     =  '"color":"good"';
           def markdown_string  =  '"mrkdwn_in":["text","title"]'
           def title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
-          def result_string    =  "\"text\":\"${passing}\n${failing}\n${pending}\""
+          def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\""
           def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
 
 
