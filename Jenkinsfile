@@ -101,6 +101,8 @@ pipeline {
               requestBody: requestBody.join('&')
             )
           }
+
+          // TODO: grep number of passing and failing from testresults and put them as result_string
           
           def color_string     =  '"color":"good"';
           def markdown_string  =  '"mrkdwn_in":["text","title"]'
