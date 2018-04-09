@@ -40,8 +40,8 @@ pipeline {
           def safe_branch_name = env.BRANCH_NAME.replace("/", "_")
           def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}"
 
-          dbImage       = docker.build("consumertest_db_image:${image_tag}", '--file database/Dockerfile.skeleton database')
-          serverImage   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file tests/Dockerfile tests')
+          dbImage       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database database')
+          serverImage   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests tests')
 
           dbImageId     = dbImage.id
           serverImageId = serverImage.id
