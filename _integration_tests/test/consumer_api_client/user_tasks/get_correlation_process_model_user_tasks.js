@@ -14,17 +14,19 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
   
   this.timeout(testTimeoutMilliseconds);
 
-  before(async () => {
+  before(async function() {
+    this.timeout(0);
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
-  }).timeout(0);
+  });
 
-  after(async () => {
+  after(async function() {
+    this.timeout(0);
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
-  }).timeout(0);
+  });
 
   it('should return a list of user tasks for a given process model in a given correlation', async () => {
 
