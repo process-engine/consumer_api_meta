@@ -68,7 +68,13 @@ pipeline {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
           serverImage.inside("--env NODE_ENV=test --env CONFIG_PATH=/usr/src/app/application/config --env datastore__service__data_sources__default__adapter__server__host=db --link ${dbContainerId}:db") {
-            testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit", returnStdout: true).trim();
+            try {
+              testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit", returnStdout: true).trim();
+              test_failed = false
+            } catch(Exception exception) {
+              testresults = exception.getMessage()
+              test_failed = true;
+            }
           }
         }
       }
@@ -96,12 +102,17 @@ pipeline {
             )
           }
           
-          color_string     =  '"color":"good"';
-          markdown_string  =  '"mrkdwn_in":["text","title"]'
-          title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} done!\""
-          result_string    =  "\"text\":\"\""
-          action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
+          def color_string     =  '"color":"good"';
+          def markdown_string  =  '"mrkdwn_in":["text","title"]'
+          def title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
+          def result_string    =  "\"text\":\"\""
+          def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
 
+
+          if (test_failed == true) {
+            color_string = '"color":"bad"';
+            title_string =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} failed!\""
+          }
           // send the measurements to slack
           slackSend attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]"
         }
