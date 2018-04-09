@@ -64,7 +64,7 @@ pipeline {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
           serverImage.inside() {
-            testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/**/*.js --exit", returnStdout: true).trim();
+            testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/_integration_tests/test/**/*.js --exit", returnStdout: true).trim();
           }
         }
       }
