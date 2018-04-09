@@ -28,6 +28,10 @@ def cleanup_docker() {
   sh "docker volume prune --force"
 }
 
+def upload_result_to_slack() {
+
+}
+
 pipeline {
   agent any
 
@@ -75,14 +79,22 @@ pipeline {
           // Print the result to the jobs console
           println testresults;
 
-          color_string     =  '"color":"good"';
-          markdown_string  =  '"mrkdwn_in":["text","title"]'
-          title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} done!\""
-          result_string    =  "\"text\":\"```${testresults.replace('\n','\\n')}```\""
-          action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
+          def requestBody = [
+            "token=${SLACK_TOKEN}",
+            "content=${testresults}",
+            "filename=${consumer_api_integration_tests.txt}",
+            "channels=process-engine_ci"
+          ]
 
-          // send the measurements to slack
-          slackSend attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]"
+          withCredentials([string(credentialsId: 'slack-file-poster-token', variable: 'SLACK_TOKEN')]) {
+            httpRequest(
+              url: 'https://slack.com/api/files.upload',
+              httpMode: 'POST',
+              contentType: 'APPLICATION_FORM',
+              consoleLogResponseBody: true,
+              requestBody: requestBody.join('&'),
+            )
+          }
         }
       }
     }
