@@ -72,7 +72,6 @@ pipeline {
               testresults = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit", returnStdout: true).trim();
               test_failed = false
             } catch(Exception exception) {
-              testresults = exception.getMessage()
               test_failed = true;
             }
           }
