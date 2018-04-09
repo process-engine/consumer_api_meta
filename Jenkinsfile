@@ -107,10 +107,6 @@ pipeline {
           def passing = sh(script: "echo \"${cleanedString}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
           def failing = sh(script: "echo \"${cleanedString}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
           def pending = sh(script: "echo \"${cleanedString}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
-          
-          println passing;
-          println failing;
-          println pending;
 
           def color_string     =  '"color":"good"';
           def markdown_string  =  '"mrkdwn_in":["text","title"]'
