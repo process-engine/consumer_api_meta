@@ -28,8 +28,43 @@ def cleanup_docker() {
   sh "docker volume prune --force"
 }
 
-def upload_result_to_slack() {
+def slack_send_summary() {
+  def cleanedString = testresults.replace('\n', '\\n').replace('"', '\\"')
+  def passing = sh(script: "echo \"${cleanedString}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
+  def failing = sh(script: "echo \"${cleanedString}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
+  def pending = sh(script: "echo \"${cleanedString}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
 
+  def color_string     =  '"color":"good"';
+  def markdown_string  =  '"mrkdwn_in":["text","title"]'
+  def title_string     =  "\"title\":\":white_check_mark: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
+  def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\""
+  def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
+
+  if (test_failed == true) {
+    color_string = '"color":"danger"';
+    title_string =  "\"title\":\":boom: Consumer tests for ${env.BRANCH_NAME} failed!\""
+  }
+
+  slackSend attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]"
+}
+
+def slack_send_testlog() {
+  withCredentials([string(credentialsId: 'slack-file-poster-token', variable: 'SLACK_TOKEN')]) {
+
+    def requestBody = [
+      "token=${SLACK_TOKEN}",
+      "content=${testresults}",
+      "filename=consumer_api_integration_tests.txt",
+      "channels=process-engine_ci"
+    ]
+
+    httpRequest(
+      url: 'https://slack.com/api/files.upload',
+      httpMode: 'POST',
+      contentType: 'APPLICATION_FORM',
+      requestBody: requestBody.join('&')
+    )
+  }
 }
 
 pipeline {
@@ -84,43 +119,8 @@ pipeline {
         script {
           // Print the result to the jobs console
           println testresults;
-
-          withCredentials([string(credentialsId: 'slack-file-poster-token', variable: 'SLACK_TOKEN')]) {
-
-            def requestBody = [
-              "token=${SLACK_TOKEN}",
-              "content=${testresults}",
-              "filename=consumer_api_integration_tests.txt",
-              "channels=process-engine_ci"
-            ]
-
-            httpRequest(
-              url: 'https://slack.com/api/files.upload',
-              httpMode: 'POST',
-              contentType: 'APPLICATION_FORM',
-              requestBody: requestBody.join('&')
-            )
-          }
-
-          // TODO: grep number of passing and failing from testresults and put them as result_string
-          def cleanedString = testresults.replace('\n', '\\n').replace('"', '\\"')
-          def passing = sh(script: "echo \"${cleanedString}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
-          def failing = sh(script: "echo \"${cleanedString}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
-          def pending = sh(script: "echo \"${cleanedString}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
-
-          def color_string     =  '"color":"good"';
-          def markdown_string  =  '"mrkdwn_in":["text","title"]'
-          def title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} succeeded!\""
-          def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\""
-          def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
-
-
-          if (test_failed == true) {
-            color_string = '"color":"danger"';
-            title_string =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} failed!\""
-          }
-          // send the measurements to slack
-          slackSend attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]"
+          slack_send_summary();
+          slack_send_testlog();
         }
       }
     }
