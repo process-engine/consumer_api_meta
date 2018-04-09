@@ -109,7 +109,7 @@ pipeline {
 
 
           if (test_failed == true) {
-            color_string = '"color":"bad"';
+            color_string = '"color":"danger"';
             title_string =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} failed!\""
           }
           // send the measurements to slack
