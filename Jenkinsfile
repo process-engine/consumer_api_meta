@@ -105,7 +105,7 @@ pipeline {
           // TODO: grep number of passing and failing from testresults and put them as result_string
           def passing = sh(script: "echo \"${testresults.replace('\n', '\\n')}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
           def failing = sh(script: "echo \"${testresults.replace('\n', '\\n')}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
-          def pending = sh(script: "echo \"${testresults.replace('\n', '\\n')}\" | grep pending || echo \"0 pending\""", returnStdout: true).trim();
+          def pending = sh(script: "echo \"${testresults.replace('\n', '\\n')}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
           
           println passing;
           println failing;
