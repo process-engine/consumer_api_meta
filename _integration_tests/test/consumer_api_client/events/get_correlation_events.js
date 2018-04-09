@@ -15,7 +15,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', functi
   this.timeout(testTimeoutMilliseconds);
 
   before(async function() {
-    this.timeout(0);
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();

@@ -92,11 +92,19 @@ pipeline {
               url: 'https://slack.com/api/files.upload',
               httpMode: 'POST',
               contentType: 'APPLICATION_FORM',
-              consoleLogResponseBody: true,
               requestBody: requestBody.join('&'),
             )
           }
         }
+        
+        color_string     =  '"color":"good"';
+        
+        markdown_string  =  '"mrkdwn_in":["text","title"]'
+        title_string     =  "\"title\":\":zap: Consumer tests for ${env.BRANCH_NAME} done!\""
+        action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]"
+
+        // send the measurements to slack
+        slackSend attachments: "[{$color_string, $title_string, $markdown_string, $action_string}]"
       }
     }
     stage('Cleanup') {
