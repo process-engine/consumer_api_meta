@@ -16,14 +16,16 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
   
   this.timeout(testTimeoutMilliseconds);
 
-  before(async () => {
+  before(async function() {
+    this.timeout(0);
     httpBootstrapper = await testSetup.initializeBootstrapper();
     await httpBootstrapper.start();
     consumerContext = await testSetup.createContext();
     consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
   });
 
-  after(async () => {
+  after(async function() {
+    this.timeout(0);
     await httpBootstrapper.reset();
     await httpBootstrapper.shutdown();
   });
