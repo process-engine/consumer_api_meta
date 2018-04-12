@@ -12,9 +12,9 @@ def cleanup_workspace() {
 }
 
 def cleanup_docker() {
-  sh(script: "docker stop ${dbContainerId}");
-  sh(script: "docker rm ${dbContainerId}");
-  sh(script: "docker rmi ${serverImageId} ${dbImageId}");
+  sh(script: "docker stop ${db_container_id}");
+  sh(script: "docker rm ${db_container_id}");
+  sh(script: "docker rmi ${server_image_id} ${db_imageI_id}");
 
   // Build stages in dockerfiles leave dangling images behind (see https://github.com/moby/moby/issues/34151).
   // Dangling images are images that are not used anywhere and don't have a tag. It is safe to remove them (see https://stackoverflow.com/a/45143234).
@@ -28,11 +28,11 @@ def cleanup_docker() {
   sh(script: "docker volume prune --force");
 }
 
-def slack_send_summary() {
-  def cleanedString = testresults.replace('\n', '\\n').replace('"', '\\"');
-  def passing = sh(script: "echo \"${cleanedString}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
-  def failing = sh(script: "echo \"${cleanedString}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
-  def pending = sh(script: "echo \"${cleanedString}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
+def slack_send_summary(testlog, test_failed) {
+  def cleaned_string = testlog.replace('\n', '\\n').replace('"', '\\"');
+  def passing = sh(script: "echo \"${cleaned_string}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
+  def failing = sh(script: "echo \"${cleaned_string}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
+  def pending = sh(script: "echo \"${cleaned_string}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
 
   def color_string     =  '"color":"good"';
   def markdown_string  =  '"mrkdwn_in":["text","title"]';
@@ -48,12 +48,12 @@ def slack_send_summary() {
   slackSend(attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]");
 }
 
-def slack_send_testlog() {
+def slack_send_testlog(testlog) {
   withCredentials([string(credentialsId: 'slack-file-poster-token', variable: 'SLACK_TOKEN')]) {
 
     def requestBody = [
       "token=${SLACK_TOKEN}",
-      "content=${testresults}",
+      "content=${testlog}",
       "filename=consumer_api_integration_tests.txt",
       "channels=process-engine_ci"
     ];
@@ -79,20 +79,20 @@ pipeline {
           def safe_branch_name = env.BRANCH_NAME.replace("/", "_");
           def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}";
 
-          dbImage       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests');
-          serverImage   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests');
+          db_image       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests');
+          server_image   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests');
 
-          dbImageId     = dbImage.id;
-          serverImageId = serverImage.id;
+          db_imageI_id     = db_image.id;
+          server_image_id  = server_image.id;
 
-          dbContainerId = dbImage
+          db_container_id = db_image
                             .run('--env POSTGRES_USER=admin --env POSTGRES_PASSWORD=admin --env POSTGRES_DB=processengine')
                             .id;
 
           // wait for the DB to start up
           docker
             .image('postgres')
-            .inside("--link ${dbContainerId}:db") {
+            .inside("--link ${db_container_id}:db") {
               sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
           }
         }
@@ -102,12 +102,17 @@ pipeline {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
-          serverImage.inside("--env NODE_ENV=test --env CONFIG_PATH=/usr/src/app/application/config --env datastore__service__data_sources__default__adapter__server__host=db --link ${dbContainerId}:db") {
-            errorCode = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit > result.txt", returnStatus: true);
+          def node_env = '--env NODE_ENV=test';
+          def config_path = '--env CONFIG_PATH=/usr/src/app/application/config';
+          def db_host = '--env datastore__service__data_sources__default__adapter__server__host=db';
+          def db_link = "--link ${db_container_id}:db";
+
+          server_image.inside("${node_env} ${config_path} ${db_host} ${db_link}") {
+            error_code = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --exit > result.txt", returnStatus: true);
             testresults = sh(script: "cat result.txt", returnStdout: true).trim();
 
             test_failed = false;
-            if (errorCode > 0) {
+            if (error_code > 0) {
               test_failed = true;
             }
           }
@@ -119,8 +124,8 @@ pipeline {
         script {
           // Print the result to the jobs console
           println(testresults);
-          slack_send_summary();
-          slack_send_testlog();
+          slack_send_summary(testresults, test_failed);
+          slack_send_testlog(testresults);
         }
       }
     }
