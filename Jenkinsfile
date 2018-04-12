@@ -114,6 +114,7 @@ pipeline {
             test_failed = false;
             if (error_code > 0) {
               test_failed = true;
+              currentBuild.result = 'FAILURE';
             }
           }
         }
