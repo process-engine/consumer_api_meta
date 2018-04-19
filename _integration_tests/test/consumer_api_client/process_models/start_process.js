@@ -4,7 +4,7 @@ const should = require('should');
 
 const returnOnOptions = require('@process-engine/consumer_api_contracts').ProcessStartReturnOnOptions;
 
-const testSetup = require('../../../application/test_setup');
+const testSetup = require('../../../test_setup');
 
 const testTimeoutMilliseconds = 5000;
 
