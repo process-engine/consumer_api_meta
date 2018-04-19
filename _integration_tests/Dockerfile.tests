@@ -2,8 +2,12 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 
+COPY index.js ./
+COPY ioc_module.js ./
 COPY package.json ./
-COPY application /usr/src/app/application
+COPY test_setup.js ./
+COPY bpmn /usr/src/app/bpmn
+COPY config /usr/src/app/config
 COPY test /usr/src/app/test
 
 RUN npm install
