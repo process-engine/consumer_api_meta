@@ -31,7 +31,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
 
     const processName = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -74,7 +74,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     const processName = 'consumer_api_lane_test';
     const restrictedContext = await testSetup.createRestrictedContext();
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -96,7 +96,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   it('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
 
     const processName = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processName, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {

@@ -33,7 +33,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     const processModelKey = 'consumer_api_lane_test';
     const laneContext = await testSetup.createLaneContext();
 
-    await consumerApiClientService.startProcess(laneContext, processModelKey, 'StartEvent_1');
+    await consumerApiClientService.startProcessInstance(laneContext, processModelKey, 'StartEvent_1');
 
     await new Promise((resolve) => {
       setTimeout(() => {

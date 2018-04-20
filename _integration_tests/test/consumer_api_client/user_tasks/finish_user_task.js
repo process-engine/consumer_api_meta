@@ -31,7 +31,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
   it('should successfully finish the given user task.', async () => {
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -52,7 +52,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
     
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -82,7 +82,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -113,7 +113,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -145,7 +145,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -177,7 +177,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -207,7 +207,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
