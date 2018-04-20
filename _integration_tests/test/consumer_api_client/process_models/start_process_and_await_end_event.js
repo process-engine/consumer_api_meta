@@ -38,7 +38,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     
-    const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+    const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.equal(payload.correlation_id);
@@ -53,7 +53,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     
-    const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+    const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.a.String();
@@ -70,7 +70,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent({}, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent({}, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -93,7 +93,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const restrictedContext = await testSetup.createRestrictedContext();
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(restrictedContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(restrictedContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -114,7 +114,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -135,7 +135,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -156,7 +156,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -176,7 +176,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const payload = 'i am missing vital properties';
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -199,7 +199,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
@@ -221,7 +221,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     try {
-      const result = await consumerApiClientService.startProcessAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      const result = await consumerApiClientService.startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;

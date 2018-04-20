@@ -31,7 +31,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
   it('should return a list of user tasks for a given process model in a given correlation', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -57,7 +57,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -80,7 +80,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const processModelKey = 'consumer_api_lane_test';
     const restrictedContext = await testSetup.createRestrictedContext();
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -103,7 +103,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
     const processModelKey = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -125,7 +125,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
   it('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    const correlationId = (await consumerApiClientService.startProcess(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
+    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3')).correlation_id;
 
     await new Promise((resolve) => {
       setTimeout(() => {
