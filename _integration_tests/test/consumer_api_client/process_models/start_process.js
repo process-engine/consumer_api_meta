@@ -2,7 +2,7 @@
 
 const should = require('should');
 
-const returnOnOptions = require('@process-engine/consumer_api_contracts').ProcessStartReturnOnOptions;
+const startCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
 const testSetup = require('../../../test_setup');
 
@@ -38,7 +38,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
     
     const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -54,7 +54,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'string',
       input_values: {},
     };
-    const returnOn = returnOnOptions.onProcessInstanceFinished;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
     
     const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -69,7 +69,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const payload = {
       input_values: {},
     };
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
     
     const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
@@ -101,7 +101,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await consumerApiClientService.startProcessInstance({}, processModelKey, startEventKey, payload, returnOn);
@@ -125,7 +125,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     const restrictedContext = await testSetup.createRestrictedContext();
 
@@ -149,7 +149,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
 
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -171,7 +171,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -214,7 +214,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
     const payload = 'i am missing vital properties';
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     const consumerContext = await testSetup.createContext('user');
 
@@ -240,7 +240,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     
-    const returnOn = returnOnOptions.onProcessInstanceStarted;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -263,8 +263,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
     
-    // NOTE: This test case can by its very definition never work with "onProcessInstanceStarted".
-    const returnOn = returnOnOptions.onProcessInstanceFinished;
+    // NOTE: This test case can by its very definition never work with .CallbackOnProcessInstanceCreated".
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     try {
       const result = await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
