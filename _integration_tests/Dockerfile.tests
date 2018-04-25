@@ -2,12 +2,14 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 
+COPY gulpfile.js ./
 COPY index.js ./
 COPY ioc_module.js ./
 COPY package.json ./
-COPY test_setup.js ./
+COPY tsconfig.json ./
 COPY bpmn /usr/src/app/bpmn
 COPY config /usr/src/app/config
+COPY src ./src
 COPY test /usr/src/app/test
 
 RUN npm install
