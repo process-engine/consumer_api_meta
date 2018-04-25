@@ -2,36 +2,39 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
+
+  async function startProcessAndReturnCorrelationId(processModelKey) {
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(consumerContext, processModelKey, 'StartEvent_1');
+
+    return result.correlation_id;
+  }
 
   it('should successfully finish the given user task.', async () => {
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -45,14 +48,17 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         Form_XGSVBgio: true,
       }
     };
-    await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
+    await testFixtureProvider
+      .consumerApiClientService
+      .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
   });
 
   it('should fail to finish the user task, when the user is unauthorized', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
     
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -68,7 +74,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     };
     
     try {
-      await consumerApiClientService.finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -82,7 +91,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -97,9 +106,13 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
       }
     };
 
-    const restrictedContext = await testSetup.createRestrictedContext();
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
+
     try {
-      await consumerApiClientService.finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -113,7 +126,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -131,7 +144,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const invalidProcessModelKey = 'invalidProcessModelKey';
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, invalidProcessModelKey, correlationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, invalidProcessModelKey, correlationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -145,7 +161,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -163,7 +179,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, invalidCorrelationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelKey, invalidCorrelationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -177,7 +196,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -193,7 +212,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     };
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, invalidUserTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelKey, correlationId, invalidUserTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -207,7 +229,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = (await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, 'StartEvent_1')).correlation_id;
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -219,7 +241,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = 'invalidUserTaskResult';
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -238,7 +263,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const userTaskResult = {};
 
     try {
-      await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;

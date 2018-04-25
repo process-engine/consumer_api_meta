@@ -2,38 +2,30 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
-  let consumerContext;
-  
+  let testFixtureProvider;
+  let laneUserContext;
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    laneUserContext = testFixtureProvider.context.laneUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
-    const laneContext = await testSetup.createLaneContext();
-
-    await consumerApiClientService.startProcessInstance(laneContext, processModelKey, 'StartEvent_1');
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -41,7 +33,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
       }, 300);
     });
 
-    const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(laneContext, processModelKey);
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(laneUserContext, processModelKey);
 
     should(userTaskList).have.property('user_tasks');
     should(userTaskList.user_tasks).be.instanceOf(Array);
@@ -60,7 +54,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     const processModelKey = 'test_consumer_api_process_start';
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForProcessModel({}, processModelKey);
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModel({}, processModelKey);
+
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -73,10 +70,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
   it('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
-    const restrictedContext = await testSetup.createRestrictedContext();
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
     
     try {
-      const userTaskList = await consumerApiClientService.getUserTasksForProcessModel(restrictedContext, processModelKey);
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModel(restrictedContext, processModelKey);
+
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -91,7 +91,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     const invalidProcessModelKey = 'invalidProcessModelKey';
     
     try {
-      const processModel = await consumerApiClientService.getUserTasksForProcessModel(consumerContext, invalidProcessModelKey);
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModel(laneUserContext, invalidProcessModelKey);
+
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
