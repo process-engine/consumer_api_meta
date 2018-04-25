@@ -2,35 +2,32 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   GET  ->  /process_models', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should return process models through the consumer api', async () => {
 
-    const processModelList = await consumerApiClientService.getProcessModels(consumerContext);
+    const processModelList = await testFixtureProvider
+      .consumerApiClientService
+      .getProcessModels(consumerContext);
 
     should(processModelList).have.property('process_models');
 
@@ -46,7 +43,10 @@ describe('Consumer API:   GET  ->  /process_models', function() {
 
   it('should fail the retrieve a list of process models, when the user is unauthorized', async () => {
     try {
-      const processModelList = await consumerApiClientService.getProcessModels({});
+      const processModelList = await testFixtureProvider
+        .consumerApiClientService
+        .getProcessModels({});
+
       should.fail(processModelList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -58,9 +58,12 @@ describe('Consumer API:   GET  ->  /process_models', function() {
 
   it('should filter out processes models that the user is not authorized to see', async () => {
 
-    const restrictedContext = await testSetup.createRestrictedContext();
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
 
-      const processModelList = await consumerApiClientService.getProcessModels(restrictedContext);
+      const processModelList = await testFixtureProvider
+        .consumerApiClientService
+        .getProcessModels(restrictedContext);
+
       should(processModelList).have.property('process_models');
 
       should(processModelList.process_models).be.instanceOf(Array);
