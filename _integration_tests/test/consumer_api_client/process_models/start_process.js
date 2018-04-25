@@ -199,6 +199,31 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
+  it('should fail to start the process, if the process model is not marked as executable', async () => {
+
+    const processModelKey = 'test_consumer_api_non_executable_process';
+    const startEventKey = 'StartEvent_1';
+    const payload = {
+      correlation_id: 'string',
+      input_values: {},
+    };
+    
+    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 400;
+      const expectedErrorMessage = /not executable/i;
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to start the process, if the given return_on option is invalid', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';

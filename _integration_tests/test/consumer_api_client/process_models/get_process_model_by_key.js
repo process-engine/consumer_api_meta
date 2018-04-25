@@ -35,6 +35,19 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
     should(processModel).have.property('startEvents');
   });
 
+  it('should not list any start events, if the retrieved process model is not marked as executable', async () => {
+
+    const processModelKey = 'test_consumer_api_non_executable_process';
+
+    const processModel = await testFixtureProvider
+      .consumerApiClientService
+      .getProcessModelByKey(consumerContext, processModelKey);
+
+    should(processModel).have.property('key');
+    should(processModel).have.property('startEvents');
+    should(processModel.startEvents.length).be.equal(0);
+  });
+
   it('should fail to retrieve the process model, when the user is unauthorized', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';

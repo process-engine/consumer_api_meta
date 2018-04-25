@@ -180,6 +180,30 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
+  it('should fail to start the process, if the process model is not marked as executable', async () => {
+
+    const processModelKey = 'test_consumer_api_non_executable_process';
+    const startEventKey = 'StartEvent_1';
+    const endEventKey = 'EndEvent_Success';
+    const payload = {
+      correlation_id: 'randomcorrelationid',
+      input_values: {},
+    };
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+
+      should.fail(result, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 400;
+      const expectedErrorMessage = /not executable/i;
+      should(error.code).match(expectedErrorCode);
+      should(error.message).match(expectedErrorMessage);
+    }
+  });
+
   // TODO: Bad Path not implemented yet
   // TODO: What exactly constitutes a valid payload anyway?
   it.skip('should fail to start the process, if the given payload is invalid', async () => {
