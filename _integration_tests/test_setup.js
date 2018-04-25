@@ -3,7 +3,6 @@
 const InvocationContainer = require('addict-ioc').InvocationContainer;
 const logger = require('loggerhythm').Logger.createLogger('test:bootstrapper');
 const path = require('path');
-const {ConsumerApiIamService} = require('@process-engine/consumer_api_core');
 
 const iocModuleNames = [
   '@essential-projects/bootstrapper',

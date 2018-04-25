@@ -2,30 +2,25 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/events/:event_id/trigger', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should successfully trigger the given event.', async () => {
@@ -36,7 +31,9 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventId = 'test_event_to_trigger'
     const eventTriggerPayload = {};
     
-    await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+    await testFixtureProvider
+      .consumerApiClientService
+      .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
   });
 
   it('should fail trigger the event, when the user is unauthorized', async () => {
@@ -47,7 +44,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent({}, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent({}, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -57,7 +57,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     }
   });
 
-  // TODO: Use different consumerContext
+  // TODO: Bad Path not implemented yet
   it.skip('should fail trigger the event, when the user forbidden to retrieve it', async () => {
   
     const processModelKey = 'test_consumer_api_trigger_event';
@@ -65,8 +65,13 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventId = 'test_event_to_trigger'
     const eventTriggerPayload = {};
 
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
+
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(restrictedContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -86,7 +91,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -106,7 +114,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -126,7 +137,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -146,7 +160,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
@@ -167,7 +184,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     const eventTriggerPayload = {};
 
     try {
-      await consumerApiClientService.triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+      await testFixtureProvider
+        .consumerApiClientService
+        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;

@@ -2,37 +2,34 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should return a process models events by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'test_get_events_for_process_model';
     
-    const eventList = await consumerApiClientService.getEventsForProcessModel(consumerContext, processModelKey);
+    const eventList = await testFixtureProvider
+      .consumerApiClientService
+      .getEventsForProcessModel(consumerContext, processModelKey);
 
     should(eventList).have.property('events');
 
@@ -52,7 +49,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     const processModelKey = 'test_get_events_for_process_model';
 
     try {
-      const eventList = await consumerApiClientService.getEventsForProcessModel({}, processModelKey);
+      const eventList = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModel({}, processModelKey);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -62,13 +62,18 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     }
   });
 
-  // TODO: Use different consumerContext
+  // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the process model\'s events, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_get_events_for_process_model';
 
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
+
     try {
-      const eventList = await consumerApiClientService.getEventsForProcessModel(consumerContext, processModelKey);
+      const eventList = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModel(restrictedContext, processModelKey);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -84,7 +89,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     const invalidProcessModelKey = 'invalidProcessModelKey';
     
     try {
-      const processModel = await consumerApiClientService.getEventsForProcessModel(consumerContext, invalidProcessModelKey);
+      const processModel = await testFixtureProvider.
+        aconsumerApiClientService
+        .getEventsForProcessModel(consumerContext, invalidProcessModelKey);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;

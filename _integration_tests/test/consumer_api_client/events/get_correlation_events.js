@@ -2,37 +2,33 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should return a correlation\'s events by its correlation_id through the consumer api', async () => {
 
     const correlationId = 'test_get_events_for_process_model';
     
-    const eventList = await consumerApiClientService.getEventsForCorrelation(consumerContext, correlationId);
+    const eventList =
+      await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(consumerContext, correlationId);
 
     should(eventList).have.property('events');
 
@@ -52,7 +48,9 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', functi
     const correlationId = 'test_get_events_for_process_model';
     
     try {
-      const eventList = await consumerApiClientService.getEventsForCorrelation({}, correlationId);
+      const eventList =
+        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation({}, correlationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -62,13 +60,17 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', functi
     }
   });
 
-  // TODO: Use different consumerContext
+  // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
 
     const correlationId = 'test_get_events_for_process_model';
+
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
     
     try {
-      const eventList = await consumerApiClientService.getEventsForCorrelation({}, correlationId);
+      const eventList =
+        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(restrictedContext, correlationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -84,7 +86,9 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', functi
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
-      const processModel = await consumerApiClientService.getEventsForCorrelation(consumerContext, invalidcorrelationId);
+      const processModel =
+        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(consumerContext, invalidcorrelationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
