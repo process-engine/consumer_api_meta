@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1cidyxu">
     <bpmn:participant id="Participant_0px403d" name="test_consumer_api_process_start" processRef="test_consumer_api_process_start" />
   </bpmn:collaboration>
-  <bpmn:process id="test_consumer_api_process_start" name="test_consumer_api_process_start" isExecutable="false">
+  <bpmn:process id="test_consumer_api_process_start" name="test_consumer_api_process_start" isExecutable="true">
     <bpmn:laneSet>
       <bpmn:lane id="Lane_1xzf0d3" name="can_start_process">
         <bpmn:extensionElements>
