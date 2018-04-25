@@ -1,5 +1,7 @@
 FROM node:8-alpine
 
+RUN apk add --no-cache git
+
 WORKDIR /usr/src/app
 
 COPY gulpfile.js ./
@@ -7,10 +9,10 @@ COPY index.js ./
 COPY ioc_module.js ./
 COPY package.json ./
 COPY tsconfig.json ./
-COPY bpmn /usr/src/app/bpmn
-COPY config /usr/src/app/config
+COPY bpmn ./bpmn
+COPY config ./config
 COPY src ./src
-COPY test /usr/src/app/test
+COPY test ./test
 
 RUN npm install
 RUN npm run build
