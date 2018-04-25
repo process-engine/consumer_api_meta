@@ -5,10 +5,10 @@ const path = require('path');
 
 const registerInContainer = (container) => {
 
-  // TODO: Add processes for use in the integrationtests
   const processes = [
-    'test_consumer_api_process_start',
     'test_consumer_api_lanes',
+    'test_consumer_api_non_executable_process',
+    'test_consumer_api_process_start',
     'test_consumer_api_usertask',
   ];
 

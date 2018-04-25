@@ -2,30 +2,25 @@
 
 const should = require('should');
 
-const testSetup = require('../../../test_setup');
+const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlations/:correlation_id/events', function() {
 
-  let httpBootstrapper;
-  let consumerApiClientService;
+  let testFixtureProvider;
   let consumerContext;
-  
+
   this.timeout(testTimeoutMilliseconds);
 
-  before(async function() {
-    this.timeout(0);
-    httpBootstrapper = await testSetup.initializeBootstrapper();
-    await httpBootstrapper.start();
-    consumerContext = await testSetup.createContext();
-    consumerApiClientService = await testSetup.resolveAsync('ConsumerApiClientService');
+  before(async () => {
+    testFixtureProvider = new TestFixtureProvider();
+    await testFixtureProvider.initializeAndStart();
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
-  after(async function() {
-    this.timeout(0);
-    await httpBootstrapper.reset();
-    await httpBootstrapper.shutdown();
+  after(async () => {
+    await testFixtureProvider.tearDown();
   });
 
   it('should return a list of events for a given process model in a given correlation', async () => {
@@ -33,7 +28,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     const processModelKey = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
     
-    const eventList = await consumerApiClientService.getEventsForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
+    const eventList = await testFixtureProvider
+      .consumerApiClientService
+      .getEventsForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
 
     should(eventList).have.property('events');
 
@@ -54,7 +51,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     const correlationId = 'correlationId';
     
     try {
-      const processModel = await consumerApiClientService.getEventsForProcessModelInCorrelation({}, processModelKey, correlationId);
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModelInCorrelation({}, processModelKey, correlationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -64,14 +64,19 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     }
   });
 
-  // TODO: Use different consumerContext
+  // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
 
     const processModelKey = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
+
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
     
     try {
-      const processModel = await consumerApiClientService.getEventsForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModelInCorrelation(restrictedContext, processModelKey, correlationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -88,7 +93,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     const correlationId = 'correlationId';
     
     try {
-      const processModel = await consumerApiClientService.getEventsForProcessModelInCorrelation(consumerContext, invalidProcessModelKey, correlationId);
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModelInCorrelation(consumerContext, invalidProcessModelKey, correlationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
@@ -105,7 +113,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     const invalidCorrelationId = 'invalidCorrelationId';
     
     try {
-      const processModel = await consumerApiClientService.getEventsForProcessModelInCorrelation(consumerContext, processModelKey, invalidcorrelationId);
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getEventsForProcessModelInCorrelation(consumerContext, processModelKey, invalidcorrelationId);
+
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
