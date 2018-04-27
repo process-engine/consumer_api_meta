@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function() {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function getUserTasksForCorrelation() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -38,7 +38,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
 
@@ -62,7 +62,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
     const correlationId = 'test_consumer_api_process_start';
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -71,9 +71,11 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -86,10 +88,10 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -98,9 +100,11 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -111,12 +115,12 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
 
     const invalidCorrelationId = 'invalidCorrelationId';
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
@@ -125,9 +129,11 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

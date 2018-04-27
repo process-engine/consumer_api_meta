@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', function() {
+describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', function getProcessModelEvent() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -26,7 +26,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
   it('should return a process models events by its process_model_key through the consumer api', async () => {
 
     const processModelKey = 'test_get_events_for_process_model';
-    
+
     const eventList = await testFixtureProvider
       .consumerApiClientService
       .getEventsForProcessModel(consumerContext, processModelKey);
@@ -53,12 +53,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
         .consumerApiClientService
         .getEventsForProcessModel({}, processModelKey);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -74,12 +76,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
         .consumerApiClientService
         .getEventsForProcessModel(restrictedContext, processModelKey);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -87,18 +91,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
   it.skip('should fail to retrieve the process model\'s events, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
-    
+
     try {
-      const processModel = await testFixtureProvider.
-        aconsumerApiClientService
+      const processModel = await testFixtureProvider
+        .aconsumerApiClientService
         .getEventsForProcessModel(consumerContext, invalidProcessModelKey);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

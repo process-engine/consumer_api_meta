@@ -6,7 +6,8 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/end_event/:end_event_key/start_and_resolve_by_end_event', function() {
+const testCase = 'POST ->  /process_models/:process_model_key/start_events/:start_event_key/end_event/:end_event_key/start_and_resolve_by_end_event';
+describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -32,7 +33,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'randomcorrelationid',
       input_values: {},
     };
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
@@ -49,7 +50,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const payload = {
       input_values: {},
     };
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
@@ -77,8 +78,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -102,9 +105,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -126,9 +131,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /key.*?not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /key.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -150,9 +157,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /start event.*?not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /start event.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -174,9 +183,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /end event.*?not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /end event.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -199,8 +210,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /not executable/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -221,9 +234,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      const expectedErrorMessage = /invalid payload/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /invalid payload/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -248,7 +263,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 500;
       should(error.message).be.empty();
-      should(error.code).match(expectedErrorCode);
+      should(error.code)
+        .match(expectedErrorCode);
     }
   });
 
@@ -273,8 +289,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 500;
       const expectedErrorMessage = /terminated with an error/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

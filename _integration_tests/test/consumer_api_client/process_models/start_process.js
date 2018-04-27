@@ -8,7 +8,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function() {
+describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function startProcessInstance() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -34,7 +34,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -52,7 +52,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     const returnOn = startCallbackType.CallbackOnEndEventReached;
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -69,7 +69,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       input_values: {},
     };
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
@@ -84,7 +84,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const payload = {
       input_values: {},
     };
-    
+
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload);
@@ -103,7 +103,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
         causeError: true,
       },
     };
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
@@ -115,8 +115,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -130,7 +132,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
         causeError: true,
       },
     };
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
@@ -143,9 +145,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -168,9 +172,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /key.*?not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /key.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -182,7 +188,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'string',
       input_values: {},
     };
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
@@ -193,9 +199,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /start event.*?not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /start event.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -207,7 +215,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'string',
       input_values: {},
     };
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
@@ -219,8 +227,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /not executable/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -232,7 +242,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'string',
       input_values: {},
     };
-    
+
     const returnOn = 'invalidReturnOption';
 
     try {
@@ -243,9 +253,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      const expectedErrorMessage = /not a valid return option/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not a valid return option/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -256,7 +268,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = 'i am missing vital properties';
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
@@ -267,9 +279,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      const expectedErrorMessage = /invalid payload/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /invalid payload/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -283,7 +297,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlation_id: 'string',
       input_values: {},
     };
-    
+
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
@@ -295,7 +309,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 500;
       should(error.message).be.empty();
-      should(error.code).match(expectedErrorCode);
+      should(error.code)
+        .match(expectedErrorCode);
     }
   });
 
@@ -309,7 +324,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
         causeError: true,
       },
     };
-    
+
     // NOTE: This test case can by its very definition never work with .CallbackOnProcessInstanceCreated".
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
@@ -322,7 +337,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     } catch (error) {
       const expectedErrorCode = 500;
       should(error.message).be.empty();
-      should(error.code).match(expectedErrorCode);
+      should(error.code)
+        .match(expectedErrorCode);
     }
   });
 
