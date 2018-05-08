@@ -336,7 +336,9 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
-      should(error.message).be.empty();
+      const expectedErrorMessage = /process failed.*?error/i;
+      should(error.message)
+        .match(expectedErrorMessage);
       should(error.code)
         .match(expectedErrorCode);
     }

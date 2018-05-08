@@ -288,7 +288,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
-      const expectedErrorMessage = /terminated with an error/i;
+      const expectedErrorMessage = /process failed.*?error/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
