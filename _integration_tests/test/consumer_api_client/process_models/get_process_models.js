@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models', function() {
+describe('Consumer API:   GET  ->  /process_models', function getProcessModels() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -45,41 +45,41 @@ describe('Consumer API:   GET  ->  /process_models', function() {
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
 
-      const processModelList = await testFixtureProvider
-        .consumerApiClientService
-        .getProcessModels(restrictedContext);
+    const processModelList = await testFixtureProvider
+      .consumerApiClientService
+      .getProcessModels(restrictedContext);
 
-      should(processModelList).have.property('process_models');
+    should(processModelList).have.property('process_models');
 
-      should(processModelList.process_models).be.instanceOf(Array);
-  
-      processModelList.process_models.forEach((processModel) => {
-        should(processModel).have.property('key');
-        should(processModel.key).not.be('test_consumer_api_process_start')
-        should(processModel).have.property('startEvents');
-        should(processModel.startEvents).be.instanceOf(Array);
-      });
+    should(processModelList.process_models).be.instanceOf(Array);
+
+    processModelList.process_models.forEach((processModel) => {
+      should(processModel).have.property('key');
+      should(processModel.key).not.be('test_consumer_api_process_start');
+      should(processModel).have.property('startEvents');
+      should(processModel.startEvents).be.instanceOf(Array);
+    });
   });
 
   it('should not return any start events for processes which are not marked as executable', async () => {
 
-      const processModelList = await testFixtureProvider
-        .consumerApiClientService
-        .getProcessModels(consumerContext);
+    const processModelList = await testFixtureProvider
+      .consumerApiClientService
+      .getProcessModels(consumerContext);
 
-      should(processModelList).have.property('process_models');
+    should(processModelList).have.property('process_models');
 
-      should(processModelList.process_models).be.instanceOf(Array);
-  
-      processModelList.process_models.forEach((processModel) => {
-        should(processModel).have.property('key');
-        should(processModel).have.property('startEvents');
-        should(processModel.startEvents).be.instanceOf(Array);
+    should(processModelList.process_models).be.instanceOf(Array);
 
-        if (processModel.key === 'test_consumer_api_non_executable_process') {
-          should(processModel.startEvents.length).be.equal(0);
-        }
-      });
+    processModelList.process_models.forEach((processModel) => {
+      should(processModel).have.property('key');
+      should(processModel).have.property('startEvents');
+      should(processModel.startEvents).be.instanceOf(Array);
+
+      if (processModel.key === 'test_consumer_api_non_executable_process') {
+        should(processModel.startEvents.length).be.equal(0);
+      }
+    });
   });
 
   it('should fail to retrieve a list of process models, when the user is unauthorized', async () => {
@@ -92,8 +92,10 @@ describe('Consumer API:   GET  ->  /process_models', function() {
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

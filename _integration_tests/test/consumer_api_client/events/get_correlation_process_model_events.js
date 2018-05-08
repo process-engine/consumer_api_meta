@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlations/:correlation_id/events', function() {
+describe('Consumer API GET  ->  /process_models/:process_model_key/correlations/:correlation_id/events', function getCorrelationProcessModelEvents() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -27,7 +27,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const processModelKey = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
-    
+
     const eventList = await testFixtureProvider
       .consumerApiClientService
       .getEventsForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
@@ -49,18 +49,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const processModelKey = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
         .getEventsForProcessModelInCorrelation({}, processModelKey, correlationId);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -71,18 +73,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     const correlationId = 'correlationId';
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
         .getEventsForProcessModelInCorrelation(restrictedContext, processModelKey, correlationId);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -91,18 +95,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
     const correlationId = 'correlationId';
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
         .getEventsForProcessModelInCorrelation(consumerContext, invalidProcessModelKey, correlationId);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -111,18 +117,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     const processModelKey = 'test_get_events_for_process_model';
     const invalidCorrelationId = 'invalidCorrelationId';
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getEventsForProcessModelInCorrelation(consumerContext, processModelKey, invalidcorrelationId);
+        .getEventsForProcessModelInCorrelation(consumerContext, processModelKey, invalidCorrelationId);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

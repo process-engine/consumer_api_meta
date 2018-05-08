@@ -6,17 +6,17 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function() {
+describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function getUserTasksForProcessModel() {
 
   let testFixtureProvider;
-  let laneUserContext;
+  let defaultUserContext;
 
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    laneUserContext = testFixtureProvider.context.laneUser;
+    defaultUserContext = testFixtureProvider.context.defaultUser;
   });
 
   after(async () => {
@@ -25,17 +25,17 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
 
   it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
 
-    const processModelKey = 'consumer_api_lane_test';
+    const processModelKey = 'consumer_api_usertask_test';
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getUserTasksForProcessModel(laneUserContext, processModelKey);
+      .getUserTasksForProcessModel(defaultUserContext, processModelKey);
 
     should(userTaskList).have.property('user_tasks');
     should(userTaskList.user_tasks).be.instanceOf(Array);
@@ -49,10 +49,29 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     });
   });
 
-  it('should fail to retrieve the process model\'s user tasks, when the user is unauthorized', async () => {
+  it('should return an empty user task list, if the given process model does not have any user tasks', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
-    
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(defaultUserContext, processModelKey);
+
+    should(userTaskList).have.property('user_tasks');
+    should(userTaskList.user_tasks).be.instanceOf(Array);
+    should(userTaskList.user_tasks.length).be.equal(0);
+  });
+
+  it('should fail to retrieve the process model\'s user tasks, when the user is unauthorized', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -61,17 +80,19 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
   it('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
+    const processModelKey = 'consumer_api_usertask_test';
     const restrictedContext = testFixtureProvider.context.restrictedUser;
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -80,27 +101,31 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
   it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
-    
+
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForProcessModel(laneUserContext, invalidProcessModelKey);
+        .getUserTasksForProcessModel(defaultUserContext, invalidProcessModelKey);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

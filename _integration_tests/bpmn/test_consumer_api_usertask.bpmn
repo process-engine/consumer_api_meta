@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-  id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:collaboration id="Collaboration_1cidyxu">
-    <bpmn:participant id="Participant_0px403d" name="consumer_api_usertask_test" processRef="consumer_api_usertask_test" /></bpmn:collaboration>
+    <bpmn:participant id="Participant_0px403d" name="consumer_api_usertask_test" processRef="consumer_api_usertask_test" />
+  </bpmn:collaboration>
   <bpmn:process id="consumer_api_usertask_test" name="consumer_api_usertask_test" isExecutable="true">
     <bpmn:laneSet>
       <bpmn:lane id="Lane_1xzf0d3" name="can_view_usertask">
+        <bpmn:extensionElements>
+          <camunda:properties>
+            <camunda:property name="role" value="user" />
+          </camunda:properties>
+        </bpmn:extensionElements>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_1vdwmn1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_1j67qnl</bpmn:flowNodeRef>
@@ -19,7 +23,8 @@
     <bpmn:userTask id="Task_1vdwmn1" name="" camunda:formKey="Form Key">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="Form_XGSVBgio" label="" type="boolean" defaultValue="" /></camunda:formData>
+          <camunda:formField id="Form_XGSVBgio" label="" type="boolean" defaultValue="" />
+        </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0fkan76</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_00nxkwz</bpmn:outgoing>
@@ -27,7 +32,8 @@
     <bpmn:endEvent id="EndEvent_1j67qnl">
       <bpmn:incoming>SequenceFlow_00nxkwz</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_00nxkwz" sourceRef="Task_1vdwmn1" targetRef="EndEvent_1j67qnl" /></bpmn:process>
+    <bpmn:sequenceFlow id="SequenceFlow_00nxkwz" sourceRef="Task_1vdwmn1" targetRef="EndEvent_1j67qnl" />
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cidyxu">
       <bpmndi:BPMNShape id="Participant_0px403d_di" bpmnElement="Participant_0px403d">
@@ -43,8 +49,8 @@
         <dc:Bounds x="35" y="4" width="487" height="166" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0fkan76_di" bpmnElement="SequenceFlow_0fkan76">
-        <di:waypoint x="137" y="83" />
-        <di:waypoint x="220" y="83" />
+        <di:waypoint xsi:type="dc:Point" x="137" y="83" />
+        <di:waypoint xsi:type="dc:Point" x="220" y="83" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="178.5" y="62" width="0" height="12" />
         </bpmndi:BPMNLabel>
@@ -59,8 +65,8 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_00nxkwz_di" bpmnElement="SequenceFlow_00nxkwz">
-        <di:waypoint x="320" y="83" />
-        <di:waypoint x="400" y="83" />
+        <di:waypoint xsi:type="dc:Point" x="320" y="83" />
+        <di:waypoint xsi:type="dc:Point" x="400" y="83" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="360" y="62" width="0" height="12" />
         </bpmndi:BPMNLabel>

@@ -6,7 +6,8 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks', function() {
+const testCase = 'GET  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks';
+describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorrelation() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -38,7 +39,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
 
@@ -66,10 +67,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -78,9 +79,11 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -93,10 +96,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -105,9 +108,11 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -119,10 +124,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -132,8 +137,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not part of/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -144,12 +151,12 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve()
+        resolve();
       }, 300);
     });
 
     const invalidCorrelationId = 'invalidCorrelationId';
-    
+
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -158,9 +165,11 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/correlatio
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 

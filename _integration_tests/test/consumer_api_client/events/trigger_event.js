@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlations/:correlation_id/events/:event_id/trigger', function() {
+describe('Consumer API: POST  ->  /process_models/:process_model_key/correlations/:correlation_id/events/:event_id/trigger', function triggerEvent() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -28,19 +28,19 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     // TODO: Replace with real values
     const processModelKey = 'test_consumer_api_trigger_event';
     const correlationId = 'correlationId';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
-    
+
     await testFixtureProvider
       .consumerApiClientService
       .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
   });
 
   it('should fail trigger the event, when the user is unauthorized', async () => {
-  
+
     const processModelKey = 'test_consumer_api_trigger_event';
     const correlationId = 'correlationId';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
     try {
@@ -48,21 +48,23 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent({}, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
   // TODO: Bad Path not implemented yet
   it.skip('should fail trigger the event, when the user forbidden to retrieve it', async () => {
-  
+
     const processModelKey = 'test_consumer_api_trigger_event';
     const correlationId = 'correlationId';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
@@ -72,12 +74,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent(restrictedContext, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /not allowed/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -87,7 +91,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     // TODO: Replace with real values
     const processModelKey = 'invalidProcessModelKey';
     const correlationId = 'correlationId';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
     try {
@@ -95,12 +99,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model key not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /process model key not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -110,7 +116,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     // TODO: Replace with real values
     const processModelKey = 'test_consumer_api_trigger_event';
     const correlationId = 'invalidcorrelation';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
     try {
@@ -118,12 +124,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model key not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /process model key not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -139,14 +147,16 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
+        .triggerEvent(consumerContext, processModelKey, correlationId, invalidEventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /user task id not found/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /user task id not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -156,7 +166,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
     // TODO: Replace with real values
     const processModelKey = 'test_consumer_api_trigger_event';
     const correlationId = 'correlationId';
-    const eventId = 'test_event_to_trigger'
+    const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
     try {
@@ -164,12 +174,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      const expectedErrorMessage = /invalid arguments/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /invalid arguments/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
@@ -188,12 +200,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/correlati
         .consumerApiClientService
         .triggerEvent(consumerContext, processModelKey, correlationId, eventId, eventTriggerPayload);
 
-      should.fail(result, undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
-      const expectedErrorMessage = /could not be finished/i
-      should(error.code).match(expectedErrorCode);
-      should(error.message).match(expectedErrorMessage);
+      const expectedErrorMessage = /could not be finished/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
     }
   });
 
