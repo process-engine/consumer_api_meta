@@ -9,11 +9,12 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/results', function startProcessInstance() {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_key/results', function startProcessInstance() {
 
   let testFixtureProvider;
   let consumerContext;
   let correlationId;
+  const processModelKey = 'test_consumer_api_process_start';
 
   this.timeout(testTimeoutMilliseconds);
 
@@ -31,7 +32,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/results', funct
 
   async function createFinishedProcessInstanceAndReturnCorrelationId() {
 
-    const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
       correlation_id: uuid.v4(),
@@ -51,21 +51,14 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/results', funct
 
   it('should successfully return the results for the given correlationId', async () => {
 
-    const results = await testFixtureProvider
+    const processResult = await testFixtureProvider
       .consumerApiClientService
-      .getCorrelationResults(consumerContext, correlationId);
+      .getCorrelationProcessModelResult(consumerContext, correlationId, processModelKey);
 
-    should.exist(results);
-    should(results.correlationId).be.equal(correlationId);
-    should(results).have.property('processInstanceResults');
-    should(results.processInstanceResults).be.an.Array();
-    should(results.processInstanceResults.length).be.greaterThan(0);
-
-    for (const processResult of results.processInstanceResults) {
-      should(processResult).have.property('processInstanceId');
-      should(processResult).have.property('processModelKey');
-      should(processResult).have.property('result');
-    }
+    should.exist(processResult);
+    should(processResult.correlationId).be.equal(correlationId);
+    should(processResult.processModelKey).be.equal(processModelKey);
+    should(processResult).have.property('result');
   });
 
   it('should fail to get the results, when the user is unauthorized', async () => {
@@ -73,7 +66,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/results', funct
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getCorrelationResults({}, correlationId);
+        .getCorrelationProcessModelResult({}, correlationId, processModelKey);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
@@ -88,17 +81,37 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/results', funct
 
   it('should fail to get the results, if the given correlationId does not exist', async () => {
 
-    const invalidProcessModelKey = 'invalidCorrelationId';
+    const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getCorrelationResults(consumerContext, invalidProcessModelKey);
+        .getCorrelationProcessModelResult(consumerContext, invalidCorrelationId, processModelKey);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /No.*?process instances with correlation id.*?found/i;
+      const expectedErrorMessage = /No.*?process.*?within correlation.*?found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to get the results, if the given process model key does not exist within the given correlation', async () => {
+
+    const invalidProcessModelKey = 'invalidProcessmodelKey';
+
+    try {
+      const results = await testFixtureProvider
+        .consumerApiClientService
+        .getCorrelationProcessModelResult(consumerContext, correlationId, invalidProcessModelKey);
+
+      should.fail(results, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /No.*?process.*?within correlation.*?found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
