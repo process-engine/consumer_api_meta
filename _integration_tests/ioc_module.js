@@ -12,7 +12,7 @@ const registerInContainer = (container) => {
     'test_consumer_api_usertask',
   ];
 
-  return processes.map((processFilename) => registerProcess(processFilename, container));
+  return processes.map((processFilename) => { return registerProcess(processFilename, container); });
 };
 
 const registerProcess = (processFilename, container) => {
