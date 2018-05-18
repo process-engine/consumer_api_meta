@@ -1,6 +1,7 @@
 'use strict';
 
 const should = require('should');
+const uuid = require('uuid');
 
 const startCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
@@ -30,7 +31,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
@@ -48,7 +49,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
     const returnOn = startCallbackType.CallbackOnEndEventReached;
@@ -98,7 +99,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {
         causeError: true,
       },
@@ -127,7 +128,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {
         causeError: true,
       },
@@ -158,7 +159,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'invalidProcessModelKey';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -185,7 +186,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'invalidStartEventKey';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -212,7 +213,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_non_executable_process';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -239,7 +240,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -294,7 +295,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -319,7 +320,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: 'string',
+      correlation_id: uuid.v4(),
       input_values: {
         causeError: true,
       },

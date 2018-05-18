@@ -59,7 +59,8 @@
     "should": "^13.2.1",
     "supertest": "^3.0.0",
     "tsconfig": "^7.0.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.8.3",
+    "uuid": "3.2.1"
   },
   "devDependencies": {
     "cross-env": "^5.1.4",
