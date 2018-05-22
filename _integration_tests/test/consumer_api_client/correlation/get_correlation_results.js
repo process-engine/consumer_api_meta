@@ -14,7 +14,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
   let testFixtureProvider;
   let consumerContext;
   let correlationId;
-  const processModelKey = 'test_consumer_api_process_start';
+  const processModelKey = 'test_consumer_api_correlation_result';
 
   this.timeout(testTimeoutMilliseconds);
 
@@ -51,14 +51,13 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
 
   it('should successfully return the results for the given correlationId', async () => {
 
-    const processResult = await testFixtureProvider
+    const correlationResult = await testFixtureProvider
       .consumerApiClientService
-      .getCorrelationProcessModelResult(consumerContext, correlationId, processModelKey);
+      .getProcessResultForCorrelation(consumerContext, correlationId, processModelKey);
 
-    should.exist(processResult);
-    should(processResult.correlationId).be.equal(correlationId);
-    should(processResult.processModelKey).be.equal(processModelKey);
-    should(processResult).have.property('result');
+    should.exist(correlationResult);
+    should(correlationResult).have.property('scriptOutput');
+    should(correlationResult.scriptOutput).be.match(/hello world/i);
   });
 
   it('should fail to get the results, when the user is unauthorized', async () => {
@@ -66,7 +65,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getCorrelationProcessModelResult({}, correlationId, processModelKey);
+        .getProcessResultForCorrelation({}, correlationId, processModelKey);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
@@ -86,7 +85,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getCorrelationProcessModelResult(consumerContext, invalidCorrelationId, processModelKey);
+        .getProcessResultForCorrelation(consumerContext, invalidCorrelationId, processModelKey);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
@@ -106,7 +105,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getCorrelationProcessModelResult(consumerContext, correlationId, invalidProcessModelKey);
+        .getProcessResultForCorrelation(consumerContext, correlationId, invalidProcessModelKey);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
