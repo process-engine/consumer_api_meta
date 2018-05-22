@@ -3,6 +3,7 @@
     "testuser": [
       "can_start_process",
       "can_view_usertask",
+      "correlation_result_test",
       "Lane A",
       "Lane B"
     ],
