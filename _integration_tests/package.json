@@ -48,7 +48,7 @@
     "@process-engine/consumer_api_contracts": "^0.7.0",
     "@process-engine/consumer_api_core": "^0.9.0",
     "@process-engine/consumer_api_http": "^0.6.0",
-    "@process-engine/process_engine": "^4.0.0",
+    "@process-engine/process_engine": "^4.0.1",
     "@process-engine/process_engine_http": "^2.0.0",
     "@process-engine/process_repository": "^1.1.0",
     "addict-ioc": "^2.3.7",
