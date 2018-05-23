@@ -1,6 +1,7 @@
 'use strict';
 
 const should = require('should');
+const uuid = require('uuid');
 
 const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
@@ -30,7 +31,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -65,7 +66,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -91,7 +92,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -119,7 +120,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -145,7 +146,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'invalidStartEventKey';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -171,7 +172,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'invalidEndEventKey';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -197,7 +198,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -250,7 +251,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {},
     };
 
@@ -274,7 +275,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: 'randomcorrelationid',
+      correlation_id: uuid.v4(),
       input_values: {
         causeError: true,
       },
