@@ -361,7 +361,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     should(result).has.property('correlation_id');
   });
 
-  it('should try to start a process which in a sublane with a user, that has no permissions to access any of the lanes.', async () => {
+  it('should try to start a process which contains a sublane with a user that has no permissions to access any of the lanes.', async () => {
 
     const processModelKey = 'test_consumer_api_sublane_normal_process';
     const startEventKey = 'StartEvent_1';
@@ -385,7 +385,31 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       should(error.message)
         .match(expectedErrorMessage);
     }
-
   });
 
+  it.only('should try to start a process with a sublane and a user, that has only permissions to access the outer lane.', async () => {
+    const processModelKey = 'test_consumer_api_sublane_normal_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {};
+    const laneUserContext = testFixtureProvider.context.singleLaneUser;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(laneUserContext, processModelKey, startEventKey, payload, returnOn);
+
+      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane.');
+
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
+
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
 });
