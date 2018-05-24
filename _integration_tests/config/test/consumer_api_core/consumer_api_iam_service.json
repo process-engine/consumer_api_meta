@@ -11,6 +11,9 @@
       "Lane A",
       "Lane C",
       "Lane D"
+    ],
+    "singlelaneuser": [
+      "Lane A"
     ]
   }
 }

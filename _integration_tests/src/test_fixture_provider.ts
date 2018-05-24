@@ -119,6 +119,11 @@ export class TestFixtureProvider {
         name: 'laneuser',
         password: 'testpass',
         roles: ['dummy'],
+      }, {
+        // Used to test access rights in sublanes
+        name: 'singlelaneuser',
+        password: 'testpass',
+        roles: ['dummy'],
       }];
 
       this.bootstrapper.addFixtures('User', identityFixtures);
@@ -136,6 +141,7 @@ export class TestFixtureProvider {
     this._customerContexts.defaultUser = await this.createConsumerContext('testuser', 'testpass');
     this._customerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
     this._customerContexts.laneUser = await this.createConsumerContext('laneuser', 'testpass');
+    this._customerContexts.singleLaneUser = await this.createConsumerContext('singlelaneuser', 'testpass');
   }
 
   private async createConsumerContext(user: string, password: string): Promise<ConsumerContext> {
