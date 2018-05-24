@@ -12,8 +12,11 @@
       "Lane C",
       "Lane D"
     ],
-    "singlelaneuser": [
+    "singleLaneAUser": [
       "Lane A"
+    ],
+    "singleLaneBUser": [
+      "Lane B"
     ]
   }
 }

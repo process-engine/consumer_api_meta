@@ -387,12 +387,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  it('should try to start a process with a sublane and a user, that has only permissions to access the outer lane.', async () => {
+  it.only('should try to start a process with a sublane and a user, that has only permissions to access the outer lane.', async () => {
     const processModelKey = 'test_consumer_api_sublane_normal_process';
     const startEventKey = 'StartEvent_1';
 
     const payload = {};
-    const laneUserContext = testFixtureProvider.context.singleLaneUser;
+    const laneUserContext = testFixtureProvider.context.singleLaneAUser;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     try {
