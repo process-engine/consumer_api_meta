@@ -439,7 +439,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  it.only('Should execute and sucessfully end a process, where the token travels through two different sublanes', async () => {
+  it('Should execute and sucessfully end a process, where the token travels through two different sublanes', async () => {
     const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
     const startEventKey = 'StartEvent_1';
 
@@ -452,5 +452,57 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
 
     should(result).has.property('correlation_id');
+  });
+
+  it('Should fail to execute a process with two sublanes with a user that is not allowed to execute the lane with the start event', async () => {
+    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {};
+    const userContext = testFixtureProvider.context.singleSublaneCUser;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+
+      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane.');
+
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
+
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it.skip('Should fail to execute a process with two sublanes with a user that is not allowed to execute the lane with the end event', async () => {
+    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {};
+    const userContext = testFixtureProvider.context.singleSublaneDUser;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+
+      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane.');
+
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
+
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
   });
 });

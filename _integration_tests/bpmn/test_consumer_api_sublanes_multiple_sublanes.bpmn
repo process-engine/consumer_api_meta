@@ -11,11 +11,11 @@
         <bpmn:flowNodeRef>EndEvent_0km3262</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_0e8cbxl</bpmn:flowNodeRef>
         <bpmn:childLaneSet>
-          <bpmn:lane id="Lane_1mog19p" name="Lane C">
+          <bpmn:lane id="Lane_1mog19p" name="Lane D">
             <bpmn:flowNodeRef>Task_0i1hhct</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
           </bpmn:lane>
-          <bpmn:lane id="Lane_1en2e65" name="Lane D">
+          <bpmn:lane id="Lane_1en2e65" name="Lane C">
             <bpmn:flowNodeRef>EndEvent_0km3262</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>Task_0e8cbxl</bpmn:flowNodeRef>
           </bpmn:lane>

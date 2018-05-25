@@ -17,6 +17,14 @@
     ],
     "singleLaneBUser": [
       "Lane B"
+    ],
+    "singleSublaneCUser": [
+      "Lane A",
+      "Lane C"
+    ],
+    "singleSublaneDUser": [
+      "Lane A",
+      "Lane D"
     ]
   }
 }
