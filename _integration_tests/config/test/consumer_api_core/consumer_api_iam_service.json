@@ -12,17 +12,17 @@
       "Lane C",
       "Lane D"
     ],
-    "singleLaneAUser": [
+    "userWithAccessToSubLaneA": [
       "Lane A"
     ],
-    "singleLaneBUser": [
+    "userWithAccessToSubLaneB": [
       "Lane B"
     ],
-    "singleSublaneCUser": [
+    "userWithNoAccessToSubLaneD": [
       "Lane A",
       "Lane C"
     ],
-    "singleSublaneDUser": [
+    "userWithNoAccessToSubLaneC": [
       "Lane A",
       "Lane D"
     ]

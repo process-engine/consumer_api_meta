@@ -9,7 +9,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function startProcessInstance() {
+describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function startProcessInstance() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -392,7 +392,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {};
-    const laneUserContext = testFixtureProvider.context.singleLaneAUser;
+    const laneUserContext = testFixtureProvider.context.userWithAccessToSubLaneA;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     try {
@@ -418,7 +418,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {};
-    const laneUserContext = testFixtureProvider.context.singleLaneBUser;
+    const laneUserContext = testFixtureProvider.context.userWithAccessToSubLaneB;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     try {
@@ -459,7 +459,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {};
-    const userContext = testFixtureProvider.context.singleSublaneCUser;
+    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneD;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     try {
@@ -480,12 +480,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  it.only('should successfully execute a process with an end event that is on a different lane in a sublane', async () => {
+  it('should successfully execute a process with an end event that is on a different lane in a sublane', async () => {
     const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
     const startEventKey = 'StartEvent_1';
 
     const payload = {};
-    const userContext = testFixtureProvider.context.singleSublaneDUser;
+    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
     const result = await testFixtureProvider

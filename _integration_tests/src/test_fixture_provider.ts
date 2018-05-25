@@ -121,22 +121,22 @@ export class TestFixtureProvider {
         roles: ['dummy'],
       }, {
         // Used to test access rights in sublanes
-        name: 'singleLaneAUser',
+        name: 'userWithAccessToSubLaneA',
         password: 'testpass',
         roles: ['dummy'],
       }, {
         // Used to test access rights in sublanes
-        name: 'singleLaneBUser',
+        name: 'userWithAccessToSubLaneB',
         password: 'testpass',
         roles: ['dummy'],
       }, {
         // Used to test access rights in multiple sublanes
-        name: 'singleSublaneCUser',
+        name: 'userWithNoAccessToSubLaneD',
         password: 'testpass',
         roles: ['dummy'],
       }, {
         // Used to test access rights in multiple sublanes
-        name: 'singleSublaneDUser',
+        name: 'userWithNoAccessToSubLaneC',
         password: 'testpass',
         roles: ['dummy'],
       },
@@ -157,10 +157,10 @@ export class TestFixtureProvider {
     this._customerContexts.defaultUser = await this.createConsumerContext('testuser', 'testpass');
     this._customerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
     this._customerContexts.laneUser = await this.createConsumerContext('laneuser', 'testpass');
-    this._customerContexts.singleLaneAUser = await this.createConsumerContext('singleLaneAUser', 'testpass');
-    this._customerContexts.singleLaneBUser = await this.createConsumerContext('singleLaneBUser', 'testpass');
-    this._customerContexts.singleSublaneCUser = await this.createConsumerContext('singleSublaneCUser', 'testpass');
-    this._customerContexts.singleSublaneDUser = await this.createConsumerContext('singleSublaneDUser', 'testpass');
+    this._customerContexts.userWithAccessToSubLaneA = await this.createConsumerContext('userWithAccessToSubLaneA', 'testpass');
+    this._customerContexts.userWithAccessToSubLaneB = await this.createConsumerContext('userWithAccessToSubLaneB', 'testpass');
+    this._customerContexts.userWithNoAccessToSubLaneD = await this.createConsumerContext('userWithNoAccessToSubLaneD', 'testpass');
+    this._customerContexts.userWithNoAccessToSubLaneC = await this.createConsumerContext('userWithNoAccessToSubLaneC', 'testpass');
   }
 
   private async createConsumerContext(user: string, password: string): Promise<ConsumerContext> {
