@@ -467,7 +467,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
         .consumerApiClientService
         .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
 
-      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane.');
+      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
     } catch (error) {
       const expectedErrorCode = 403;
@@ -480,7 +480,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     }
   });
 
-  it.skip('Should fail to execute a process with two sublanes with a user that is not allowed to execute the lane with the end event', async () => {
+  it.only('should successfully execute a process with an end event that is on a different lane in a sublane', async () => {
     const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
     const startEventKey = 'StartEvent_1';
 
@@ -488,21 +488,10 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const userContext = testFixtureProvider.context.singleSublaneDUser;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
-    try {
-      const result = await testFixtureProvider
-        .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
 
-      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane.');
-
-    } catch (error) {
-      const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
-
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
+    should(result).has.property('correlation_id');
   });
 });
