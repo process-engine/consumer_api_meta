@@ -128,7 +128,7 @@ export class TestFixtureProvider {
         // Used to test access rights in sublanes
         name: 'singleLaneBUser',
         password: 'testpass',
-        roles: ['dummy']
+        roles: ['dummy'],
       }];
 
       this.bootstrapper.addFixtures('User', identityFixtures);
