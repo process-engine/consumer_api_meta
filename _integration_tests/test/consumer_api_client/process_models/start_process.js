@@ -438,4 +438,19 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
         .match(expectedErrorMessage);
     }
   });
+
+  it.only('Should execute and sucessfully end a process, where the token travels through two different sublanes', async () => {
+    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {};
+    const laneuserContext = testFixtureProvider.context.laneUser;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
+
+    should(result).has.property('correlation_id');
+  });
 });
