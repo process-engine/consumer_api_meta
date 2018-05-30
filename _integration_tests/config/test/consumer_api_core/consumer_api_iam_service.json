@@ -25,6 +25,10 @@
     "userWithNoAccessToSubLaneC": [
       "Lane A",
       "Lane D"
+    ],
+    "userWithNoAccessToLaneA": [
+      "Lane C",
+      "Lane D"
     ]
   }
 }

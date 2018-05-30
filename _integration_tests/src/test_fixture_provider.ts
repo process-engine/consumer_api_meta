@@ -139,6 +139,11 @@ export class TestFixtureProvider {
         name: 'userWithNoAccessToSubLaneC',
         password: 'testpass',
         roles: ['dummy'],
+      }, {
+        // Used to test access rights when the process is nested in a sublane
+        name: 'userWithNoAccessToLaneA',
+        password: 'testpass',
+        roles: ['dummy'],
       },
     ];
 
@@ -161,6 +166,7 @@ export class TestFixtureProvider {
     this._customerContexts.userWithAccessToSubLaneB = await this.createConsumerContext('userWithAccessToSubLaneB', 'testpass');
     this._customerContexts.userWithNoAccessToSubLaneD = await this.createConsumerContext('userWithNoAccessToSubLaneD', 'testpass');
     this._customerContexts.userWithNoAccessToSubLaneC = await this.createConsumerContext('userWithNoAccessToSubLaneC', 'testpass');
+    this._customerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA', 'testpass');
   }
 
   private async createConsumerContext(user: string, password: string): Promise<ConsumerContext> {
