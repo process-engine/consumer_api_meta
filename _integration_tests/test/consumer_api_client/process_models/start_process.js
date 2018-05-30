@@ -345,10 +345,15 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
   });
 
   it('Should sucessfully execute a process, with two different sublanes', async () => {
-    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
 
-    const payload = {};
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
     const laneuserContext = testFixtureProvider.context.laneUser;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
@@ -360,10 +365,15 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
   });
 
   it('should successfully execute a process with an end event that is on a different sublane', async () => {
-    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
 
-    const payload = {};
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
     const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
@@ -375,10 +385,15 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
   });
 
   it('Should fail to execute a process with two sublanes and a user that is not allowed to execute the lane with the start event', async () => {
-    const processModelKey = 'test_consumer_api_sublane_multiple_sublanes_process';
+    const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
 
-    const payload = {};
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
     const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneD;
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
