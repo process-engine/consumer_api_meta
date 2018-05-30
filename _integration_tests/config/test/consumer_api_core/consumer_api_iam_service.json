@@ -11,6 +11,24 @@
       "Lane A",
       "Lane C",
       "Lane D"
+    ],
+    "userWithAccessToSubLaneA": [
+      "Lane A"
+    ],
+    "userWithAccessToSubLaneB": [
+      "Lane B"
+    ],
+    "userWithNoAccessToSubLaneD": [
+      "Lane A",
+      "Lane C"
+    ],
+    "userWithNoAccessToSubLaneC": [
+      "Lane A",
+      "Lane D"
+    ],
+    "userWithNoAccessToLaneA": [
+      "Lane C",
+      "Lane D"
     ]
   }
 }

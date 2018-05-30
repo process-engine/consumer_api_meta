@@ -11,6 +11,7 @@ const registerInContainer = (container) => {
     'test_consumer_api_non_executable_process',
     'test_consumer_api_process_start',
     'test_consumer_api_usertask',
+    'test_consumer_api_sublane_process',
   ];
 
   return processes.map((processFilename) => { return registerProcess(processFilename, container); });
