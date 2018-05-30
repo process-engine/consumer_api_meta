@@ -9,7 +9,7 @@ const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provide
 
 const testTimeoutMilliseconds = 5000;
 
-describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function startProcessInstance() {
+describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start', function startProcessInstance() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -92,6 +92,46 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
 
     should(result).have.property('correlation_id');
     should(result.correlation_id).be.a.String();
+  });
+
+  it('should sucessfully execute a process with two different sublanes', async () => {
+    const processModelKey = 'test_consumer_api_sublane_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
+    const laneuserContext = testFixtureProvider.context.laneUser;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
+
+    should(result).have.property('correlation_id');
+  });
+
+  it('should successfully execute a process with an end event that is on a different sublane', async () => {
+    const processModelKey = 'test_consumer_api_sublane_process';
+    const startEventKey = 'StartEvent_1';
+
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
+    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+
+    should(result).have.property('correlation_id');
   });
 
   it('should fail to start the process, when the user is unauthorized', async () => {
@@ -292,7 +332,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
   // TODO: Find a way to simulate a start event error
   it.skip('should fail, if starting the request caused an error', async () => {
 
-    const processModelKey = 'test_consumer_a pi_process_start';
+    const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
       correlation_id: uuid.v4(),
@@ -344,47 +384,7 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
     }
   });
 
-  it('Should sucessfully execute a process, with two different sublanes', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-
-    const payload = {
-      input_values: {
-        test_config: 'different_lane',
-      },
-    };
-
-    const laneuserContext = testFixtureProvider.context.laneUser;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
-
-    const result = await testFixtureProvider
-      .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
-
-    should(result).have.property('correlation_id');
-  });
-
-  it('should successfully execute a process with an end event that is on a different sublane', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-
-    const payload = {
-      input_values: {
-        test_config: 'different_lane',
-      },
-    };
-
-    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
-
-    const result = await testFixtureProvider
-      .consumerApiClientService
-      .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
-
-    should(result).have.property('correlation_id');
-  });
-
-  it('Should fail to execute a process with two sublanes and a user that is not allowed to execute the lane with the start event', async () => {
+  it('should fail to execute a process with two sublanes and a user that is not allowed to execute the lane with the start event', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
 
@@ -404,6 +404,36 @@ describe.only('Consumer API:   POST  ->  /process_models/:process_model_key/star
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
+
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to execute a process with a user that has no access to the parent lane', async () => {
+    const processModelKey = 'test_consumer_api_sublane_process';
+    const startEventKey = 'Start_Event_1';
+
+    const payload = {
+      input_values: {
+        test_config: 'different_lane',
+      },
+    };
+
+    const userContext = testFixtureProvider.context.userWithNoAccessToLaneA;
+    const returnOn = startCallbackType.CallbackOnEndEventReached;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+
+      should.fail(result, undefined, 'The user can execute the process even if he has no access rights to the parent lane.');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /not allowed/i;
