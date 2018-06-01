@@ -11,7 +11,8 @@ consumer_api_http
 *.DS_Store
 
 # IDE configs
-.vscode
+.vscode/*
+!.vscode/launch.json
 .idea/
 *.iml
 *.iws
