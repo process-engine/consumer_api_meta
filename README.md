@@ -153,8 +153,6 @@ meta git push
 This meta repository is shipped with a configuration for the visual studio code debugger. 
 
 ### Usage of the VS Code Debugger
-
-#### Open VSCode in the right directory
 To use the Debugger, open VSCode inside the *consumer_api_meta* directory.
 
 #### Start a debugging session
@@ -170,11 +168,9 @@ If you're all set up, click the play button again. The debugger will continue un
 ### Debugging Dependencies
 You can set breakpoint in dependent modules before you start a debugging session. 
 
-To do that, you have to open the class where you want to set premature breakpoints over the *node_modules* directory. 
+To do that, you have to open the module in question through the `node-modules` folder.
 
-For example, you are currently working on integration tests and want to set breakpoints in the `NodeInstance` class of the `process-engine` dependency.
-
-The path of the `node_instance.ts` file you want to open should therefor look like this:
+For example if you want to debug the `node_instance.ts` file in the `process-engine` module, you would use the following path:
 ```
 process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
 ```
