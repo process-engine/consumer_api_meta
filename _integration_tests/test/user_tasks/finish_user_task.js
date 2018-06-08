@@ -2,7 +2,7 @@
 
 const should = require('should');
 
-const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
@@ -168,7 +168,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    await startProcessAndReturnCorrelationId(processModelKey);
+    const invalidCorrelationId = 'invalidCorrelationId';
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -182,8 +183,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
         Form_XGSVBgio: true,
       },
     };
-
-    const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
       await testFixtureProvider
@@ -224,6 +223,44 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       await testFixtureProvider
         .consumerApiClientService
         .finishUserTask(consumerContext, processModelKey, correlationId, invalidUserTaskId, userTaskResult);
+
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to finish an already finished user task.', async () => {
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      form_fields: {
+        Form_XGSVBgio: true,
+      },
+    };
+
+    await testFixtureProvider
+      .consumerApiClientService
+      .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
