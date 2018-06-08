@@ -155,6 +155,16 @@ This meta repository is shipped with a configuration for the visual studio code 
 ### Usage of the VS Code Debugger
 To use the Debugger, open VSCode inside the *consumer_api_meta* directory.
 
+### Settings breakpoints
+You can set breakpoint in dependent modules before you start a debugging session. 
+
+To do that, you have to open the module in question through the `node-modules` folder.
+
+For example if you want to debug the `node_instance.ts` file in the `process-engine` module, you would use the following path:
+```
+process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
+```
+
 #### Start a debugging session
 You can start a debugging session as follows: 
 1. Navigate to the debugger tab
@@ -165,17 +175,7 @@ After starting, the debugger will break at the first executed line of code.
 
 If you're all set up, click the play button again. The debugger will continue until it reaches a breakpoint or the end of execution.
 
-### Debugging Dependencies
-You can set breakpoint in dependent modules before you start a debugging session. 
-
-To do that, you have to open the module in question through the `node-modules` folder.
-
-For example if you want to debug the `node_instance.ts` file in the `process-engine` module, you would use the following path:
-```
-process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
-```
-
-Another way would be to simply open the script files where you want to set break points over the loaded modules panel in the debugger view.
+You can also set breakpoints in loaded modules by using the _loaded modules_ panel in the debugger tab.
 
 This is due to the fact that VSCode follows symlinks to their destination.
 Node, on the other hand, resolves symlinks to absolute paths. 
