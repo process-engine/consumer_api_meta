@@ -158,9 +158,9 @@ To use the Debugger, open VSCode inside the *consumer_api_meta* directory.
 ### Settings breakpoints
 You can set breakpoint in dependent modules before you start a debugging session. 
 
-To do that, you have to open the module in question through the `node-modules` folder.
+To do that, you have to open the module in question through the `node_modules` folder.
 
-For example if you want to debug the `node_instance.ts` file in the `process-engine` module, you would use the following path:
+For example, if you want to debug the `node_instance.ts` file in the `process-engine` module, you would use the following path:
 ```
 process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
 ```
