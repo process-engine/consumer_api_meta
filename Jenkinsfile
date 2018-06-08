@@ -98,7 +98,7 @@ pipeline {
         }
       }
     }
-    stage('Consumer Tests') {
+    stage('Consumer API Tests') {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
