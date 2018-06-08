@@ -228,7 +228,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /UserTask .+ not found/i;
+      const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
