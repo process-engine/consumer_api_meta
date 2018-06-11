@@ -150,12 +150,15 @@ meta git push
 * Runs `git push` in each module specified in the `.meta`-file individually
 
 ## 4. VSCode Debugger configuration
+
 This meta repository is shipped with a configuration for the visual studio code debugger. 
 
-### Usage of the VS Code Debugger
+### 4.1 Usage of the VS Code Debugger
+
 To use the Debugger, open VSCode inside the *consumer_api_meta* directory.
 
-### Settings breakpoints
+### 4.2 Settings breakpoints
+
 You can set breakpoint in dependent modules before you start a debugging session. 
 
 To do that, you have to open the module in question through the `node_modules` folder.
@@ -166,6 +169,7 @@ process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_ins
 ```
 
 #### Start a debugging session
+
 You can start a debugging session as follows: 
 1. Navigate to the debugger tab
 2. Select the configuration that matches your current project
