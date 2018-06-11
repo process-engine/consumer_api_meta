@@ -60,6 +60,27 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlation_id).be.a.String();
   });
 
+  it.only('should sucessfully execute a process, where two lanes are nested in a sublane', async () => {
+    const processModelKey = 'test_consumer_api_sublane_process';
+    const startEventKey = 'StartEvent_1';
+    const endEventKey = 'EndEvent_1';
+
+    const payload = {
+      input_values: {
+        test_config: 'same_lane',
+      },
+    };
+
+    const laneuserContext = testFixtureProvider.context.laneUser;
+
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstanceAndAwaitEndEvent(laneuserContext, processModelKey, startEventKey, endEventKey, payload);
+
+    should(result).have.property('correlation_id');
+    console.log(result);
+  });
+
   it('should fail to start the process, when the user is unauthorized', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
