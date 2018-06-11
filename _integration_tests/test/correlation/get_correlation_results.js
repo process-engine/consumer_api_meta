@@ -34,8 +34,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
 
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
@@ -43,10 +43,10 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.equal(payload.correlation_id);
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.equal(payload.correlationId);
 
-    return result.correlation_id;
+    return result.correlationId;
   }
 
   it('should successfully return the results for the given correlationId', async () => {

@@ -31,8 +31,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
@@ -40,8 +40,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.equal(payload.correlation_id);
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.equal(payload.correlationId);
   });
 
   it('should start the process and return the correlation ID (return_on = on_process_instance_finished)', async () => {
@@ -49,8 +49,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
     const returnOn = startCallbackType.CallbackOnEndEventReached;
 
@@ -58,8 +58,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.equal(payload.correlation_id);
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.equal(payload.correlationId);
   });
 
   it('should start the process and return a generated correlation ID, when none is provided', async () => {
@@ -67,7 +67,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      input_values: {},
+      inputValues: {},
     };
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
 
@@ -75,7 +75,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
+    should(result).have.property('correlationId');
   });
 
   it('should start the process with using \'on_process_instance_started\' as a default value for return_on', async () => {
@@ -83,15 +83,15 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      input_values: {},
+      inputValues: {},
     };
 
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.a.String();
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.a.String();
   });
 
   it('should sucessfully execute a process with two different sublanes', async () => {
@@ -99,7 +99,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'different_lane',
       },
     };
@@ -111,7 +111,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .consumerApiClientService
       .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
+    should(result).have.property('correlationId');
   });
 
   it('should successfully execute a process with an end event that is on a different sublane', async () => {
@@ -119,7 +119,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'different_lane',
       },
     };
@@ -131,7 +131,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       .consumerApiClientService
       .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
 
-    should(result).have.property('correlation_id');
+    should(result).have.property('correlationId');
   });
 
   it('should fail to start the process, when the user is unauthorized', async () => {
@@ -139,8 +139,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {
+      correlationId: uuid.v4(),
+      inputValues: {
         causeError: true,
       },
     };
@@ -168,8 +168,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {
+      correlationId: uuid.v4(),
+      inputValues: {
         causeError: true,
       },
     };
@@ -199,8 +199,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'invalidProcessModelKey';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
@@ -226,8 +226,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'invalidStartEventKey';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
@@ -253,8 +253,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_non_executable_process';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
@@ -280,8 +280,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const returnOn = 'invalidReturnOption';
@@ -335,8 +335,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
@@ -359,8 +359,8 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {
+      correlationId: uuid.v4(),
+      inputValues: {
         causeError: true,
       },
     };
@@ -389,7 +389,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'different_lane',
       },
     };
@@ -420,7 +420,7 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'Start_Event_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'different_lane',
       },
     };

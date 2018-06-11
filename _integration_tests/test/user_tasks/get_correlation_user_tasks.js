@@ -28,10 +28,10 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3');
 
-    return result.correlation_id;
+    return result.correlationId;
   }
 
-  it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
+  it('should return a correlation\'s user tasks by its correlationId through the consumer api', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
@@ -46,15 +46,15 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
       .consumerApiClientService
       .getUserTasksForCorrelation(consumerContext, correlationId);
 
-    should(userTaskList).have.property('user_tasks');
+    should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.user_tasks).be.instanceOf(Array);
-    should(userTaskList.user_tasks.length).be.greaterThan(0);
+    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks.length).be.greaterThan(0);
 
-    userTaskList.user_tasks.forEach((userTask) => {
+    userTaskList.userTasks.forEach((userTask) => {
       should(userTask).have.property('key');
       should(userTask).have.property('id');
-      should(userTask).have.property('process_instance_id');
+      should(userTask).have.property('processInstanceId');
       should(userTask).have.property('data');
     });
   });
@@ -108,7 +108,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     }
   });
 
-  it('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
