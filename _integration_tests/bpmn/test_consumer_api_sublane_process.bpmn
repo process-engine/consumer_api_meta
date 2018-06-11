@@ -50,10 +50,10 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[token.current.test_config === 'same_lane']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_07n5it8" sourceRef="Task_0ukwbko" targetRef="EndEvent_1" />
-    <bpmn:scriptTask id="Task_0ukwbko" name="Write &#34;Hello Lane A&#34; to the console">
+    <bpmn:scriptTask id="Task_0ukwbko" name="Write &#34;Hello Lane D&#34; to the console">
       <bpmn:incoming>SequenceFlow_1wy0fnk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_07n5it8</bpmn:outgoing>
-      <bpmn:script><![CDATA[console.log('Hello Lane A');]]></bpmn:script>
+      <bpmn:script><![CDATA[console.log('Hello Lane D');]]></bpmn:script>
     </bpmn:scriptTask>
     <bpmn:startEvent id="StartEvent_1" name="Start">
       <bpmn:outgoing>SequenceFlow_06ggshv</bpmn:outgoing>
