@@ -7,4 +7,6 @@ echo "Done. Starting setup..."
 npm install --no-package-lock
 
 # build all packages and schemas
-meta exec "npm run build" --exclude consumer_api_meta
+meta exec "npm run build && npm run build-schemas" --exclude consumer_api_meta
+
+echo "done"
