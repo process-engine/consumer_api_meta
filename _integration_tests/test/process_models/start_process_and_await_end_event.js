@@ -401,7 +401,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     }
   });
 
-  it.only('should fail to execute the process, if the user has only access to the root lane.', async () => {
+  it('should fail to execute the process, if the user has only access to the root lane.', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -432,5 +432,34 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     }
   });
 
+  it('should fail to execute the process, if the user has no access to the root lane.', async () => {
+    const processModelKey = 'test_consumer_api_sublane_process';
+    const startEventKey = 'StartEvent_1';
+    const endEventKey = 'EndEvent_1';
 
+    const payload = {
+      input_values: {
+        test_config: 'same_lane',
+      },
+    };
+
+    const userContext = testFixtureProvider.context.userWithNoAccessToLaneA;
+
+    try {
+      const result = await testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
+
+      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
+
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
+
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
 });
