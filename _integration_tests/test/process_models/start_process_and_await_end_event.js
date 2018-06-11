@@ -355,7 +355,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
