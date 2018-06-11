@@ -60,7 +60,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlation_id).be.a.String();
   });
 
-  it('should successfully execute a process, where two lanes are nested in a sublane', async () => {
+  it('should execute a process with a root lane and two sublanes', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -81,7 +81,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlation_id).be.a.String();
   });
 
-  it('should successfully execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
+  it('should execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -339,7 +339,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     }
   });
 
-  it('should fail to execute a process with two sublanes and a user that is not allowed to execute the lane with the start event', async () => {
+  it('should fail to execute a process with a user that is not allowed to access the sublane with the start event', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -401,7 +401,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     }
   });
 
-  it('should fail to execute the process, if the user has only access to the root lane.', async () => {
+  it('should fail to start the process, if the user has only access to the root lane.', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -432,7 +432,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     }
   });
 
-  it('should fail to execute the process, if the user has no access to the root lane.', async () => {
+  it('should fail to start the process, if the user has no access to the root lane.', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
