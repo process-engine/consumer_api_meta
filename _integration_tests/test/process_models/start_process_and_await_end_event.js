@@ -60,7 +60,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlation_id).be.a.String();
   });
 
-  it('should sucessfully execute a process, where two lanes are nested in a sublane', async () => {
+  it('should successfully execute a process, where two lanes are nested in a sublane', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -81,7 +81,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlation_id).be.a.String();
   });
 
-  it('should sucessfully execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
+  it('should successfully execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
