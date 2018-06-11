@@ -2,30 +2,39 @@
 
 const should = require('should');
 
-const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks', function getUserTasksForProcessModel() {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', function getUserTasksForCorrelation() {
 
   let testFixtureProvider;
-  let defaultUserContext;
+  let consumerContext;
 
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    defaultUserContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
   after(async () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
+  async function startProcessAndReturnCorrelationId(processModelKey) {
+    const result = await testFixtureProvider
+      .consumerApiClientService
+      .startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3');
 
-    const processModelKey = 'consumer_api_usertask_test';
+    return result.correlation_id;
+  }
+
+  it('should return a correlation\'s user tasks by its correlation_id through the consumer api', async () => {
+
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -35,9 +44,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getUserTasksForProcessModel(defaultUserContext, processModelKey);
+      .getUserTasksForCorrelation(consumerContext, correlationId);
 
     should(userTaskList).have.property('user_tasks');
+
     should(userTaskList.user_tasks).be.instanceOf(Array);
     should(userTaskList.user_tasks.length).be.greaterThan(0);
 
@@ -49,33 +59,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     });
   });
 
-  it('should return an empty user task list, if the given process model does not have any user tasks', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    const userTaskList = await testFixtureProvider
-      .consumerApiClientService
-      .getUserTasksForProcessModel(defaultUserContext, processModelKey);
-
-    should(userTaskList).have.property('user_tasks');
-    should(userTaskList.user_tasks).be.instanceOf(Array);
-    should(userTaskList.user_tasks.length).be.equal(0);
-  });
-
-  it('should fail to retrieve the process model\'s user tasks, when the user is unauthorized', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
+    const correlationId = 'test_consumer_api_process_start';
 
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForProcessModel({}, processModelKey);
+        .getUserTasksForCorrelation({}, correlationId);
 
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
@@ -88,15 +79,23 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     }
   });
 
-  it('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'consumer_api_usertask_test';
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
     const restrictedContext = testFixtureProvider.context.restrictedUser;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
 
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForProcessModel(restrictedContext, processModelKey);
+        .getUserTasksForCorrelation(restrictedContext, correlationId);
 
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
@@ -109,14 +108,23 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/user_tasks
     }
   });
 
-  it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve the correlation\'s user tasks, if the correlation_id does not exist', async () => {
 
-    const invalidProcessModelKey = 'invalidProcessModelKey';
+    const processModelKey = 'consumer_api_lane_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForProcessModel(defaultUserContext, invalidProcessModelKey);
+        .getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {

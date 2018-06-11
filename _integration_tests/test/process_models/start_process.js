@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 const startCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
-const TestFixtureProvider = require('../../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
 
