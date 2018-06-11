@@ -170,25 +170,36 @@ meta git push
 This meta repository is shipped with a configuration for the visual studio
 code debugger.
 
-### 4.1 Usage of the VS Code Debugger
+To use the Debugger, *consumer_api_meta* must be opened as a Top-Level project.
+Otherwise, VSCode will not be able to find the config file.
 
-To use the Debugger, open VSCode inside the *consumer_api_meta* directory.
+### 4.1 Settings breakpoints
 
-### 4.2 Settings breakpoints
+You can either set breakpoints prior to launching the application or
+during runtime.
 
-You can set breakpoint in dependent modules before you start a debugging session. 
+For VSCode to discover them, you have to open the module in question
+through the `node_modules` folder.
 
-To do that, you have to open the module in question through the
-`node_modules` folder.
+This is due to the fact that VSCode follows symlinks to their destination.
+Node, on the other hand, resolves symlinks to absolute paths. 
+Which means, if we want to use the debugger, we need to force node to preserve
+the symlinks.
+Because of this, we need to navigate to the target module through the
+`node_modules` folder. 
 
+Example:
 If you want to debug the `node_instance.ts` file in the `process-engine` module,
 you would use the following path:
 
 ```
-process-engine-meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
+consumer_api_meta/_integration_tests/node-modules/@process-engine/src/node_instance.ts
 ```
 
-#### Start a debugging session
+You can also set breakpoints during runtime, by using the loaded modules_ panel
+from the `debugger` tab.
+
+#### 4.2 Start a debugging session
 
 You can start a debugging session as follows: 
 1. Navigate to the debugger tab
@@ -197,15 +208,6 @@ You can start a debugging session as follows:
 
 After starting, the debugger will break at the first executed line of code.
 
-If you're all set up, click the play button again. The debugger will continue
-until it reaches a breakpoint or the end of execution.
-
-You can also set breakpoints in loaded modules by using the
-_loaded modules_ panel in the debugger tab.
-
-This is due to the fact that VSCode follows symlinks to their destination.
-Node, on the other hand, resolves symlinks to absolute paths. 
-Which means, if we want to use the debugger, we need to force node to preserve
-the symlinks.
-Because of this, we need to navigate to the target module through the
-`node_modules` folder. 
+Click the play button again to start the debugging process.
+The debugger will continue until it reaches a breakpoint or the end of
+the program.
