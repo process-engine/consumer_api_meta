@@ -66,7 +66,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'same_lane',
       },
     };
@@ -77,8 +77,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(laneuserContext, processModelKey, startEventKey, endEventKey, payload);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.a.String();
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.a.String();
   });
 
   it('should execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
@@ -87,7 +87,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'same_lane',
       },
     };
@@ -98,8 +98,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(laneuserContext, processModelKey, startEventKey, endEventKey, payload);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.a.String();
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.a.String();
   });
 
   it('should fail to start the process, when the user is unauthorized', async () => {
@@ -345,7 +345,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'same_lane',
       },
     };
@@ -376,7 +376,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_2';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'different_lane',
       },
     };
@@ -391,8 +391,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
     } catch (error) {
-      const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /not found/i;
 
       should(error.code)
         .match(expectedErrorCode);
@@ -407,7 +407,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'same_lane',
       },
     };
@@ -438,7 +438,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const endEventKey = 'EndEvent_1';
 
     const payload = {
-      input_values: {
+      inputValues: {
         test_config: 'same_lane',
       },
     };
