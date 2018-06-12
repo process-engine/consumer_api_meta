@@ -31,16 +31,16 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.equal(payload.correlation_id);
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.equal(payload.correlationId);
   });
 
   it('should start the process, wait until the end event was reached and return a generated correlation ID, when none is provided', async () => {
@@ -49,15 +49,15 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      input_values: {},
+      inputValues: {},
     };
 
     const result = await testFixtureProvider
       .consumerApiClientService
       .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
 
-    should(result).have.property('correlation_id');
-    should(result.correlation_id).be.a.String();
+    should(result).have.property('correlationId');
+    should(result.correlationId).be.a.String();
   });
 
   it('should execute a process with a root lane and two sublanes', async () => {
@@ -108,8 +108,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -134,8 +134,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
@@ -162,8 +162,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -188,8 +188,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'invalidStartEventKey';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -214,8 +214,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'invalidEndEventKey';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -240,8 +240,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -293,8 +293,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {},
+      correlationId: uuid.v4(),
+      inputValues: {},
     };
 
     try {
@@ -317,8 +317,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_Success';
     const payload = {
-      correlation_id: uuid.v4(),
-      input_values: {
+      correlationId: uuid.v4(),
+      inputValues: {
         causeError: true,
       },
     };

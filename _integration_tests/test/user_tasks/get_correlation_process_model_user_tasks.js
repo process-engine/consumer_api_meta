@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider')
 
 const testTimeoutMilliseconds = 5000;
 
-const testCase = 'GET  ->  /process_models/:process_model_key/correlations/:correlation_id/user_tasks';
+const testCase = 'GET  ->  /process_models/:process_model_key/correlations/:correlation_id/userTasks';
 describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorrelation() {
 
   let testFixtureProvider;
@@ -29,7 +29,7 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, 'StartEvent_0yfvdj3');
 
-    return result.correlation_id;
+    return result.correlationId;
   }
 
   it('should return a list of user tasks for a given process model in a given correlation', async () => {
@@ -47,15 +47,15 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
       .consumerApiClientService
       .getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
 
-    should(userTaskList).have.property('user_tasks');
+    should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.user_tasks).be.instanceOf(Array);
-    should(userTaskList.user_tasks.length).be.greaterThan(0);
+    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks.length).be.greaterThan(0);
 
-    userTaskList.user_tasks.forEach((userTask) => {
+    userTaskList.userTasks.forEach((userTask) => {
       should(userTask).have.property('key');
       should(userTask).have.property('id');
-      should(userTask).have.property('process_instance_id');
+      should(userTask).have.property('processInstanceId');
       should(userTask).have.property('data');
     });
   });
@@ -144,7 +144,7 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     }
   });
 
-  it('should fail to retrieve a list of user tasks, if the correlation_id does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the correlationId does not exist', async () => {
 
     const processModelKey = 'consumer_api_lane_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
