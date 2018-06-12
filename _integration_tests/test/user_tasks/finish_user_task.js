@@ -29,7 +29,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, 'StartEvent_1');
 
-    return result.correlation_id;
+    return result.correlationId;
   }
 
   it('should successfully finish the given user task.', async () => {
@@ -45,7 +45,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -69,7 +69,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -104,7 +104,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -141,7 +141,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -179,7 +179,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -214,7 +214,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const invalidUserTaskId = 'invalidUserTaskId';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };
@@ -248,7 +248,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
-      form_fields: {
+      formFields: {
         Form_XGSVBgio: true,
       },
     };

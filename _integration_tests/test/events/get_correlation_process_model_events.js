@@ -37,11 +37,11 @@ describe('Consumer API GET  ->  /process_models/:process_model_key/correlations/
     should(eventList.events).be.instanceOf(Array);
     should(eventList.events.length).be.greaterThan(0);
 
-    eventList.events.forEach((userTask) => {
-      should(userTask).have.property('key');
-      should(userTask).have.property('id');
-      should(userTask).have.property('process_instance_id');
-      should(userTask).have.property('data');
+    eventList.events.forEach((event) => {
+      should(event).have.property('key');
+      should(event).have.property('id');
+      should(event).have.property('processInstanceId');
+      should(event).have.property('data');
     });
   });
 

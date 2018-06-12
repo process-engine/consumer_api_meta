@@ -6,7 +6,7 @@ const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider')
 
 const testTimeoutMilliseconds = 5000;
 
-describe('Consumer API:   GET  ->  /process_models', function getProcessModels() {
+describe('Consumer API:   GET  ->  /processModels', function getProcessModels() {
 
   let testFixtureProvider;
   let consumerContext;
@@ -29,12 +29,12 @@ describe('Consumer API:   GET  ->  /process_models', function getProcessModels()
       .consumerApiClientService
       .getProcessModels(consumerContext);
 
-    should(processModelList).have.property('process_models');
+    should(processModelList).have.property('processModels');
 
-    should(processModelList.process_models).be.instanceOf(Array);
-    should(processModelList.process_models.length).be.greaterThan(0);
+    should(processModelList.processModels).be.instanceOf(Array);
+    should(processModelList.processModels.length).be.greaterThan(0);
 
-    processModelList.process_models.forEach((processModel) => {
+    processModelList.processModels.forEach((processModel) => {
       should(processModel).have.property('key');
       should(processModel).have.property('startEvents');
       should(processModel.startEvents).be.instanceOf(Array);
@@ -49,11 +49,11 @@ describe('Consumer API:   GET  ->  /process_models', function getProcessModels()
       .consumerApiClientService
       .getProcessModels(restrictedContext);
 
-    should(processModelList).have.property('process_models');
+    should(processModelList).have.property('processModels');
 
-    should(processModelList.process_models).be.instanceOf(Array);
+    should(processModelList.processModels).be.instanceOf(Array);
 
-    processModelList.process_models.forEach((processModel) => {
+    processModelList.processModels.forEach((processModel) => {
       should(processModel).have.property('key');
       should(processModel.key).not.be('test_consumer_api_process_start');
       should(processModel).have.property('startEvents');
@@ -67,11 +67,11 @@ describe('Consumer API:   GET  ->  /process_models', function getProcessModels()
       .consumerApiClientService
       .getProcessModels(consumerContext);
 
-    should(processModelList).have.property('process_models');
+    should(processModelList).have.property('processModels');
 
-    should(processModelList.process_models).be.instanceOf(Array);
+    should(processModelList.processModels).be.instanceOf(Array);
 
-    processModelList.process_models.forEach((processModel) => {
+    processModelList.processModels.forEach((processModel) => {
       should(processModel).have.property('key');
       should(processModel).have.property('startEvents');
       should(processModel.startEvents).be.instanceOf(Array);

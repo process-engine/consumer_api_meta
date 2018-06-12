@@ -39,7 +39,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', f
     eventList.events.forEach((userTask) => {
       should(userTask).have.property('key');
       should(userTask).have.property('id');
-      should(userTask).have.property('process_instance_id');
+      should(userTask).have.property('processInstanceId');
       should(userTask).have.property('data');
     });
   });
