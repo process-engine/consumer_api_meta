@@ -60,7 +60,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlationId).be.a.String();
   });
 
-  it('should execute a process with a root lane and two sublanes', async () => {
+  it('should execute a process with sublanes, if the user can access all lanes', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -81,7 +81,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     should(result.correlationId).be.a.String();
   });
 
-  it('should execute a process with two sublanes and a user, which only has access to the current sublane', async () => {
+  it('should execute a process with sublanes, if the user can only access one lane and process execution never changes sublanes', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
