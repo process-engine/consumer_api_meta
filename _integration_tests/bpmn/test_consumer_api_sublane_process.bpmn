@@ -31,7 +31,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1tm93se" sourceRef="Task_0e8cbxl" targetRef="EndEvent_2" />
     <bpmn:sequenceFlow id="SequenceFlow_1n8yxzw" name="Different lane test" sourceRef="ExclusiveGateway_1ax0imj" targetRef="Task_0e8cbxl">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[token.current.test_config === 'different_lane']]></bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">token.current.test_config === 'different_lane'</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="EndEvent_1" name="End">
       <bpmn:incoming>SequenceFlow_07n5it8</bpmn:incoming>
@@ -44,16 +44,16 @@
     <bpmn:scriptTask id="Task_0e8cbxl" name="Write &#34;Hello Lane C&#34; to the console">
       <bpmn:incoming>SequenceFlow_1n8yxzw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tm93se</bpmn:outgoing>
-      <bpmn:script><![CDATA[console.log('Hello Lane C');]]></bpmn:script>
+      <bpmn:script>console.log('Hello Lane C');</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_1wy0fnk" name="Same lane test" sourceRef="ExclusiveGateway_1ax0imj" targetRef="Task_0ukwbko">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[token.current.test_config === 'same_lane']]></bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">token.current.test_config === 'same_lane'</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_07n5it8" sourceRef="Task_0ukwbko" targetRef="EndEvent_1" />
     <bpmn:scriptTask id="Task_0ukwbko" name="Write &#34;Hello Lane D&#34; to the console">
       <bpmn:incoming>SequenceFlow_1wy0fnk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_07n5it8</bpmn:outgoing>
-      <bpmn:script><![CDATA[console.log('Hello Lane D');]]></bpmn:script>
+      <bpmn:script>console.log('Hello Lane D');</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:startEvent id="StartEvent_1" name="Start">
       <bpmn:outgoing>SequenceFlow_06ggshv</bpmn:outgoing>
