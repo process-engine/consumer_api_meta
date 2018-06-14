@@ -37,7 +37,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       correlationId: uuid.v4(),
       inputValues: {},
     };
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const returnOn = startCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
       .consumerApiClientService

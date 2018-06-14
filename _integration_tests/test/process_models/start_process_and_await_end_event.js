@@ -3,6 +3,8 @@
 const should = require('should');
 const uuid = require('uuid');
 
+const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
+
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
@@ -12,6 +14,8 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
   let testFixtureProvider;
   let consumerContext;
+
+  const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
   this.timeout(testTimeoutMilliseconds);
 
@@ -37,7 +41,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -54,7 +58,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -75,7 +79,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstanceAndAwaitEndEvent(laneuserContext, processModelKey, startEventKey, endEventKey, payload);
+      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -96,7 +100,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstanceAndAwaitEndEvent(laneuserContext, processModelKey, startEventKey, endEventKey, payload);
+      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -115,7 +119,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent({}, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance({}, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -143,7 +147,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(restrictedContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(restrictedContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -172,7 +176,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
@@ -203,7 +207,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
@@ -234,7 +238,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
@@ -265,7 +269,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(userContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
@@ -293,7 +297,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -319,7 +323,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -345,7 +349,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -371,7 +375,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -396,7 +400,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -424,7 +428,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -450,7 +454,7 @@ describe(`Consumer API: ${testCase}`, function startProcessAndAwaitEndEvent() {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstanceAndAwaitEndEvent(consumerContext, processModelKey, startEventKey, endEventKey, payload);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {

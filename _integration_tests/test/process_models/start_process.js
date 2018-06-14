@@ -3,7 +3,7 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const startCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
+const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
@@ -34,11 +34,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlationId: uuid.v4(),
       inputValues: {},
     };
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -52,11 +52,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       correlationId: uuid.v4(),
       inputValues: {},
     };
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -69,11 +69,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const payload = {
       inputValues: {},
     };
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -105,11 +105,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     const laneuserContext = testFixtureProvider.context.laneUser;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -125,11 +125,11 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -145,12 +145,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance({}, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance({}, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -174,14 +174,14 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       },
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(restrictedContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(restrictedContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -205,12 +205,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneD;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 
@@ -236,12 +236,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     const userContext = testFixtureProvider.context.userWithNoAccessToLaneA;
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'The user can execute the process even if he has no access rights to the parent lane.');
     } catch (error) {
@@ -264,12 +264,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       inputValues: {},
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -291,12 +291,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       inputValues: {},
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -318,12 +318,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       inputValues: {},
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -345,12 +345,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       inputValues: {},
     };
 
-    const returnOn = 'invalidReturnOption';
+    const startCallbackType = 'invalidReturnOption';
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -371,12 +371,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     const startEventKey = 'StartEvent_1';
     const payload = 'i am missing vital properties';
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -400,12 +400,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
       inputValues: {},
     };
 
-    const returnOn = startCallbackType.CallbackOnProcessInstanceCreated;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -427,12 +427,12 @@ describe('Consumer API:   POST  ->  /process_models/:process_model_key/start_eve
     };
 
     // NOTE: This test case can by its very definition never work with .CallbackOnProcessInstanceCreated".
-    const returnOn = startCallbackType.CallbackOnEndEventReached;
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
