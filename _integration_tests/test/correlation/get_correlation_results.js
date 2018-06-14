@@ -78,6 +78,25 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     }
   });
 
+  // TODO: Currently blocked by Bug in ProcessEngineAdapter
+  it.skip('should fail to get the results, when the user is forbidden to see the process instance result', async () => {
+
+    try {
+      const results = await testFixtureProvider
+        .consumerApiClientService
+        .getProcessResultForCorrelation(testFixtureProvider.context.restrictedUser, correlationId, processModelKey);
+
+      should.fail(results, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to get the results, if the given correlationId does not exist', async () => {
 
     const invalidCorrelationId = 'invalidCorrelationId';
