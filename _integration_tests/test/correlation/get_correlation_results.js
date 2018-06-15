@@ -78,8 +78,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     }
   });
 
-  // TODO: Currently blocked by Bug in ProcessEngineAdapter
-  it.skip('should fail to get the results, when the user is forbidden to see the process instance result', async () => {
+  it('should fail to get the results, when the user is forbidden to see the process instance result', async () => {
 
     try {
       const results = await testFixtureProvider
@@ -88,8 +87,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i;
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /not allowed/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
