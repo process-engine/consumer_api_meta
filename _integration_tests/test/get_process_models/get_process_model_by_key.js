@@ -33,6 +33,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
 
     should(processModel).have.property('key');
     should(processModel).have.property('startEvents');
+    should(processModel).have.property('endEvents');
+    should(processModel.startEvents.length).be.greaterThan(0);
+    should(processModel.endEvents.length).be.greaterThan(0);
   });
 
   it('should not list any start events, if the retrieved process model is not marked as executable', async () => {
@@ -45,7 +48,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', function
 
     should(processModel).have.property('key');
     should(processModel).have.property('startEvents');
+    should(processModel).have.property('endEvents');
     should(processModel.startEvents.length).be.equal(0);
+    should(processModel.endEvents.length).be.equal(0);
   });
 
   it('should fail to retrieve the process model, when the user is unauthorized', async () => {
