@@ -3,7 +3,19 @@
 const fs = require('fs');
 const path = require('path');
 
+const ConsumerApiClientService = require('@process-engine/consumer_api_client').ConsumerApiClientService;
+
 const registerInContainer = (container) => {
+
+  const accessConsumerApiInternally = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
+
+  if (accessConsumerApiInternally) {
+    container.register('ConsumerApiClientService', ConsumerApiClientService)
+      .dependencies('ConsumerApiInternalAccessor');
+  } else {
+    container.register('ConsumerApiClientService', ConsumerApiClientService)
+      .dependencies('ConsumerApiExternalAccessor');
+  }
 
   const processes = [
     'test_consumer_api_correlation_result',
