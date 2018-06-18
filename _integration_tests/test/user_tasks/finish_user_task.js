@@ -1,6 +1,9 @@
 'use strict';
 
 const should = require('should');
+const uuid = require('uuid');
+
+const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
@@ -25,9 +28,16 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
   });
 
   async function startProcessAndReturnCorrelationId(processModelKey) {
+    const startEventKey = 'StartEvent_1';
+    const payload = {
+      correlationId: uuid.v4(),
+      inputValues: {},
+    };
+    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
+
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, 'StartEvent_1');
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
     return result.correlationId;
   }

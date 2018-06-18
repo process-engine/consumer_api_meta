@@ -27,12 +27,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
       .getUserTasksForProcessModel(defaultUserContext, processModelKey);
@@ -52,12 +46,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
   it('should return an empty user task list, if the given process model does not have any user tasks', async () => {
 
     const processModelKey = 'test_consumer_api_process_start';
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService

@@ -1,8 +1,8 @@
 {
   "applications": {
-    "skeleton_server": {
+    "consumer_api_integrationtest_server": {
       "features": {
-        "Name": "Skeleton_Server",
+        "Name": "consumer_api_integrationtest_server",
         "Environment": "Server",
         "Platform": "NodeJS",
         "PlatformVersion": "7.6.0",
