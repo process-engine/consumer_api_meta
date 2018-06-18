@@ -1,12 +1,10 @@
-import * as fs from 'fs';
-// tslint:disable-next-line:import-blacklist
-import * as _ from 'lodash';
 import * as path from 'path';
 
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
-import {ExecutionContext} from '@essential-projects/core_contracts';
+import {HttpIntegrationTestBootstrapper} from '@essential-projects/http_integration_testing';
+
 import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
@@ -53,16 +51,15 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 });
 
 export class TestFixtureProvider {
-  private httpBootstrapper: any;
+  private httpBootstrapper: HttpIntegrationTestBootstrapper;
   private _consumerApiClientService: IConsumerApiService;
 
   private container: InvocationContainer;
-  private bootstrapper: any;
 
-  private _customerContexts: {[name: string]: ConsumerContext} = {};
+  private _consumerContexts: {[name: string]: ConsumerContext} = {};
 
   public get context(): {[name: string]: ConsumerContext} {
-    return this._customerContexts;
+    return this._consumerContexts;
   }
 
   public get consumerApiClientService(): IConsumerApiService {
@@ -70,10 +67,10 @@ export class TestFixtureProvider {
   }
 
   public async initializeAndStart(): Promise<void> {
-    this.httpBootstrapper = await this.initializeBootstrapper();
+    await this.initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this.createConsumerContextForUsers();
-    this._consumerApiClientService = await this.resolveAsync('ConsumerApiClientService');
+    this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
   }
 
   public async tearDown(): Promise<void> {
@@ -81,11 +78,11 @@ export class TestFixtureProvider {
     await this.httpBootstrapper.shutdown();
   }
 
-  public async resolveAsync(moduleName: string): Promise<any> {
-    return this.container.resolveAsync(moduleName);
+  public async resolveAsync<T>(moduleName: string, args?: any): Promise<any> {
+    return this.container.resolveAsync<T>(moduleName, args);
   }
 
-  private async initializeBootstrapper(): Promise<any> {
+  private async initializeBootstrapper(): Promise<void> {
 
     try {
       this.container = new InvocationContainer({
@@ -101,7 +98,7 @@ export class TestFixtureProvider {
       this.container.validateDependencies();
 
       const appPath: string = path.resolve(__dirname);
-      this.bootstrapper = await this.container.resolveAsync('HttpIntegrationTestBootstrapper', [appPath]);
+      this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
 
       const identityFixtures: Array<any> = [{
         // Default User, used to test happy paths
@@ -146,11 +143,9 @@ export class TestFixtureProvider {
       },
     ];
 
-      this.bootstrapper.addFixtures('User', identityFixtures);
+      this.httpBootstrapper.addFixtures('User', identityFixtures);
 
       logger.info('Bootstrapper started.');
-
-      return this.bootstrapper;
     } catch (error) {
       logger.error('Failed to start bootstrapper!', error);
       throw error;
@@ -158,18 +153,18 @@ export class TestFixtureProvider {
   }
 
   private async createConsumerContextForUsers(): Promise<void> {
-    this._customerContexts.defaultUser = await this.createConsumerContext('testuser', 'testpass');
-    this._customerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
-    this._customerContexts.laneUser = await this.createConsumerContext('laneuser', 'testpass');
-    this._customerContexts.userWithAccessToSubLaneA = await this.createConsumerContext('userWithAccessToSubLaneA', 'testpass');
-    this._customerContexts.userWithAccessToSubLaneB = await this.createConsumerContext('userWithAccessToSubLaneB', 'testpass');
-    this._customerContexts.userWithNoAccessToSubLaneD = await this.createConsumerContext('userWithNoAccessToSubLaneD', 'testpass');
-    this._customerContexts.userWithNoAccessToSubLaneC = await this.createConsumerContext('userWithNoAccessToSubLaneC', 'testpass');
-    this._customerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA', 'testpass');
+    this._consumerContexts.defaultUser = await this.createConsumerContext('testuser', 'testpass');
+    this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
+    this._consumerContexts.laneUser = await this.createConsumerContext('laneuser', 'testpass');
+    this._consumerContexts.userWithAccessToSubLaneA = await this.createConsumerContext('userWithAccessToSubLaneA', 'testpass');
+    this._consumerContexts.userWithAccessToSubLaneB = await this.createConsumerContext('userWithAccessToSubLaneB', 'testpass');
+    this._consumerContexts.userWithNoAccessToSubLaneD = await this.createConsumerContext('userWithNoAccessToSubLaneD', 'testpass');
+    this._consumerContexts.userWithNoAccessToSubLaneC = await this.createConsumerContext('userWithNoAccessToSubLaneC', 'testpass');
+    this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA', 'testpass');
   }
 
   private async createConsumerContext(user: string, password: string): Promise<ConsumerContext> {
-    const authToken: any = await this.bootstrapper.getTokenFromAuth(user, password);
+    const authToken: any = await this.httpBootstrapper.getTokenFromAuth(user, password);
 
     return <ConsumerContext> {
       identity: authToken,
