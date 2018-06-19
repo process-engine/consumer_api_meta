@@ -1,0 +1,70 @@
+{
+  "name": "@process-engine/consumer_api_sample_internal_process_engine",
+  "publishConfig": {
+    "registry": "https://www.npmjs.com"
+  },
+  "version": "1.0.0",
+  "description": "This sample demonstrates how to use the consumer api to access an internal process engine",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "tests"
+  ],
+  "scripts": {
+    "start": "cross-env NODE_ENV=test CONFIG_PATH=config node index.js",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "@essential-projects/bootstrapper": "^2.0.0",
+    "@essential-projects/bootstrapper_node": "^2.0.0",
+    "@essential-projects/caching": "^2.0.1",
+    "@essential-projects/core": "^2.0.0",
+    "@essential-projects/data_model": "^3.0.0",
+    "@essential-projects/data_model_contracts": "^3.0.0",
+    "@essential-projects/datasource_adapter_base": "^2.0.0",
+    "@essential-projects/datasource_adapter_postgres": "^2.0.0",
+    "@essential-projects/datastore": "^2.0.0",
+    "@essential-projects/datastore_http": "^2.0.0",
+    "@essential-projects/datastore_messagebus": "^2.0.0",
+    "@essential-projects/event_aggregator": "^2.0.0",
+    "@essential-projects/feature": "^2.0.0",
+    "@essential-projects/http_extension": "^2.0.0",
+    "@essential-projects/http_integration_testing": "^2.0.0",
+    "@essential-projects/iam": "^2.1.0",
+    "@essential-projects/iam_http": "^2.0.0",
+    "@essential-projects/invocation": "^2.0.0",
+    "@essential-projects/messagebus": "^2.0.0",
+    "@essential-projects/messagebus_adapter_faye": "^2.0.0",
+    "@essential-projects/messagebus_http": "^2.0.1",
+    "@essential-projects/metadata": "^2.1.1",
+    "@essential-projects/routing": "^2.0.0",
+    "@essential-projects/security_service": "^2.1.0",
+    "@essential-projects/services": "^2.0.0",
+    "@essential-projects/timing": "^2.0.0",
+    "@essential-projects/validation": "^2.0.0",
+    "@process-engine/consumer_api_client": "^0.10.0",
+    "@process-engine/consumer_api_contracts": "^0.11.0",
+    "@process-engine/consumer_api_core": "^0.12.1",
+    "@process-engine/process_engine": "^6.0.3",
+    "@process-engine/process_engine_http": "^4.0.0",
+    "@process-engine/process_repository": "^2.0.0",
+    "addict-ioc": "^2.3.7",
+    "gulptraum-typescript": "^1.5.0",
+    "loggerhythm": "^3.0.3",
+    "mocha": "^5.1.1",
+    "mocha-jenkins-reporter": "^0.3.12",
+    "should": "^13.2.1",
+    "supertest": "^3.0.0",
+    "tsconfig": "^7.0.0",
+    "typescript": "^2.8.3",
+    "uuid": "3.2.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.4",
+    "eslint": "^4.19.1",
+    "eslint-config-5minds": "^0.2.0",
+    "eslint-plugin-import": "^2.11.0",
+    "gulptraum": "^2.3.0",
+    "@essential-projects/tslint-config": "^1.0.0"
+  }
+}
