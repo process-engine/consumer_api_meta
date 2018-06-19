@@ -7,6 +7,7 @@ import * as uuid from 'uuid';
 import {
   ConsumerContext,
   IConsumerApiService,
+  ICorrelationResult,
   ProcessStartRequestPayload,
   ProcessStartResponsePayload,
   StartCallbackType,
@@ -88,6 +89,12 @@ async function executeSample(): Promise<void> {
 
   // Now wait for the process to finish´
   await wait(500);
+
+  // Lastly, retrieve the process instance result through the Consumer API and print it.
+  const processInstanceResult: ICorrelationResult =
+    await consumerApiClientService.getProcessResultForCorrelation(consumerContext, correlationId, processModelKey);
+
+  logger.info('The process instance was finished with the following result:', processInstanceResult);
 }
 
 async function wait(timeoutDuration: number): Promise<void> {
