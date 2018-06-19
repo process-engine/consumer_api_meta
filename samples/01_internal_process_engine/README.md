@@ -5,11 +5,11 @@ a ProcessEngine, which is contained directly within the application.
 
 ![Architecture with integrated ProcessEngine](../images/consumer_api_internal.png)
 
-Note that this example relies completely on ioc, as this is one of the main
+Note that this example relies completely on IoC, as this is one of the main
 architectural principles used to develop the ProcessEngine.
 
 That is also the reason why there won't be a sample for using an internal
-process engine without using ioc, as this is would be completely impractical.
+process engine without using IoC, as this is would be completely impractical.
 
 ## Requirements
 
@@ -43,7 +43,7 @@ This sample consists of the following components:
   and the consumer api
 - `bpmn`: Contains a sample process that will be used by the sample application
 - `ioc_module.js`: This will register the sample process at the IoC container.
-  It also creates a customary registration for the `ConsumerApiClientService`,
+  It also creates a custom registration for the `ConsumerApiClientService`,
   enabling it to access the ProcessEngine contained within this sample
 - `src`: Contains the sample project. It has two files:
   - `setup.ts`: Contains functions necessary for handling all IoC related
@@ -62,9 +62,9 @@ In short, the sample will perform the following actions:
   - The `ConsumerApiClientService` will be given an accessor for accessing the
     ProcessEngine included in this sample application 
 - Create fixtures for a sample user
-  - Not to worry, the sample user will be removed when the program has finished
+  - The sample user will be removed when the program has finished
 - Use the `ConsumerApiClientService` to
   - start the sample process
-  - retrieve the waiting user task for the sample process when is reached
+  - retrieve the waiting user task for the sample process when it is reached
   - finish the user task with a given payload
   - retrieve and log the process instance result
