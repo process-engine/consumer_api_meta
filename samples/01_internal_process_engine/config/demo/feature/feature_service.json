@@ -1,8 +1,8 @@
 {
   "applications": {
-    "consumer_api_integrationtest_server": {
+    "consumer_api_sample_internal_process_engine": {
       "features": {
-        "Name": "consumer_api_integrationtest_server",
+        "Name": "consumer_api_sample_internal_process_engine",
         "Environment": "Server",
         "Platform": "NodeJS",
         "PlatformVersion": "7.6.0",
