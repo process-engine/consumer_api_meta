@@ -18,7 +18,7 @@ This sample has the following minimal requirements:
 - Globally installed `gulp` 
 - A running postgres server
 
-If you do not have gulp installed, you can do so by using the
+If you do not have `gulp` installed, you can do so by using the
 `npm install -g gulp` command.
 
 ## Setup
