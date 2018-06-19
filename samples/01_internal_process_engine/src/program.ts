@@ -2,8 +2,6 @@ import * as setup from './setup';
 
 import {Logger} from 'loggerhythm';
 
-import * as uuid from 'uuid';
-
 import {
   ConsumerContext,
   IConsumerApiService,
@@ -41,6 +39,7 @@ async function executeSample(): Promise<void> {
 
   // The key of the process model to start.
   const processModelKey: string = 'sample_process';
+
   // The key of the start event with which to start the process instance.
   const startEventKey: string = 'StartEvent_1';
 
@@ -49,7 +48,7 @@ async function executeSample(): Promise<void> {
   // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
   // The property 'inputValues' can be used to provide parameters to the process instance's initial token.
   const payload: ProcessStartRequestPayload = {
-    correlationId: uuid.v4(),
+    correlationId: 'customCorrelationId',
     inputValues: {},
   };
 
