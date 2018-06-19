@@ -108,14 +108,20 @@ pipeline {
           def db_host = '--env datastore__service__data_sources__default__adapter__server__host=db';
           def db_link = "--link ${db_container_id}:db";
 
-          server_image.inside("${node_env} ${junit_report_path} ${config_path} ${db_host} ${db_link}") {
-            error_code = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit > result.txt", returnStatus: true);
-            testresults = sh(script: "cat result.txt", returnStdout: true).trim();
+          server_image.inside("${node_env} ${consumer_api_access_type} ${junit_report_path} ${config_path} ${db_host} ${db_link}") {
+
+            def test_execution_script = 'node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit'
+
+            error_code_external = sh(script: "CONSUMER_API_ACCESS_TYPE=external ${test_execution_script}  > result_external.txt", returnStatus: true);
+            testresults = sh(script: 'cat result_external.txt', returnStdout: true).trim();
+
+            error_code_internal = sh(script: "CONSUMER_API_ACCESS_TYPE=internal ${test_execution_script}  > result_internal.txt", returnStatus: true);
+            testresults += sh(script: 'cat result_internal.txt', returnStdout: true).trim();
 
             junit 'report.xml'
 
             test_failed = false;
-            if (error_code > 0) {
+            if (error_code_external > 0 || error_code_internal > 0) {
               test_failed = true;
               currentBuild.result = 'FAILURE';
             }
