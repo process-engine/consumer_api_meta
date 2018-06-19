@@ -11,7 +11,7 @@
     "tests"
   ],
   "scripts": {
-    "start": "cross-env NODE_ENV=test CONFIG_PATH=config node index.js",
+    "start": "cross-env NODE_ENV=demo CONFIG_PATH=config node dist/commonjs/program.js",
     "build": "gulp build"
   },
   "dependencies": {

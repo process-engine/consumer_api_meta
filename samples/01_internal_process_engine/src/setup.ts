@@ -40,11 +40,10 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/validation',
   '@process-engine/consumer_api_client',
   '@process-engine/consumer_api_core',
-  '@process-engine/consumer_api_http',
   '@process-engine/process_engine',
   '@process-engine/process_engine_http',
   '@process-engine/process_repository',
-  '.',
+  '../../', // This points to the top-level ioc module located in this sample.
 ];
 
 // This imports all the listed ioc modules and stores them.

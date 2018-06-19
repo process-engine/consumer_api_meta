@@ -5,19 +5,16 @@ const path = require('path');
 
 const ConsumerApiClientService = require('@process-engine/consumer_api_client').ConsumerApiClientService;
 
+// This function will be called by the setup, when registering ioc modules at the container.
 const registerInContainer = (container) => {
 
+  // Creates a custom ioc registration for the ConsumerApiClientService. 
+  // It will be injected with an accessor for accessing an internal process engine application.
   container.register('ConsumerApiClientService', ConsumerApiClientService)
     .dependencies('ConsumerApiInternalAccessor');
 
-  const processes = [
-    'sample_process'
-  ];
-
-  return processes.map((processFilename) => { return registerProcess(processFilename, container); });
-};
-
-const registerProcess = (processFilename, container) => {
+  // Register the sample process at the ioc container.
+  const processFilename = 'sample_process';
   const processFilePath = path.join(__dirname, 'bpmn', `${processFilename}.bpmn`);
   const processFile = fs.readFileSync(processFilePath, 'utf8');
 
