@@ -1,5 +1,7 @@
 import * as setup from './setup';
 
+import {Logger} from 'loggerhythm';
+
 import * as uuid from 'uuid';
 
 import {
@@ -8,7 +10,12 @@ import {
   ProcessStartRequestPayload,
   ProcessStartResponsePayload,
   StartCallbackType,
+  UserTask,
+  UserTaskList,
+  UserTaskResult,
 } from '@process-engine/consumer_api_contracts';
+
+const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
 /**
  * This sample will use the ConsumerApiClientService to do the following:
@@ -16,9 +23,9 @@ import {
  * - Retrieve a list of waiting user tasks.
  * - Finish a waiting user task with the given result.
  * - Wait for the process to finish and the retrieve the result.
- *
  */
-async function executeSampleProject(): Promise<void> {
+// tslint:disable:no-magic-numbers
+async function executeSample(): Promise<void> {
 
   // Wait for the setup to finish and the bootstrapper to start
   await setup.start();
@@ -36,9 +43,10 @@ async function executeSampleProject(): Promise<void> {
   // The key of the start event with which to start the process instance.
   const startEventKey: string = 'StartEvent_1';
 
-  // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
   // The correlationId is used to associate multiple process instances with one another.
   // This is currently the case when using subprocesses.
+  // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
+  // The property 'inputValues' can be used to provide parameters to the process instance's initial token.
   const payload: ProcessStartRequestPayload = {
     correlationId: uuid.v4(),
     inputValues: {},
@@ -56,7 +64,47 @@ async function executeSampleProject(): Promise<void> {
   const processStartResult: ProcessStartResponsePayload =
     await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
+  const correlationId: string = processStartResult.correlationId;
+
+  // Allow for the process instance execution to reach the user task.
+  await wait(500);
+
   // Get a list of all waiting user tasks, using the process model key and the correlation id.
+  const waitingUserTasks: UserTaskList =
+    await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
+
+  // There should be one waiting user task.
+  const userTask: UserTask = waitingUserTasks.userTasks[0];
+
+  // Set a user task result and finish the user task.
+  // Note that the keys contained in 'formFields' must each reflect a form field of the user task you want to finish.
+  const userTaskResult: UserTaskResult = {
+    formFields: {
+      TaskWasSuccessful: true,
+    },
+  };
+
+  await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTask.key, userTaskResult);
+
+  // Now wait for the process to finish´
+  await wait(500);
 }
 
-executeSampleProject();
+async function wait(timeoutDuration: number): Promise<void> {
+
+  // Allow for the process instance to proceed to the user task.
+  await new Promise((resolve: Function, reject: Function): void => {
+    setTimeout(() => {
+      resolve();
+    }, timeoutDuration);
+  });
+}
+
+executeSample()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error: Error): void => {
+    logger.error('Something went wrong while running the sample!', error.message);
+    process.exit(0);
+  });
