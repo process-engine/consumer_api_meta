@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "description": "This sample demonstrates how to use the consumer api to access an internal process engine",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/commonjs/index.js",
   "files": [
     "tests"
   ],
