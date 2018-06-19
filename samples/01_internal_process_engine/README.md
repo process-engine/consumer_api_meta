@@ -1,12 +1,15 @@
 # Access internal ProcessEngine with Consumer API
 
-This sample demonstrates on how to use the `ConsumerApiClientService` to access
+This sample demonstrates how to use the `ConsumerApiClientService` to access
 a ProcessEngine, which is contained directly within the application.
 
 ![Architecture with integrated ProcessEngine](../images/consumer_api_internal.png)
 
 Note that this example relies completely on ioc, as this is one of the main
 architectural principles used to develop the ProcessEngine.
+
+That is also the reason why there won't be a sample for using an internal
+process engine without using ioc, as this is would be completely impractical.
 
 ## Requirements
 
@@ -15,8 +18,8 @@ This sample has the following minimal requirements:
 - Globally installed `gulp` 
 - A running postgres server
 
-Use `npm install -g gulp` to install gulp globally,
-if you have not already done so.
+If you do not have gulp installed, you can do so by using the
+`npm install -g gulp` command.
 
 ## Setup
 
@@ -24,7 +27,8 @@ Run the following commands in sequence:
 - `npm install`
 - `npm run build`
 
-Also make sure that the connection settings for postgres are accurate!
+Also make sure that the connection settings to your postgres instance
+are accurate!
 You can find the postgres config file at the following location:
 `config/demo/data_sources/postgres.json`.
 
