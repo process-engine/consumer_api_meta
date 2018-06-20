@@ -1,5 +1,7 @@
 import * as setup from './setup';
 
+import * as uuid from 'uuid';
+
 import {Logger} from 'loggerhythm';
 
 import {
@@ -48,7 +50,7 @@ async function executeSample(): Promise<void> {
   // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
   // The property 'inputValues' can be used to provide parameters to the process instance's initial token.
   const payload: ProcessStartRequestPayload = {
-    correlationId: 'customCorrelationId',
+    correlationId: uuid.v4(), // Note that correlation IDs must be unique!
     inputValues: {},
   };
 

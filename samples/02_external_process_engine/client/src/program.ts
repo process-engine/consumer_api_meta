@@ -1,5 +1,7 @@
 import * as setup from './setup';
 
+import * as uuid from 'uuid';
+
 import {Logger} from 'loggerhythm';
 
 import {
@@ -48,7 +50,7 @@ async function executeSample(): Promise<void> {
   // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
   // The property 'inputValues' can be used to provide parameters to the process instance's initial token.
   const payload: ProcessStartRequestPayload = {
-    correlationId: 'customCorrelationId',
+    correlationId: uuid.v4(), // Note that correlation IDs must be unique!
     inputValues: {},
   };
 
@@ -61,10 +63,12 @@ async function executeSample(): Promise<void> {
 
   // Start the process instance and wait for the service to resolve.
   // The result returns the id of the correlation that the process instance was added to.
+  logger.info(`Starting process ${processModelKey}, using StartEventKey ${startEventKey}`);
   const processStartResult: ProcessStartResponsePayload =
     await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
   const correlationId: string = processStartResult.correlationId;
+  logger.info(`Process instance was started and belongs to correlation ${correlationId}`);
 
   // Allow for the process instance execution to reach the user task.
   await wait(500);
@@ -75,6 +79,7 @@ async function executeSample(): Promise<void> {
 
   // There should be one waiting user task.
   const userTask: UserTask = waitingUserTasks.userTasks[0];
+  logger.info(`Found a wating user task with key ${userTask.key}`);
 
   // Set a user task result and finish the user task.
   // Note that the keys contained in 'formFields' must each reflect a form field of the user task you want to finish.
@@ -84,7 +89,9 @@ async function executeSample(): Promise<void> {
     },
   };
 
+  logger.info('Finishing the user task with payload:', userTaskResult);
   await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTask.key, userTaskResult);
+  logger.info('Success! Waiting for the process instance to finish.');
 
   // Now wait for the process to finish´
   await wait(500);
