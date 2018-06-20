@@ -107,18 +107,20 @@ pipeline {
           def config_path = '--env CONFIG_PATH=/usr/src/app/config';
           def db_host = '--env datastore__service__data_sources__default__adapter__server__host=db';
           def db_link = "--link ${db_container_id}:db";
-
+          
           server_image.inside("${node_env} ${junit_report_path} ${config_path} ${db_host} ${db_link}") {
 
+            def error_code_external;
+            def error_code_internal;
             def test_execution_script = 'node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit'
 
             withEnv(['CONSUMER_API_ACCESS_TYPE=external']) {
-              def error_code_external = sh(script: "${test_execution_script}  > result_external.txt", returnStatus: true);
+              error_code_external = sh(script: "${test_execution_script}  > result_external.txt", returnStatus: true);
               testresults = sh(script: 'cat result_external.txt', returnStdout: true).trim();
             }
 
             withEnv(['CONSUMER_API_ACCESS_TYPE=internal']) {
-              def error_code_internal = sh(script: "${test_execution_script}  > result_internal.txt", returnStatus: true);
+              error_code_internal = sh(script: "${test_execution_script}  > result_internal.txt", returnStatus: true);
               testresults += sh(script: 'cat result_internal.txt', returnStdout: true).trim();
             }
 
