@@ -100,9 +100,9 @@ export async function start(): Promise<void> {
 
     bootstrapper.addFixtures('User', identityFixtures);
 
-    logger.info('Bootstrapper started.');
-
     await bootstrapper.start();
+
+    logger.info('Bootstrapper started.');
   } catch (error) {
     logger.error('Failed to start bootstrapper!', error);
     throw error;
