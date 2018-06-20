@@ -31,7 +31,7 @@ let bootstrapper: AppBootstrapper;
 /**
  * Initializes the IoC container and starts the bootstrapper.
  *
- * @function initializeIoC
+ * @function start
  */
 export async function start(): Promise<void> {
 
