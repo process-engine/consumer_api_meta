@@ -33,7 +33,6 @@ const iocModuleNames = [
   '@essential-projects/routing',
   '@essential-projects/timing',
   '@essential-projects/validation',
-  '@process-engine/consumer_api_client',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
   '@process-engine/process_engine',
@@ -63,14 +62,14 @@ async function start() {
     for (const iocModule of iocModules) {
       iocModule.registerInContainer(container);
     }
-  
+
     container.validateDependencies();
-    
+
     const appPath = path.resolve(__dirname);
     const bootstrapper = await container.resolveAsync('AppBootstrapper', [appPath]);
 
     logger.info('Bootstrapper started.');
-  
+
     await bootstrapper.start();
   } catch (error) {
     logger.error('Failed to start bootstrapper!', error);
