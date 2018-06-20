@@ -1,16 +1,20 @@
-import {IAuthObject} from '@essential-projects/core_contracts';
+import * as path from 'path';
 
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
-import {ConsumerContext} from '@process-engine/consumer_api_contracts';
-
+import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
+import {IAuthObject} from '@essential-projects/core_contracts';
 import {IHttpClient, IResponse} from '@essential-projects/http_contracts';
+
+import {ConsumerContext} from '@process-engine/consumer_api_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
 // These are the names of the modules, whose ioc_modules will be included in the ioc container.
 const iocModuleNames: Array<string> = [
+  '@essential-projects/bootstrapper',
+  '@essential-projects/bootstrapper_node',
   '@essential-projects/services',
   '.',
 ];
@@ -22,11 +26,12 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
 
 let container: InvocationContainer;
 
+let bootstrapper: AppBootstrapper;
+
 /**
- * Initializes the IoC container.
+ * Initializes the IoC container and starts the bootstrapper.
  *
- * @function start
- * @async
+ * @function initializeIoC
  */
 export async function start(): Promise<void> {
 
@@ -50,9 +55,18 @@ export async function start(): Promise<void> {
     // with the registered components, like circular-dependencies.
     container.validateDependencies();
 
-    logger.info('IoC initialized.');
+    const appPath: string = path.resolve(__dirname);
+
+    // We use the integrationtest-bootstrapper here, because it provides us with an easy way to register users.
+    // Also, the bootstrappers "reset" method allows us to clear those users from the database again.
+    // This way, the sample application will in no way affect data consistency.
+    bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
+
+    await bootstrapper.start();
+
+    logger.info('Bootstrapper started.');
   } catch (error) {
-    logger.error('Failed to initialze IoC!', error);
+    logger.error('Failed to start the bootstrapper!', error);
     throw error;
   }
 }
@@ -85,7 +99,7 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
 export async function createConsumerContext(): Promise<ConsumerContext> {
   const httpClient: IHttpClient = await resolveAsync<IHttpClient>('HttpService');
 
-  const loginRoute: string = '/iam/login';
+  const loginRoute: string = 'iam/login';
 
   const loginPayload: any = {
     username: 'sampleUser',
