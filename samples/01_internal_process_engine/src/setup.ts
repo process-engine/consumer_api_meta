@@ -43,7 +43,7 @@ const iocModuleNames: Array<string> = [
   '@process-engine/process_engine',
   '@process-engine/process_engine_http',
   '@process-engine/process_repository',
-  '../../', // This points to the top-level ioc module located in this sample.
+  '.', // This points to the top-level ioc module located in this sample.
 ];
 
 // This imports all the listed ioc modules and stores them.
@@ -68,7 +68,7 @@ export async function start(): Promise<void> {
     // Create a new IoC container.
     // Using the InvocationContainer allows us to perform functions for each registered component,
     // whenever a new instance for that component is created.
-    // In this case, we want the container to run the 'initialze' function for each registered component.
+    // In this case, we want the container to run the 'initialize' function for each registered component.
     container = new InvocationContainer({
       defaults: {
         conventionCalls: ['initialize'],

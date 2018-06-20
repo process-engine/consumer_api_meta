@@ -36,11 +36,15 @@ You must run the following commands in the server and client applications:
 - `npm run build`
 
 Also make sure that the connection settings to your postgres instance
-are accurate!
+are accurate and that the database exists!
 
 You can find the postgres config file at the following location
 in the server application:
 `config/demo/data_sources/postgres.json`.
+
+Note:
+The datatables required by the ProcessEngine will be created automatically
+at startup.
 
 ## Executing the sample
 

@@ -58,7 +58,7 @@ async function executeSample(): Promise<void> {
   // Note that this is the only way to handle waiting user tasks.
   // If you were to set this callback to 'CallbackOnProcessInstanceFinished' or 'CallbackOnEndEventReached',
   // the Consumer API would wait to resolve until the process is finished.
-  // Which is not possible, if there is an interrupting user tasks.
+  // Which is not possible, if there is an interrupting user task.
   const startCallbackType: StartCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
   // Start the process instance and wait for the service to resolve.
