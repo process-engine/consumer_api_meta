@@ -45,7 +45,7 @@
     "@essential-projects/services": "^2.0.0",
     "@essential-projects/timing": "^2.0.0",
     "@essential-projects/validation": "^2.0.0",
-    "@process-engine/consumer_api_client": "^0.10.0",
+    "@process-engine/consumer_api_client": "feature~remove_consumer_api_client_addict-ioc_implementation",
     "@process-engine/consumer_api_contracts": "^0.11.0",
     "@process-engine/consumer_api_core": "^0.12.1",
     "@process-engine/consumer_api_http": "^0.9.1",
