@@ -112,11 +112,15 @@ pipeline {
 
             def test_execution_script = 'node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit'
 
-            error_code_external = sh(script: "CONSUMER_API_ACCESS_TYPE=external ${test_execution_script}  > result_external.txt", returnStatus: true);
-            testresults = sh(script: 'cat result_external.txt', returnStdout: true).trim();
+            withEnv(['CONSUMER_API_ACCESS_TYPE=external']) {
+              def error_code_external = sh(script: "${test_execution_script}  > result_external.txt", returnStatus: true);
+              testresults = sh(script: 'cat result_external.txt', returnStdout: true).trim();
+            }
 
-            error_code_internal = sh(script: "CONSUMER_API_ACCESS_TYPE=internal ${test_execution_script}  > result_internal.txt", returnStatus: true);
-            testresults += sh(script: 'cat result_internal.txt', returnStdout: true).trim();
+            withEnv(['CONSUMER_API_ACCESS_TYPE=internal']) {
+              def error_code_internal = sh(script: "${test_execution_script}  > result_internal.txt", returnStatus: true);
+              testresults += sh(script: 'cat result_internal.txt', returnStdout: true).trim();
+            }
 
             junit 'report.xml'
 
