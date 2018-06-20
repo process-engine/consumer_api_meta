@@ -21,7 +21,7 @@ let consumerApiClientService: ConsumerApiClientService;
 export function initialize(): void {
 
   const httpConfig: any = {
-    url: 'http://localhost:8000',
+    url: 'http://localhost:6666',
   };
 
   logger.info('Creating new ConsumerApiClientService instance with an external accessor.');
