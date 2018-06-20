@@ -108,7 +108,7 @@ pipeline {
           def db_host = '--env datastore__service__data_sources__default__adapter__server__host=db';
           def db_link = "--link ${db_container_id}:db";
 
-          server_image.inside("${node_env} ${consumer_api_access_type} ${junit_report_path} ${config_path} ${db_host} ${db_link}") {
+          server_image.inside("${node_env} ${junit_report_path} ${config_path} ${db_host} ${db_link}") {
 
             def test_execution_script = 'node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit'
 
