@@ -1,20 +1,17 @@
 {
-  "name": "@process-engine/consumer_api_meta_integration_tests",
+  "name": "@process-engine/consumer_api_sample_server",
   "publishConfig": {
     "registry": "https://www.npmjs.com"
   },
   "version": "1.0.0",
-  "description": "integration tests",
+  "description": "This is the server application for the consumer api example on how to connect to an external process engine.",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/commonjs/application.js",
   "files": [
     "tests"
   ],
   "scripts": {
-    "start": "cross-env NODE_ENV=test CONFIG_PATH=config node index.js",
-    "test-internal-access": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=internal mocha test/**/*.js --exit",
-    "test-external-access": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=external mocha test/**/*.js --exit",
-    "test": "npm run test-internal-access && npm run test-external-access",
+    "start": "cross-env NODE_ENV=demo CONFIG_PATH=config node dist/commonjs/application.js",
     "build": "gulp build"
   },
   "dependencies": {
@@ -45,20 +42,15 @@
     "@essential-projects/services": "^2.0.0",
     "@essential-projects/timing": "^2.0.0",
     "@essential-projects/validation": "^2.0.0",
-    "@process-engine/consumer_api_client": "^0.11.0",
+    "@process-engine/consumer_api_http": "^0.9.1",
     "@process-engine/consumer_api_contracts": "^0.11.0",
     "@process-engine/consumer_api_core": "^0.12.1",
-    "@process-engine/consumer_api_http": "^0.9.1",
     "@process-engine/process_engine": "^6.0.3",
     "@process-engine/process_engine_http": "^4.0.0",
     "@process-engine/process_repository": "^2.0.0",
     "addict-ioc": "^2.3.7",
     "gulptraum-typescript": "^1.5.0",
     "loggerhythm": "^3.0.3",
-    "mocha": "^5.1.1",
-    "mocha-jenkins-reporter": "^0.3.12",
-    "should": "^13.2.1",
-    "supertest": "^3.0.0",
     "tsconfig": "^7.0.0",
     "typescript": "^2.8.3",
     "uuid": "3.2.1"
