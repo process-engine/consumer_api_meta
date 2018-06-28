@@ -6,6 +6,11 @@ echo "Done. Starting setup..."
 # install all necessary dependencies
 npm install --no-package-lock
 
+if [[ "$?" -ne "0" ]]; then
+  printf "\e[1;31mNPM install failed! Aborting...\e[0m\n";
+  exit 1;
+fi
+
 # build all packages and schemas
 meta exec "npm run build && npm run build-schemas" --exclude consumer_api_meta
 
