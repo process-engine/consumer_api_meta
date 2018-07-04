@@ -76,17 +76,15 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const laneuserContext = testFixtureProvider.context.laneUser;
-
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
   });
 
-  it('should execute a process with sublanes, when the user can only access one lane and process execution never changes sublanes', async () => {
+  it('should execute a process with sublanes, when the user can only access one sublane and process execution never changes sublanes', async () => {
     const processModelKey = 'test_consumer_api_sublane_process';
     const startEventKey = 'StartEvent_1';
     const endEventKey = 'EndEvent_1';
@@ -97,7 +95,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const laneuserContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
+    const laneuserContext = testFixtureProvider.context.userWithAccessToSubLaneC;
 
     const result = await testFixtureProvider
       .consumerApiClientService

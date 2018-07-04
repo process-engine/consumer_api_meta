@@ -29,7 +29,6 @@ const registerInContainer = (container) => {
 
   const processes = [
     'test_consumer_api_correlation_result',
-    'test_consumer_api_lanes',
     'test_consumer_api_non_executable_process',
     'test_consumer_api_process_start',
     'test_consumer_api_usertask',

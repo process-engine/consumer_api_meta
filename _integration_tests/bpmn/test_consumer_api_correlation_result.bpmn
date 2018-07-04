@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.15.1">
   <bpmn:collaboration id="Collaboration_1cidyxu">
     <bpmn:participant id="Participant_0px403d" name="test_consumer_api_correlation_result" processRef="test_consumer_api_correlation_result" />
   </bpmn:collaboration>
   <bpmn:process id="test_consumer_api_correlation_result" name="test_consumer_api_correlation_result" isExecutable="true">
     <bpmn:laneSet>
-      <bpmn:lane id="Lane_1xzf0d3" name="correlation_result_test">
+      <bpmn:lane id="Lane_1xzf0d3" name="Default_Test_Lane">
         <bpmn:extensionElements>
           <camunda:properties>
             <camunda:property name="role" value="user" />
@@ -27,7 +27,7 @@
     <bpmn:scriptTask id="scriptTask_CreateSampleResult" name="Create Sample Result">
       <bpmn:incoming>SequenceFlow_0vspoh6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dqpbny</bpmn:outgoing>
-      <bpmn:script><![CDATA[return { scriptOutput: "hello world" }]]></bpmn:script>
+      <bpmn:script>return { scriptOutput: "hello world" }</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:endEvent id="EndEvent_Success" name="Return entire token">
       <bpmn:incoming>SequenceFlow_0dqpbny</bpmn:incoming>
@@ -51,10 +51,10 @@
         <dc:Bounds x="35" y="4" width="451" height="227" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0vspoh6_di" bpmnElement="SequenceFlow_0vspoh6">
-        <di:waypoint xsi:type="dc:Point" x="135" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="184" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="184" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="231" y="116" />
+        <di:waypoint x="135" y="116" />
+        <di:waypoint x="184" y="116" />
+        <di:waypoint x="184" y="116" />
+        <di:waypoint x="231" y="116" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="154" y="109.5" width="90" height="13" />
         </bpmndi:BPMNLabel>
@@ -69,10 +69,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0dqpbny_di" bpmnElement="SequenceFlow_0dqpbny">
-        <di:waypoint xsi:type="dc:Point" x="331" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="368" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="368" y="116" />
-        <di:waypoint xsi:type="dc:Point" x="405" y="116" />
+        <di:waypoint x="331" y="116" />
+        <di:waypoint x="368" y="116" />
+        <di:waypoint x="368" y="116" />
+        <di:waypoint x="405" y="116" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="338" y="109.5" width="90" height="13" />
         </bpmndi:BPMNLabel>

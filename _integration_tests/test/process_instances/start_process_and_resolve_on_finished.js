@@ -71,12 +71,11 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const laneuserContext = testFixtureProvider.context.laneUser;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType);
+      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -91,7 +90,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
+    const userContext = testFixtureProvider.context.userWithAccessToSubLaneC;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider
