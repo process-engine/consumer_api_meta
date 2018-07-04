@@ -102,7 +102,7 @@ export class TestFixtureProvider {
 
       const identityFixtures: Array<any> = [{
         // Default User, used to test happy paths
-        name: 'testuser',
+        name: 'defaultUser',
         password: 'testpass',
         roles: ['user'],
       }, {
@@ -111,32 +111,17 @@ export class TestFixtureProvider {
         password: 'testpass',
         roles: ['dummy'],
       }, {
-        // Used to test access rights to
-        name: 'laneuser',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
         // Used to test access rights in sublanes
-        name: 'userWithAccessToSubLaneA',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
-        // Used to test access rights in sublanes
-        name: 'userWithAccessToSubLaneB',
+        name: 'userWithAccessToSubLaneC',
         password: 'testpass',
         roles: ['dummy'],
       }, {
         // Used to test access rights in multiple sublanes
-        name: 'userWithNoAccessToSubLaneD',
+        name: 'userWithAccessToLaneA',
         password: 'testpass',
         roles: ['dummy'],
       }, {
         // Used to test access rights in multiple sublanes
-        name: 'userWithNoAccessToSubLaneC',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
-        // Used to test access rights when the process is nested in a sublane
         name: 'userWithNoAccessToLaneA',
         password: 'testpass',
         roles: ['dummy'],
@@ -153,13 +138,10 @@ export class TestFixtureProvider {
   }
 
   private async createConsumerContextForUsers(): Promise<void> {
-    this._consumerContexts.defaultUser = await this.createConsumerContext('testuser', 'testpass');
+    this._consumerContexts.defaultUser = await this.createConsumerContext('defaultUser', 'testpass');
     this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
-    this._consumerContexts.laneUser = await this.createConsumerContext('laneuser', 'testpass');
-    this._consumerContexts.userWithAccessToSubLaneA = await this.createConsumerContext('userWithAccessToSubLaneA', 'testpass');
-    this._consumerContexts.userWithAccessToSubLaneB = await this.createConsumerContext('userWithAccessToSubLaneB', 'testpass');
-    this._consumerContexts.userWithNoAccessToSubLaneD = await this.createConsumerContext('userWithNoAccessToSubLaneD', 'testpass');
-    this._consumerContexts.userWithNoAccessToSubLaneC = await this.createConsumerContext('userWithNoAccessToSubLaneC', 'testpass');
+    this._consumerContexts.userWithAccessToSubLaneC = await this.createConsumerContext('userWithAccessToSubLaneC', 'testpass');
+    this._consumerContexts.userWithAccessToLaneA = await this.createConsumerContext('userWithAccessToLaneA', 'testpass');
     this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA', 'testpass');
   }
 

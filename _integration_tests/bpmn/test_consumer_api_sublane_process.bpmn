@@ -5,7 +5,7 @@
   </bpmn:collaboration>
   <bpmn:process id="test_consumer_api_sublane_process" isExecutable="true">
     <bpmn:laneSet>
-      <bpmn:lane id="Lane_0q1p5st" name="Default_Test_Lane">
+      <bpmn:lane id="Lane_0q1p5st" name="LaneA">
         <bpmn:flowNodeRef>EndEvent_2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1ax0imj</bpmn:flowNodeRef>
@@ -13,13 +13,13 @@
         <bpmn:flowNodeRef>Task_0ukwbko</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:childLaneSet>
-          <bpmn:lane id="Lane_1mog19p" name="Lane D">
+          <bpmn:lane id="Lane_1mog19p" name="LaneC">
             <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExclusiveGateway_1ax0imj</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>Task_0ukwbko</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
           </bpmn:lane>
-          <bpmn:lane id="Lane_1en2e65" name="Lane C">
+          <bpmn:lane id="Lane_1en2e65" name="LaneB">
             <bpmn:flowNodeRef>EndEvent_2</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>Task_0e8cbxl</bpmn:flowNodeRef>
           </bpmn:lane>

@@ -1,31 +1,21 @@
 {
   "claimConfig": {
-    "testuser": [
+    "defaultUser": [
       "Default_Test_Lane",
-      "Lane B"
+      "LaneA",
+      "LaneB",
+      "LaneC"
     ],
-    "laneuser": [
-      "Default_Test_Lane",
-      "Lane C",
-      "Lane D"
+    "userWithAccessToSubLaneC": [
+      "LaneA",
+      "LaneC"
     ],
-    "userWithAccessToSubLaneA": [
-      "Default_Test_Lane"
-    ],
-    "userWithAccessToSubLaneB": [
-      "Lane B"
-    ],
-    "userWithNoAccessToSubLaneD": [
-      "Default_Test_Lane",
-      "Lane C"
-    ],
-    "userWithNoAccessToSubLaneC": [
-      "Default_Test_Lane",
-      "Lane D"
+    "userWithAccessToLaneA": [
+      "LaneA"
     ],
     "userWithNoAccessToLaneA": [
-      "Lane C",
-      "Lane D"
+      "LaneB",
+      "LaneC"
     ]
   }
 }

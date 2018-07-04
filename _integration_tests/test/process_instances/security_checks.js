@@ -8,19 +8,17 @@ const StartCallbackType = require('@process-engine/consumer_api_contracts').Star
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 const testTimeoutMilliseconds = 5000;
-// eslint-disable-next-line
+
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start';
 describe(`Consumer API: ${testCase}`, function startProcessInstance() {
 
   let testFixtureProvider;
-  let consumerContext;
 
   this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
   });
 
   after(async () => {
@@ -98,7 +96,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const userContext = testFixtureProvider.context.userWithNoAccessToSubLaneC;
+    const userContext = testFixtureProvider.context.userWithAccessToSubLaneC;
 
     const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
@@ -163,7 +161,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
-    const userContext = testFixtureProvider.context.userWithAccessToSubLaneA;
+    const userContext = testFixtureProvider.context.userWithAccessToLaneA;
 
     try {
       const result = await testFixtureProvider
