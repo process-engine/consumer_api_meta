@@ -27,7 +27,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   });
 
   async function startProcessAndReturnCorrelationId(processModelKey) {
-    const startEventKey = 'StartEvent_0yfvdj3';
+    const startEventKey = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -43,7 +43,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should return a correlation\'s user tasks by its correlationId through the consumer api', async () => {
 
-    const processModelKey = 'consumer_api_lane_test';
+    const processModelKey = 'consumer_api_usertask_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
@@ -91,7 +91,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'consumer_api_lane_test';
+    const processModelKey = 'consumer_api_usertask_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
@@ -120,7 +120,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
   it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
 
-    const processModelKey = 'consumer_api_lane_test';
+    const processModelKey = 'consumer_api_usertask_test';
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
     await new Promise((resolve) => {
