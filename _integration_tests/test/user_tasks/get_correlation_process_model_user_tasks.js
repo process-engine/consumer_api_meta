@@ -118,7 +118,7 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

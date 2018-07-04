@@ -73,7 +73,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /start event.*?not found/i;
+      const expectedErrorMessage = /startevent.*?not found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -101,7 +101,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /end event.*?not found/i;
+      const expectedErrorMessage = /endevent.*?not found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -237,7 +237,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
-      const expectedErrorMessage = /process failed.*?error/i;
+      const expectedErrorMessage = /critical error/i;
       should(error.message)
         .match(expectedErrorMessage);
       should(error.code)

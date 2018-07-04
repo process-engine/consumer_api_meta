@@ -76,7 +76,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', functi
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

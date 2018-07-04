@@ -90,7 +90,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       },
     };
 
-    const userContext = testFixtureProvider.context.userWithAccessToSubLaneC;
+    const userContext = testFixtureProvider.context.defaultUser;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider

@@ -60,6 +60,46 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     should(correlationResult.scriptOutput).be.match(/hello world/i);
   });
 
+  it('should fail to get the results, if the given correlationId does not exist', async () => {
+
+    const invalidCorrelationId = 'invalidCorrelationId';
+
+    try {
+      const results = await testFixtureProvider
+        .consumerApiClientService
+        .getProcessResultForCorrelation(consumerContext, invalidCorrelationId, processModelKey);
+
+      should.fail(results, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /no process results for correlation.*?found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to get the results, if the given process model key does not exist within the given correlation', async () => {
+
+    const invalidProcessModelKey = 'invalidProcessmodelKey';
+
+    try {
+      const results = await testFixtureProvider
+        .consumerApiClientService
+        .getProcessResultForCorrelation(consumerContext, correlationId, invalidProcessModelKey);
+
+      should.fail(results, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /process model.*?not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to get the results, when the user is unauthorized', async () => {
 
     try {
@@ -88,47 +128,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to get the results, if the given correlationId does not exist', async () => {
-
-    const invalidCorrelationId = 'invalidCorrelationId';
-
-    try {
-      const results = await testFixtureProvider
-        .consumerApiClientService
-        .getProcessResultForCorrelation(consumerContext, invalidCorrelationId, processModelKey);
-
-      should.fail(results, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /No.*?process.*?within correlation.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to get the results, if the given process model key does not exist within the given correlation', async () => {
-
-    const invalidProcessModelKey = 'invalidProcessmodelKey';
-
-    try {
-      const results = await testFixtureProvider
-        .consumerApiClientService
-        .getProcessResultForCorrelation(consumerContext, correlationId, invalidProcessModelKey);
-
-      should.fail(results, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /No.*?process.*?within correlation.*?found/i;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
