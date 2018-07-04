@@ -39,6 +39,7 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/validation',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/iam',
   '@process-engine/process_engine',
   '@process-engine/process_engine_http',
   '@process-engine/process_repository',
