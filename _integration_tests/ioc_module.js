@@ -9,7 +9,13 @@ const {
   InternalAccessor,
 } = require('@process-engine/consumer_api_client');
 
+const IamFacadeMock = require('./dist/commonjs/iam_facade_mock').IamFacadeMock;
+
 const registerInContainer = (container) => {
+
+  // This removes the necessity for having a running IdentityServer during testing.
+  container.register('IamFacade', IamFacadeMock)
+    .singleton();
 
   const accessConsumerApiInternally = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
 
