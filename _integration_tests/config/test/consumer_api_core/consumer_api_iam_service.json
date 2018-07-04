@@ -1,29 +1,26 @@
 {
   "claimConfig": {
     "testuser": [
-      "can_start_process",
-      "can_view_usertask",
-      "correlation_result_test",
-      "Lane A",
+      "Default_Test_Lane",
       "Lane B"
     ],
     "laneuser": [
-      "Lane A",
+      "Default_Test_Lane",
       "Lane C",
       "Lane D"
     ],
     "userWithAccessToSubLaneA": [
-      "Lane A"
+      "Default_Test_Lane"
     ],
     "userWithAccessToSubLaneB": [
       "Lane B"
     ],
     "userWithNoAccessToSubLaneD": [
-      "Lane A",
+      "Default_Test_Lane",
       "Lane C"
     ],
     "userWithNoAccessToSubLaneC": [
-      "Lane A",
+      "Default_Test_Lane",
       "Lane D"
     ],
     "userWithNoAccessToLaneA": [
