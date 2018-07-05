@@ -1,7 +1,7 @@
-import {IIdentity} from '@essential-projects/iam_contracts';
-import {IIamFacade} from '@process-engine/process_engine_contracts';
+import {ForbiddenError} from '@essential-projects/errors_ts';
+import {IIAMService, IIdentity} from '@essential-projects/iam_contracts';
 
-export class IamFacadeMock implements IIamFacade {
+export class IamServiceMock implements IIAMService {
 
   private _claimConfigs: any = {
       defaultUser: [
@@ -23,20 +23,22 @@ export class IamFacadeMock implements IIamFacade {
       ],
   };
 
-  public async checkIfUserCanAccessLane(identity: IIdentity, laneId: string): Promise<boolean> {
+  public async ensureHasClaim(identity: IIdentity, claimName: string): Promise<void> {
 
     const identityName: string = identity.token;
 
     const matchingUserConfig: Array<string> = this._claimConfigs[identityName];
 
     if (!matchingUserConfig) {
-      return false;
+      throw new ForbiddenError('access denied');
     }
 
     const userHasClaim: boolean = matchingUserConfig.some((claim: string): boolean => {
-      return claim === laneId;
+      return claim === claimName;
     });
 
-    return userHasClaim;
+    if (!userHasClaim) {
+      throw new ForbiddenError('access denied');
+    }
   }
 }
