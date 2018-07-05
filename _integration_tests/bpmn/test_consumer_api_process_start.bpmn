@@ -35,10 +35,10 @@
     <bpmn:sequenceFlow id="SequenceFlow_0dbx7lk" name="" sourceRef="ExclusiveGateway_0bnj53e" targetRef="scriptTask_WriteConsoleLog">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">token.history.StartEvent_1.causeError !== true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:scriptTask id="scriptTask_WriteConsoleLog" name="Write Log">
+    <bpmn:scriptTask id="scriptTask_WriteConsoleLog" name="Do stuff">
       <bpmn:incoming>SequenceFlow_0dbx7lk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dqpbny</bpmn:outgoing>
-      <bpmn:script>console.log('Successfully started the process!');</bpmn:script>
+      <bpmn:script>return 'process instance started';</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:endEvent id="EndEvent_Success" name="">
       <bpmn:incoming>SequenceFlow_0dqpbny</bpmn:incoming>
