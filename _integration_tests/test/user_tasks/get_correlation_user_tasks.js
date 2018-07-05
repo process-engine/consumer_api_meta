@@ -69,6 +69,35 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     });
   });
 
+  it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const invalidCorrelationId = 'invalidCorrelationId';
+
+    try {
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
+
+      should.fail(processModel, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
 
     const correlationId = 'test_consumer_api_process_start';
@@ -111,35 +140,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    const invalidCorrelationId = 'invalidCorrelationId';
-
-    try {
-      const processModel = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
-
-      should.fail(processModel, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

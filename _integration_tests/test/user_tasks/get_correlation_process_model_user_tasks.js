@@ -70,62 +70,6 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     });
   });
 
-  it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    try {
-      const userTaskList = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForProcessModelInCorrelation({}, processModelKey, correlationId);
-
-      should.fail(userTaskList, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    try {
-      const userTaskList = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForProcessModelInCorrelation(restrictedContext, processModelKey, correlationId);
-
-      should.fail(userTaskList, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 403;
-      const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
   it('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
 
     const invalidProcessModelKey = 'invalidProcessModelKey';
@@ -176,6 +120,62 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    try {
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModelInCorrelation({}, processModelKey, correlationId);
+
+      should.fail(userTaskList, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    try {
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModelInCorrelation(restrictedContext, processModelKey, correlationId);
+
+      should.fail(userTaskList, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

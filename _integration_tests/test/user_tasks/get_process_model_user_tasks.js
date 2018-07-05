@@ -56,6 +56,26 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     should(userTaskList.userTasks.length).be.equal(0);
   });
 
+  it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
+
+    const invalidProcessModelKey = 'invalidProcessModelKey';
+
+    try {
+      const processModel = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForProcessModel(defaultUserContext, invalidProcessModelKey);
+
+      should.fail(processModel, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /not found/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to retrieve the process model\'s user tasks, when the user is unauthorized', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
@@ -90,26 +110,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
-
-    const invalidProcessModelKey = 'invalidProcessModelKey';
-
-    try {
-      const processModel = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForProcessModel(defaultUserContext, invalidProcessModelKey);
-
-      should.fail(processModel, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

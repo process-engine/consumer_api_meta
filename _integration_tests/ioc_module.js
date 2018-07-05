@@ -14,8 +14,7 @@ const IamServiceMock = require('./dist/commonjs/iam_service_mock').IamServiceMoc
 const registerInContainer = (container) => {
 
   // This removes the necessity for having a running IdentityServer during testing.
-  container.register('IamServiceNew', IamServiceMock)
-    .singleton();
+  container.register('IamServiceNew', IamServiceMock);
 
   const accessConsumerApiInternally = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
 
