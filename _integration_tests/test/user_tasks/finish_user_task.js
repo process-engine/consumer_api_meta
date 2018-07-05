@@ -94,7 +94,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model.*?does not have.*?user task/i;
+      const expectedErrorMessage = /no process instance.*?found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -130,7 +130,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model.*?does not have.*?user task/i;
+      const expectedErrorMessage = /no correlation.*?found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

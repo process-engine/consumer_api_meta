@@ -37,6 +37,7 @@ const registerInContainer = (container) => {
     'test_consumer_api_non_executable_process',
     'test_consumer_api_process_start',
     'test_consumer_api_usertask',
+    'test_consumer_api_usertask_empty',
     'test_consumer_api_sublane_process',
   ];
 
