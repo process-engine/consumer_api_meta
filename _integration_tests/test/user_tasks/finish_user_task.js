@@ -300,7 +300,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     }
   });
 
-  it('should fail to finish the user task, when the user forbidden to retrieve it', async () => {
+  it('should fail to finish the user task, when the user is forbidden to retrieve it', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
 
