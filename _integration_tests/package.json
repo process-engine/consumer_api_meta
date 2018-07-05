@@ -47,7 +47,7 @@
     "@process-engine/consumer_api_contracts": "^0.12.1",
     "@process-engine/consumer_api_core": "feature~implement_accessibility_checks",
     "@process-engine/consumer_api_http": "^0.9.2",
-    "@process-engine/iam": "feature~implement_accessibility_checks",
+    "@process-engine/iam": "^0.1.2",
     "@process-engine/process_engine": "feature~implement_accessibility_checks",
     "@process-engine/process_engine_http": "^4.0.0",
     "@process-engine/process_repository": "^2.0.0",

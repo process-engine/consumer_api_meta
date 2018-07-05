@@ -9,7 +9,7 @@ const {
   InternalAccessor,
 } = require('@process-engine/consumer_api_client');
 
-const IamServiceMock = require('./dist/commonjs/iam_facade_mock').IamServiceMock;
+const IamServiceMock = require('./dist/commonjs/iam_service_mock').IamServiceMock;
 
 const registerInContainer = (container) => {
 
