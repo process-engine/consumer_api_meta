@@ -65,78 +65,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
   });
 
-  it('should fail to finish the user task, when the user is unauthorized', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
-
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    const userTaskId = 'Task_1vdwmn1';
-    const userTaskResult = {
-      formFields: {
-        Form_XGSVBgio: true,
-      },
-    };
-
-    try {
-      await testFixtureProvider
-        .consumerApiClientService
-        .finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
-
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to finish the user task, when the user forbidden to retrieve it', async () => {
-
-    const processModelKey = 'consumer_api_usertask_test';
-
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
-    const userTaskId = 'Task_1vdwmn1';
-    const userTaskResult = {
-      formFields: {
-        Form_XGSVBgio: true,
-      },
-    };
-
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
-
-    try {
-      await testFixtureProvider
-        .consumerApiClientService
-        .finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
-
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
-    }
-  });
-
   it('should fail to finish the user task, if the given process_model_key does not exist', async () => {
 
     const processModelKey = 'consumer_api_usertask_test';
@@ -166,7 +94,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not part of/i;
+      const expectedErrorMessage = /no process instance.*?found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -202,7 +130,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i;
+      const expectedErrorMessage = /no correlation.*?found/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -330,6 +258,78 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 500;
       const expectedErrorMessage = /could not be finished/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to finish the user task, when the user is unauthorized', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      formFields: {
+        Form_XGSVBgio: true,
+      },
+    };
+
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask({}, processModelKey, correlationId, userTaskId, userTaskResult);
+
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code)
+        .match(expectedErrorCode);
+      should(error.message)
+        .match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to finish the user task, when the user is forbidden to retrieve it', async () => {
+
+    const processModelKey = 'consumer_api_usertask_test';
+
+    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 300);
+    });
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      formFields: {
+        Form_XGSVBgio: true,
+      },
+    };
+
+    const restrictedContext = testFixtureProvider.context.restrictedUser;
+
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(restrictedContext, processModelKey, correlationId, userTaskId, userTaskResult);
+
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)

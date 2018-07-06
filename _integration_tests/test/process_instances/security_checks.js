@@ -77,7 +77,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorMessage = /access denied/i;
       should(error.code)
         .match(expectedErrorCode);
       should(error.message)
@@ -139,7 +139,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
       should.fail(result, undefined, 'The user can execute the process even if he has no access rights to the parent lane.');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorMessage = /access denied/i;
 
       should(error.code)
         .match(expectedErrorCode);
@@ -172,7 +172,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
 
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /not allowed/i;
+      const expectedErrorMessage = /access denied/i;
 
       should(error.code)
         .match(expectedErrorCode);

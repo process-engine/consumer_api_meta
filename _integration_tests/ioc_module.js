@@ -9,7 +9,12 @@ const {
   InternalAccessor,
 } = require('@process-engine/consumer_api_client');
 
+const IamServiceMock = require('./dist/commonjs/iam_service_mock').IamServiceMock;
+
 const registerInContainer = (container) => {
+
+  // This removes the necessity for having a running IdentityServer during testing.
+  container.register('IamServiceNew', IamServiceMock);
 
   const accessConsumerApiInternally = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
 
@@ -32,6 +37,7 @@ const registerInContainer = (container) => {
     'test_consumer_api_non_executable_process',
     'test_consumer_api_process_start',
     'test_consumer_api_usertask',
+    'test_consumer_api_usertask_empty',
     'test_consumer_api_sublane_process',
   ];
 

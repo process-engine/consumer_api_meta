@@ -100,36 +100,6 @@ export class TestFixtureProvider {
       const appPath: string = path.resolve(__dirname);
       this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
 
-      const identityFixtures: Array<any> = [{
-        // Default User, used to test happy paths
-        name: 'defaultUser',
-        password: 'testpass',
-        roles: ['user'],
-      }, {
-        // Restricted user without access rights to any lanes
-        name: 'restrictedUser',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
-        // Used to test access rights in sublanes
-        name: 'userWithAccessToSubLaneC',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
-        // Used to test access rights in multiple sublanes
-        name: 'userWithAccessToLaneA',
-        password: 'testpass',
-        roles: ['dummy'],
-      }, {
-        // Used to test access rights in multiple sublanes
-        name: 'userWithNoAccessToLaneA',
-        password: 'testpass',
-        roles: ['dummy'],
-      },
-    ];
-
-      this.httpBootstrapper.addFixtures('User', identityFixtures);
-
       logger.info('Bootstrapper started.');
     } catch (error) {
       logger.error('Failed to start bootstrapper!', error);
@@ -138,18 +108,23 @@ export class TestFixtureProvider {
   }
 
   private async createConsumerContextForUsers(): Promise<void> {
-    this._consumerContexts.defaultUser = await this.createConsumerContext('defaultUser', 'testpass');
-    this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser', 'testpass');
-    this._consumerContexts.userWithAccessToSubLaneC = await this.createConsumerContext('userWithAccessToSubLaneC', 'testpass');
-    this._consumerContexts.userWithAccessToLaneA = await this.createConsumerContext('userWithAccessToLaneA', 'testpass');
-    this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA', 'testpass');
+
+    // all access user
+    this._consumerContexts.defaultUser = await this.createConsumerContext('defaultUser');
+    // no access user
+    this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser');
+    // partially restricted users
+    this._consumerContexts.userWithAccessToSubLaneC = await this.createConsumerContext('userWithAccessToSubLaneC');
+    this._consumerContexts.userWithAccessToLaneA = await this.createConsumerContext('userWithAccessToLaneA');
+    this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA');
   }
 
-  private async createConsumerContext(user: string, password: string): Promise<ConsumerContext> {
-    const authToken: any = await this.httpBootstrapper.getTokenFromAuth(user, password);
+  private async createConsumerContext(username: string): Promise<ConsumerContext> {
 
+    // Note: Since the iam facade is mocked, it doesn't matter what kind of token is used here.
+    // It only matters that one is present.
     return <ConsumerContext> {
-      identity: authToken,
+      identity: username,
     };
   }
 }
