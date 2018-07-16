@@ -106,11 +106,12 @@ pipeline {
           def consumer_api_mode = '--env CONSUMER_API_ACCESS_TYPE=internal ';
           def junit_report_path = '--env JUNIT_REPORT_PATH=report.xml';
           def config_path = '--env CONFIG_PATH=/usr/src/app/config';
+          def db_host_old = '--env datastore__service__data_sources__default__adapter__server__host=db';
           def db_flow_node_instance = '--env process_engine__flow_node_instance_repository__host=db';
           def db_process_model = '--env process_engine__process_model_repository__host=db';
           def db_link = "--link ${db_container_id}:db";
 
-          server_image.inside("${node_env} ${consumer_api_mode} ${junit_report_path} ${config_path} ${db_process_model} ${db_flow_node_instance} ${db_link}") {
+          server_image.inside("${node_env} ${consumer_api_mode} ${junit_report_path} ${config_path} ${db_host_old} ${db_process_model} ${db_flow_node_instance} ${db_link}") {
             error_code = sh(script: "node /usr/src/app/node_modules/.bin/mocha /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit > result.txt", returnStatus: true);
             testresults = sh(script: "cat result.txt", returnStdout: true).trim();
 
