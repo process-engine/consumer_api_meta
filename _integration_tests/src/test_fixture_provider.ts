@@ -19,17 +19,14 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/datasource_adapter_base',
   '@essential-projects/datasource_adapter_postgres',
   '@essential-projects/datastore',
-  '@essential-projects/datastore_http',
   '@essential-projects/datastore_messagebus',
   '@essential-projects/event_aggregator',
   '@essential-projects/feature',
   '@essential-projects/http_extension',
   '@essential-projects/http_integration_testing',
   '@essential-projects/iam',
-  '@essential-projects/iam_http',
   '@essential-projects/invocation',
   '@essential-projects/messagebus',
-  '@essential-projects/messagebus_http',
   '@essential-projects/messagebus_adapter_faye',
   '@essential-projects/metadata',
   '@essential-projects/security_service',
@@ -39,9 +36,10 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/validation',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/flow_node_instance.repository.sequelize',
   '@process-engine/iam',
   '@process-engine/process_engine',
-  '@process-engine/process_engine_http',
+  '@process-engine/process_model.repository.sequelize',
   '@process-engine/process_repository',
   '../../',
 ];
@@ -99,6 +97,12 @@ export class TestFixtureProvider {
 
       const appPath: string = path.resolve(__dirname);
       this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
+
+      // NOTE: Importing the process models into the database is handled by the ProcessEngineService, during initialization.
+      // Consequently, we need to resolve this service at least once, before doing anything else.
+      // Otherwise we won't have any process models in the database to work with.
+      // Maybe we should consider moving the process import into a sepearate import-service.
+      const processEngineService: any = await this.resolveAsync<any>('ProcessEngineService');
 
       logger.info('Bootstrapper started.');
     } catch (error) {

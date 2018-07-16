@@ -57,7 +57,7 @@ describe('Consumer API:   GET  ->  /processModels', function getProcessModels() 
 
     processModelList.processModels.forEach((processModel) => {
       should(processModel).have.property('key');
-      should(processModel.key).not.be('test_consumer_api_process_start');
+      should(processModel.key).not.be.equal('test_consumer_api_process_start');
       should(processModel).have.property('startEvents');
       should(processModel).have.property('endEvents');
       should(processModel.startEvents).be.instanceOf(Array);
