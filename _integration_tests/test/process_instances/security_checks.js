@@ -105,7 +105,7 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
         .consumerApiClientService
         .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
 
-      should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
+      should.fail(result, undefined, 'This request should have failed!');
 
     } catch (error) {
       const expectedErrorCode = 404;
