@@ -12,6 +12,6 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 # build all packages and schemas
-meta exec "npm run build && npm run build-schemas" --exclude consumer_api_meta
+meta exec "npm run build" --exclude consumer_api_meta
 
 echo "done"
