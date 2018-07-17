@@ -3,7 +3,7 @@ import * as path from 'path';
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
-import {HttpIntegrationTestBootstrapper} from '@essential-projects/http_integration_testing';
+import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity, IIdentityService} from '@essential-projects/iam_contracts';
 
 import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
@@ -16,7 +16,6 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper_node',
   '@essential-projects/event_aggregator',
   '@essential-projects/http_extension',
-  '@essential-projects/http_integration_testing',
   '@essential-projects/services',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
@@ -33,7 +32,7 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 });
 
 export class TestFixtureProvider {
-  private httpBootstrapper: HttpIntegrationTestBootstrapper;
+  private httpBootstrapper: AppBootstrapper;
   private _consumerApiClientService: IConsumerApiService;
 
   private container: InvocationContainer;
@@ -57,8 +56,7 @@ export class TestFixtureProvider {
   }
 
   public async tearDown(): Promise<void> {
-    await this.httpBootstrapper.reset();
-    await this.httpBootstrapper.shutdown();
+    this.httpBootstrapper.stop();
   }
 
   public async resolveAsync<T>(moduleName: string, args?: any): Promise<any> {
@@ -81,7 +79,7 @@ export class TestFixtureProvider {
       this.container.validateDependencies();
 
       const appPath: string = path.resolve(__dirname);
-      this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
+      this.httpBootstrapper = await this.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
       logger.info('Bootstrapper started.');
     } catch (error) {
