@@ -4,8 +4,10 @@ import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
 import {HttpIntegrationTestBootstrapper} from '@essential-projects/http_integration_testing';
+import {IIdentity, IIdentityService} from '@essential-projects/iam_contracts';
 
 import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
+import {ExecutionContext, IImportProcessService} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -50,6 +52,7 @@ export class TestFixtureProvider {
     await this.initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this.createConsumerContextForUsers();
+    await this.importProcessFiles();
     this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
   }
 
@@ -80,9 +83,6 @@ export class TestFixtureProvider {
       const appPath: string = path.resolve(__dirname);
       this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
 
-      // TODO: Refactor to use the new import service
-      const processEngineService: any = await this.resolveAsync<any>('ProcessEngineService');
-
       logger.info('Bootstrapper started.');
     } catch (error) {
       logger.error('Failed to start bootstrapper!', error);
@@ -109,5 +109,35 @@ export class TestFixtureProvider {
     return <ConsumerContext> {
       identity: username,
     };
+  }
+
+  private async importProcessFiles(): Promise<void> {
+
+    const processFileNames: Array<string> = [
+      'test_consumer_api_correlation_result',
+      'test_consumer_api_non_executable_process',
+      'test_consumer_api_process_start',
+      'test_consumer_api_usertask',
+      'test_consumer_api_usertask_empty',
+      'test_consumer_api_sublane_process',
+    ];
+
+    const importService: IImportProcessService = await this.resolveAsync<IImportProcessService>('ImportProcessService');
+
+    const identityService: IIdentityService = await this.resolveAsync<IIdentityService>('IdentityServiceNew');
+
+    const dummyIdentity: IIdentity = await identityService.getIdentity('dummyToken');
+    const dummyContext: ExecutionContext = new ExecutionContext(dummyIdentity);
+
+    for (const processFileName of processFileNames) {
+      await this.registerProcess(dummyContext, processFileName, importService);
+    }
+  }
+
+  private async registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
+
+    const processFilePath: string = path.join(__dirname, '..', '..', 'bpmn', `${processFileName}.bpmn`);
+
+    await importService.importBpmnFromFile(dummyContext, processFilePath, true);
   }
 }
