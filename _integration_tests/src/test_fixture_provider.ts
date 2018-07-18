@@ -135,8 +135,28 @@ export class TestFixtureProvider {
 
   private async registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
 
-    const processFilePath: string = path.join(__dirname, '..', '..', 'bpmn', `${processFileName}.bpmn`);
+    const bpmnDirectoryPath: string = this.getBpmnDirectoryPath();
+    const processFilePath: string = path.join(bpmnDirectoryPath, `${processFileName}.bpmn`);
 
     await importService.importBpmnFromFile(dummyContext, processFilePath, true);
+  }
+
+  /**
+   * Generate an absoulte path, which points to the bpmn directory.
+   *
+   * Checks if the cwd is "_integration_tests". If not, that directory name is appended.
+   * This is necessary, because Jenkins uses a different cwd than the local machines do.
+   */
+  private getBpmnDirectoryPath(): string {
+
+    const bpmnDirectoryName: string = 'bpmn';
+    let rootDirPath: string = process.cwd();
+    const integrationTestDirName: string = '_integration_tests';
+
+    if (!rootDirPath.endsWith(integrationTestDirName)) {
+      rootDirPath = path.join(rootDirPath, integrationTestDirName);
+    }
+
+    return path.join(rootDirPath, bpmnDirectoryName);
   }
 }
