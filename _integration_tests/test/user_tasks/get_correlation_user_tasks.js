@@ -26,10 +26,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
   });
 
   after(async () => {
-    // TODO - BUG:
-    // After receiving a 403 error, running any further requests will result in a 403 error aswell.
-    // Cleanup will not work, after the last test for checking the users access to a process model is done.
-    // await finishWaitingUserTasksAfterTests();
+    await finishWaitingUserTasksAfterTests();
     await testFixtureProvider.tearDown();
   });
 
@@ -47,11 +44,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
 
     correlationId = result.correlationId;
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    // Wait for the process instance to reach the user task
+    await wait();
   }
 
   async function finishWaitingUserTasksAfterTests() {
@@ -65,6 +59,17 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     await testFixtureProvider
       .consumerApiClientService
       .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+
+    // Wait for the process instance to finish
+    await wait();
+  }
+
+  async function wait() {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
   }
 
   it('should return a correlation\'s user tasks by its correlationId through the consumer api', async () => {
@@ -99,10 +104,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no correlation.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -117,10 +120,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -137,10 +138,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', fu
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 

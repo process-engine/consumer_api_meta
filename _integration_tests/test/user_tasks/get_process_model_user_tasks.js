@@ -26,10 +26,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
   });
 
   after(async () => {
-    // TODO - BUG:
-    // After receiving a 403 error, running any further requests will result in a 403 error aswell.
-    // Cleanup will not work, after the last test for checking the users access to a process model is done.
-    // await finishWaitingUserTasksAfterTests();
+    await finishWaitingUserTasksAfterTests();
     await testFixtureProvider.tearDown();
   });
 
@@ -47,11 +44,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
 
     correlationId = result.correlationId;
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    // Wait for the process instance to reach the user task
+    await wait();
   }
 
   async function finishWaitingUserTasksAfterTests() {
@@ -65,6 +59,17 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     await testFixtureProvider
       .consumerApiClientService
       .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+
+    // Wait for the process instance to finish
+    await wait();
+  }
+
+  async function wait() {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
   }
 
   it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
@@ -112,10 +117,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no process instance.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -130,10 +133,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -150,10 +151,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 

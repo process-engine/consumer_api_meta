@@ -47,11 +47,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -71,11 +67,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -95,10 +87,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no process instance.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -109,11 +99,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     await startProcessAndReturnCorrelationId(processModelKey);
     const invalidCorrelationId = 'invalidCorrelationId';
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -131,10 +117,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no correlation.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -144,11 +128,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const invalidUserTaskId = 'invalidUserTaskId';
     const userTaskResult = {
@@ -166,10 +146,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -178,11 +156,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -204,10 +178,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -217,11 +189,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = 'invalidUserTaskResult';
@@ -234,34 +202,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
-      should(error.code)
-        .match(expectedErrorCode);
-    }
-  });
-
-  // TODO: Bad Path not implemented yet
-  // TODO: Find a way to simulate a process error
-  it.skip('should fail, if attempting to finish the user task caused an error', async () => {
-
-    // TODO: Replace with real values
-    const processModelKey = 'test_consumer_api_user_task_finish';
-    const correlationId = 'correlationId';
-    const userTaskId = 'invalidUserTaskId';
-    const userTaskResult = {};
-
-    try {
-      await testFixtureProvider
-        .consumerApiClientService
-        .finishUserTask(consumerContext, processModelKey, correlationId, userTaskId, userTaskResult);
-
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 500;
-      const expectedErrorMessage = /could not be finished/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -271,11 +212,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -293,10 +230,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -306,11 +241,7 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -330,11 +261,17 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
+
+  async function wait() {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+  }
 
 });

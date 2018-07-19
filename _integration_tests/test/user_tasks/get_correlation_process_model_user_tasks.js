@@ -27,10 +27,7 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
   });
 
   after(async () => {
-    // TODO - BUG:
-    // After receiving a 403 error, running any further requests will result in a 403 error aswell.
-    // Cleanup will not work, after the last test for checking the users access to a process model is done.
-    // await finishWaitingUserTasksAfterTests();
+    await finishWaitingUserTasksAfterTests();
     await testFixtureProvider.tearDown();
   });
 
@@ -48,11 +45,8 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
 
     correlationId = result.correlationId;
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    // Wait for the process instance to reach the user task
+    await wait();
   }
 
   async function finishWaitingUserTasksAfterTests() {
@@ -66,15 +60,20 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     await testFixtureProvider
       .consumerApiClientService
       .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+
+    // Wait for the process instance to finish
+    await wait();
   }
 
-  it('should return a list of user tasks for a given process model in a given correlation', async () => {
-
+  async function wait() {
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-      }, 300);
+      }, 1000);
     });
+  }
+
+  it('should return a list of user tasks for a given process model in a given correlation', async () => {
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
@@ -97,12 +96,6 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
 
     const invalidProcessModelId = 'invalidProcessModelId';
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
-
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
@@ -112,20 +105,12 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no process instance.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail to retrieve a list of user tasks, if the correlationId does not exist', async () => {
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
 
     const invalidCorrelationId = 'invalidCorrelationId';
 
@@ -138,20 +123,12 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no correlation.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail to retrieve the correlation\'s user tasks, when the user is unauthorized', async () => {
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
 
     try {
       const userTaskList = await testFixtureProvider
@@ -162,22 +139,14 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
 
     try {
       const userTaskList = await testFixtureProvider
@@ -188,10 +157,8 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
