@@ -3,44 +3,27 @@ import * as path from 'path';
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
-import {HttpIntegrationTestBootstrapper} from '@essential-projects/http_integration_testing';
+import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
+import {IIdentity, IIdentityService} from '@essential-projects/iam_contracts';
 
 import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
+import {ExecutionContext, IImportProcessService} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
 const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
-  '@essential-projects/caching',
-  '@essential-projects/core',
-  '@essential-projects/data_model',
-  '@essential-projects/data_model_contracts',
-  '@essential-projects/datasource_adapter_base',
-  '@essential-projects/datasource_adapter_postgres',
-  '@essential-projects/datastore',
-  '@essential-projects/datastore_messagebus',
   '@essential-projects/event_aggregator',
-  '@essential-projects/feature',
   '@essential-projects/http_extension',
-  '@essential-projects/http_integration_testing',
-  '@essential-projects/iam',
-  '@essential-projects/invocation',
-  '@essential-projects/messagebus',
-  '@essential-projects/messagebus_adapter_faye',
-  '@essential-projects/metadata',
-  '@essential-projects/security_service',
   '@essential-projects/services',
-  '@essential-projects/routing',
-  '@essential-projects/timing',
-  '@essential-projects/validation',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
   '@process-engine/flow_node_instance.repository.sequelize',
   '@process-engine/iam',
   '@process-engine/process_engine',
   '@process-engine/process_model.repository.sequelize',
-  '@process-engine/process_repository',
+  '@process-engine/timers.repository.sequelize',
   '../../',
 ];
 
@@ -49,7 +32,7 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 });
 
 export class TestFixtureProvider {
-  private httpBootstrapper: HttpIntegrationTestBootstrapper;
+  private httpBootstrapper: AppBootstrapper;
   private _consumerApiClientService: IConsumerApiService;
 
   private container: InvocationContainer;
@@ -65,22 +48,23 @@ export class TestFixtureProvider {
   }
 
   public async initializeAndStart(): Promise<void> {
-    await this.initializeBootstrapper();
+    await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
-    await this.createConsumerContextForUsers();
+    await this._createConsumerContextForUsers();
+    await this._importProcessFiles();
     this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
   }
 
   public async tearDown(): Promise<void> {
-    await this.httpBootstrapper.reset();
-    await this.httpBootstrapper.shutdown();
+    const httpExtension: any = await this.container.resolveAsync('HttpExtension');
+    await httpExtension.close();
   }
 
   public async resolveAsync<T>(moduleName: string, args?: any): Promise<any> {
     return this.container.resolveAsync<T>(moduleName, args);
   }
 
-  private async initializeBootstrapper(): Promise<void> {
+  private async _initializeBootstrapper(): Promise<void> {
 
     try {
       this.container = new InvocationContainer({
@@ -96,13 +80,7 @@ export class TestFixtureProvider {
       this.container.validateDependencies();
 
       const appPath: string = path.resolve(__dirname);
-      this.httpBootstrapper = await this.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
-
-      // NOTE: Importing the process models into the database is handled by the ProcessEngineService, during initialization.
-      // Consequently, we need to resolve this service at least once, before doing anything else.
-      // Otherwise we won't have any process models in the database to work with.
-      // Maybe we should consider moving the process import into a sepearate import-service.
-      const processEngineService: any = await this.resolveAsync<any>('ProcessEngineService');
+      this.httpBootstrapper = await this.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
       logger.info('Bootstrapper started.');
     } catch (error) {
@@ -111,24 +89,74 @@ export class TestFixtureProvider {
     }
   }
 
-  private async createConsumerContextForUsers(): Promise<void> {
+  private async _createConsumerContextForUsers(): Promise<void> {
 
     // all access user
-    this._consumerContexts.defaultUser = await this.createConsumerContext('defaultUser');
+    this._consumerContexts.defaultUser = await this._createConsumerContext('defaultUser');
     // no access user
-    this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser');
+    this._consumerContexts.restrictedUser = await this._createConsumerContext('restrictedUser');
     // partially restricted users
-    this._consumerContexts.userWithAccessToSubLaneC = await this.createConsumerContext('userWithAccessToSubLaneC');
-    this._consumerContexts.userWithAccessToLaneA = await this.createConsumerContext('userWithAccessToLaneA');
-    this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA');
+    this._consumerContexts.userWithAccessToSubLaneC = await this._createConsumerContext('userWithAccessToSubLaneC');
+    this._consumerContexts.userWithAccessToLaneA = await this._createConsumerContext('userWithAccessToLaneA');
+    this._consumerContexts.userWithNoAccessToLaneA = await this._createConsumerContext('userWithNoAccessToLaneA');
   }
 
-  private async createConsumerContext(username: string): Promise<ConsumerContext> {
+  private async _createConsumerContext(username: string): Promise<ConsumerContext> {
 
     // Note: Since the iam facade is mocked, it doesn't matter what kind of token is used here.
     // It only matters that one is present.
     return <ConsumerContext> {
       identity: username,
     };
+  }
+
+  private async _importProcessFiles(): Promise<void> {
+
+    const processFileNames: Array<string> = [
+      'test_consumer_api_correlation_result',
+      'test_consumer_api_non_executable_process',
+      'test_consumer_api_process_start',
+      'test_consumer_api_usertask',
+      'test_consumer_api_usertask_empty',
+      'test_consumer_api_sublane_process',
+    ];
+
+    const importService: IImportProcessService = await this.resolveAsync<IImportProcessService>('ImportProcessService');
+
+    const identityService: IIdentityService = await this.resolveAsync<IIdentityService>('IdentityServiceNew');
+
+    const dummyIdentity: IIdentity = await identityService.getIdentity('dummyToken');
+    const dummyContext: ExecutionContext = new ExecutionContext(dummyIdentity);
+
+    for (const processFileName of processFileNames) {
+      await this._registerProcess(dummyContext, processFileName, importService);
+    }
+  }
+
+  private async _registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
+
+    const bpmnDirectoryPath: string = this._getBpmnDirectoryPath();
+    const processFilePath: string = path.join(bpmnDirectoryPath, `${processFileName}.bpmn`);
+
+    await importService.importBpmnFromFile(dummyContext, processFilePath, true);
+  }
+
+  /**
+   * Generate an absoulte path, which points to the bpmn directory.
+   *
+   * Checks if the cwd is "_integration_tests". If not, that directory name is appended.
+   * This is necessary, because Jenkins uses a different cwd than the local machines do.
+   */
+  private _getBpmnDirectoryPath(): string {
+
+    const bpmnDirectoryName: string = 'bpmn';
+    let rootDirPath: string = process.cwd();
+    const integrationTestDirName: string = '_integration_tests';
+
+    if (!rootDirPath.endsWith(integrationTestDirName)) {
+      rootDirPath = path.join(rootDirPath, integrationTestDirName);
+    }
+
+    return path.join(rootDirPath, bpmnDirectoryName);
   }
 }
