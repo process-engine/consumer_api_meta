@@ -39,6 +39,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       .consumerApiClientService
       .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
 
+    await wait();
+
     return result.correlationId;
   }
 
@@ -46,8 +48,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     const processModelKey = 'consumer_api_usertask_test';
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -66,8 +66,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     const processModelKey = 'consumer_api_usertask_test';
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -99,8 +97,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     await startProcessAndReturnCorrelationId(processModelKey);
     const invalidCorrelationId = 'invalidCorrelationId';
 
-    await wait();
-
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
       formFields: {
@@ -128,8 +124,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await wait();
-
     const invalidUserTaskId = 'invalidUserTaskId';
     const userTaskResult = {
       formFields: {
@@ -155,8 +149,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     const processModelKey = 'consumer_api_usertask_test';
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -189,8 +181,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
 
-    await wait();
-
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = 'invalidUserTaskResult';
 
@@ -211,8 +201,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     const processModelKey = 'consumer_api_usertask_test';
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -240,8 +228,6 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     const processModelKey = 'consumer_api_usertask_test';
 
     const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
-
-    await wait();
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {

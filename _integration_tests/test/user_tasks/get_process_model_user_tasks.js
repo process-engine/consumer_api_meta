@@ -22,7 +22,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
-    await startProcessInstance();
+    correlationId = await startProcessInstanceAndReturnCorrelationId();
   });
 
   after(async () => {
@@ -30,7 +30,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     await testFixtureProvider.tearDown();
   });
 
-  async function startProcessInstance(processId = processModelId) {
+  async function startProcessInstanceAndReturnCorrelationId(processId = processModelId) {
     const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
@@ -42,10 +42,10 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
       .consumerApiClientService
       .startProcessInstance(consumerContext, processId, startEventId, payload, startCallbackType);
 
-    correlationId = result.correlationId;
-
     // Wait for the process instance to reach the user task
     await wait();
+
+    return result.correlationId;
   }
 
   async function finishWaitingUserTasksAfterTests() {
@@ -93,7 +93,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
   it('should return an empty user task list, if the given process model does not have any user tasks', async () => {
 
     const processModelKey = 'consumer_api_usertask_test_empty';
-    await startProcessInstance(processModelKey);
+    await startProcessInstanceAndReturnCorrelationId(processModelKey);
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
