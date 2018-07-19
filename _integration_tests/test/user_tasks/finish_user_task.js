@@ -1,17 +1,16 @@
 'use strict';
 
 const should = require('should');
-const uuid = require('uuid');
 
-const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
-
-const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
+const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
 const testTimeoutMilliseconds = 5000;
 
 const testCase = 'POST -> /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish';
 describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
+  let processInstanceHandler;
   let testFixtureProvider;
   let consumerContext;
 
@@ -21,33 +20,19 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
   });
 
   after(async () => {
     await testFixtureProvider.tearDown();
   });
 
-  async function startProcessAndReturnCorrelationId(processModelKey) {
-    const startEventKey = 'StartEvent_1';
-    const payload = {
-      correlationId: uuid.v4(),
-      inputValues: {},
-    };
-    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
-
-    const result = await testFixtureProvider
-      .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
-
-    await wait();
-
-    return result.correlationId;
-  }
-
   it('should successfully finish the given user task.', async () => {
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -65,7 +50,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -94,7 +80,9 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+
     const invalidCorrelationId = 'invalidCorrelationId';
 
     const userTaskId = 'Task_1vdwmn1';
@@ -122,7 +110,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const invalidUserTaskId = 'invalidUserTaskId';
     const userTaskResult = {
@@ -146,9 +135,11 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
   });
 
   it('should fail to finish an already finished user task.', async () => {
+
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -179,7 +170,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = 'invalidUserTaskResult';
@@ -200,7 +192,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -227,7 +220,8 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
 
     const processModelKey = 'consumer_api_usertask_test';
 
-    const correlationId = await startProcessAndReturnCorrelationId(processModelKey);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelKey);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
     const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
@@ -251,13 +245,5 @@ describe(`Consumer API: ${testCase}`, function finishUserTask() {
       should(error.message).be.match(expectedErrorMessage);
     }
   });
-
-  async function wait() {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-  }
 
 });
