@@ -48,10 +48,10 @@ export class TestFixtureProvider {
   }
 
   public async initializeAndStart(): Promise<void> {
-    await this.initializeBootstrapper();
+    await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
-    await this.createConsumerContextForUsers();
-    await this.importProcessFiles();
+    await this._createConsumerContextForUsers();
+    await this._importProcessFiles();
     this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
   }
 
@@ -64,7 +64,7 @@ export class TestFixtureProvider {
     return this.container.resolveAsync<T>(moduleName, args);
   }
 
-  private async initializeBootstrapper(): Promise<void> {
+  private async _initializeBootstrapper(): Promise<void> {
 
     try {
       this.container = new InvocationContainer({
@@ -89,19 +89,19 @@ export class TestFixtureProvider {
     }
   }
 
-  private async createConsumerContextForUsers(): Promise<void> {
+  private async _createConsumerContextForUsers(): Promise<void> {
 
     // all access user
-    this._consumerContexts.defaultUser = await this.createConsumerContext('defaultUser');
+    this._consumerContexts.defaultUser = await this._createConsumerContext('defaultUser');
     // no access user
-    this._consumerContexts.restrictedUser = await this.createConsumerContext('restrictedUser');
+    this._consumerContexts.restrictedUser = await this._createConsumerContext('restrictedUser');
     // partially restricted users
-    this._consumerContexts.userWithAccessToSubLaneC = await this.createConsumerContext('userWithAccessToSubLaneC');
-    this._consumerContexts.userWithAccessToLaneA = await this.createConsumerContext('userWithAccessToLaneA');
-    this._consumerContexts.userWithNoAccessToLaneA = await this.createConsumerContext('userWithNoAccessToLaneA');
+    this._consumerContexts.userWithAccessToSubLaneC = await this._createConsumerContext('userWithAccessToSubLaneC');
+    this._consumerContexts.userWithAccessToLaneA = await this._createConsumerContext('userWithAccessToLaneA');
+    this._consumerContexts.userWithNoAccessToLaneA = await this._createConsumerContext('userWithNoAccessToLaneA');
   }
 
-  private async createConsumerContext(username: string): Promise<ConsumerContext> {
+  private async _createConsumerContext(username: string): Promise<ConsumerContext> {
 
     // Note: Since the iam facade is mocked, it doesn't matter what kind of token is used here.
     // It only matters that one is present.
@@ -110,7 +110,7 @@ export class TestFixtureProvider {
     };
   }
 
-  private async importProcessFiles(): Promise<void> {
+  private async _importProcessFiles(): Promise<void> {
 
     const processFileNames: Array<string> = [
       'test_consumer_api_correlation_result',
@@ -129,13 +129,13 @@ export class TestFixtureProvider {
     const dummyContext: ExecutionContext = new ExecutionContext(dummyIdentity);
 
     for (const processFileName of processFileNames) {
-      await this.registerProcess(dummyContext, processFileName, importService);
+      await this._registerProcess(dummyContext, processFileName, importService);
     }
   }
 
-  private async registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
+  private async _registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
 
-    const bpmnDirectoryPath: string = this.getBpmnDirectoryPath();
+    const bpmnDirectoryPath: string = this._getBpmnDirectoryPath();
     const processFilePath: string = path.join(bpmnDirectoryPath, `${processFileName}.bpmn`);
 
     await importService.importBpmnFromFile(dummyContext, processFilePath, true);
@@ -147,7 +147,7 @@ export class TestFixtureProvider {
    * Checks if the cwd is "_integration_tests". If not, that directory name is appended.
    * This is necessary, because Jenkins uses a different cwd than the local machines do.
    */
-  private getBpmnDirectoryPath(): string {
+  private _getBpmnDirectoryPath(): string {
 
     const bpmnDirectoryName: string = 'bpmn';
     let rootDirPath: string = process.cwd();
