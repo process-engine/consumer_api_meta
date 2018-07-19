@@ -189,33 +189,6 @@ describe(`Consumer API: ${testCase}`, function startProcessInstance() {
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  // TODO: Find a way to simulate a start event error
-  it.skip('should fail, if starting the request caused an error', async () => {
-
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
-    const payload = {
-      correlationId: uuid.v4(),
-      inputValues: {},
-    };
-
-    const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
-
-    try {
-      const result = await testFixtureProvider
-        .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
-
-      should.fail(result, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 500;
-      should(error.message).be.empty();
-      should(error.code)
-        .match(expectedErrorCode);
-    }
-  });
-
   it('should fail, if the request was aborted before the desired return_on event was reached', async () => {
     const processModelKey = 'test_consumer_api_process_start';
     const startEventKey = 'StartEvent_1';
