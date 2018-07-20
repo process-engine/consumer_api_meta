@@ -31,7 +31,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     await testFixtureProvider.tearDown();
   });
 
-  async function createFinishedProcessInstanceAndReturnCorrelationId(processModelId = processModelIdDefault, endEventId) {
+  async function createFinishedProcessInstanceAndReturnCorrelationId(processModelId = processModelIdDefault, endEventId = undefined) {
 
     const startEventId = 'StartEvent_1';
     const payload = {
