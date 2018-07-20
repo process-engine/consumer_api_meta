@@ -14,7 +14,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
   let testFixtureProvider;
   let consumerContext;
   let correlationId;
-  const processModelKey = 'test_consumer_api_correlation_result';
+  const processModelId = 'test_consumer_api_correlation_result';
 
   this.timeout(testTimeoutMilliseconds);
 
@@ -41,7 +41,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, returnOn);
+      .startProcessInstance(consumerContext, processModelId, startEventKey, payload, returnOn);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -51,13 +51,22 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
 
   it('should successfully return the results for the given correlationId', async () => {
 
-    const correlationResult = await testFixtureProvider
+    const correlationResults = await testFixtureProvider
       .consumerApiClientService
-      .getProcessResultForCorrelation(consumerContext, correlationId, processModelKey);
+      .getProcessResultForCorrelation(consumerContext, correlationId, processModelId);
 
-    should.exist(correlationResult);
-    should(correlationResult).have.property('scriptOutput');
-    should(correlationResult.scriptOutput).be.match(/hello world/i);
+    should(correlationResults).be.instanceof(Array);
+    should(correlationResults.length).be.equal(1);
+
+    const correlationResult = correlationResults[0];
+
+    const expectedEndEventId = 'EndEvent_Success';
+    const expectedTokenPayload = /hello world/i;
+
+    should(correlationResult.correlationId).be.equal(correlationId);
+    should(correlationResult.endEventId).be.equal(expectedEndEventId);
+    should(correlationResult).have.property('tokenPayload');
+    should(correlationResult.tokenPayload.scriptOutput).be.match(expectedTokenPayload);
   });
 
   it('should fail to get the results, if the given correlationId does not exist', async () => {
@@ -67,7 +76,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getProcessResultForCorrelation(consumerContext, invalidCorrelationId, processModelKey);
+        .getProcessResultForCorrelation(consumerContext, invalidCorrelationId, processModelId);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
@@ -105,7 +114,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getProcessResultForCorrelation({}, correlationId, processModelKey);
+        .getProcessResultForCorrelation({}, correlationId, processModelId);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
@@ -123,7 +132,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getProcessResultForCorrelation(testFixtureProvider.context.restrictedUser, correlationId, processModelKey);
+        .getProcessResultForCorrelation(testFixtureProvider.context.restrictedUser, correlationId, processModelId);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
