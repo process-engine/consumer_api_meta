@@ -113,6 +113,7 @@ export class TestFixtureProvider {
   private async _importProcessFiles(): Promise<void> {
 
     const processFileNames: Array<string> = [
+      'test_consumer_api_correlation_multiple_results',
       'test_consumer_api_correlation_result',
       'test_consumer_api_non_executable_process',
       'test_consumer_api_process_start',
