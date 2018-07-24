@@ -14,11 +14,19 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
   let correlationId;
 
   const processModelIdDefault = 'test_consumer_api_correlation_result';
+  const processModelIdMultipleEndEvents = 'test_consumer_api_correlation_multiple_results';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    const processModelsToImport = [
+      processModelIdDefault,
+      processModelIdMultipleEndEvents,
+    ];
+
+    await testFixtureProvider.importProcessFiles(processModelsToImport);
 
     correlationId = await createFinishedProcessInstanceAndReturnCorrelationId();
   });
@@ -75,7 +83,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
   // which currently requires a join gateway to be present for each split gateway.
   it.skip('should successfully return the results for a correlation where multiple end events have been reached', async () => {
 
-    const processModelIdMultipleEndEvents = 'test_consumer_api_correlation_multiple_results';
     const endEventToWaitFor = 'EndEvent_2';
 
     const correlationIdMultipleResults =
@@ -119,10 +126,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /no process results for correlation.*?found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -139,10 +144,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /process model.*?not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -157,10 +160,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -175,10 +176,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 

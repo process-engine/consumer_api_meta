@@ -14,12 +14,14 @@ describe(`Consumer API: ${testCase}`, () => {
   let consumerContext;
   let correlationId;
 
-  const processModelId = 'consumer_api_usertask_test';
+  const processModelId = 'test_consumer_api_usertask';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    await testFixtureProvider.importProcessFiles([processModelId]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 

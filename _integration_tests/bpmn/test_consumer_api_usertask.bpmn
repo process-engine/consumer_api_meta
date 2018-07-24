@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definition_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.15.1">
   <bpmn:collaboration id="Collaboration_1cidyxu">
-    <bpmn:participant id="Participant_0px403d" name="consumer_api_usertask_test" processRef="consumer_api_usertask_test" />
+    <bpmn:participant id="Participant_0px403d" name="test_consumer_api_usertask" processRef="test_consumer_api_usertask" />
   </bpmn:collaboration>
-  <bpmn:process id="consumer_api_usertask_test" name="consumer_api_usertask_test" isExecutable="true">
+  <bpmn:process id="test_consumer_api_usertask" name="test_consumer_api_usertask" isExecutable="true">
     <bpmn:laneSet>
       <bpmn:lane id="Lane_1xzf0d3" name="Default_Test_Lane">
         <bpmn:extensionElements>
@@ -16,7 +16,7 @@
         <bpmn:flowNodeRef>EndEvent_1j67qnl</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="StartEvent_1" name="consumer_api_usertask_test">
+    <bpmn:startEvent id="StartEvent_1" name="test_consumer_api_usertask">
       <bpmn:outgoing>SequenceFlow_0fkan76</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0fkan76" sourceRef="StartEvent_1" targetRef="Task_1vdwmn1" />

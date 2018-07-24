@@ -13,12 +13,14 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   let consumerContext;
   let correlationId;
 
-  const processModelId = 'consumer_api_usertask_test';
+  const processModelId = 'test_consumer_api_usertask';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    await testFixtureProvider.importProcessFiles([processModelId]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 

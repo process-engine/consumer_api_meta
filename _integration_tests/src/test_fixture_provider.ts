@@ -51,7 +51,6 @@ export class TestFixtureProvider {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this._createConsumerContextForUsers();
-    await this._importProcessFiles();
     this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
   }
 
@@ -110,21 +109,11 @@ export class TestFixtureProvider {
     };
   }
 
-  private async _importProcessFiles(): Promise<void> {
-
-    const processFileNames: Array<string> = [
-      'test_consumer_api_correlation_multiple_results',
-      'test_consumer_api_correlation_result',
-      'test_consumer_api_non_executable_process',
-      'test_consumer_api_process_start',
-      'test_consumer_api_usertask',
-      'test_consumer_api_usertask_empty',
-      'test_consumer_api_sublane_process',
-    ];
+  public async importProcessFiles(processFileNames: Array<string>): Promise<void> {
 
     const importService: IImportProcessService = await this.resolveAsync<IImportProcessService>('ImportProcessService');
 
-    const identityService: IIdentityService = await this.resolveAsync<IIdentityService>('IdentityServiceNew');
+    const identityService: IIdentityService = await this.resolveAsync<IIdentityService>('IdentityService');
 
     const dummyIdentity: IIdentity = await identityService.getIdentity('dummyToken');
     const dummyContext: ExecutionContext = new ExecutionContext(dummyIdentity);

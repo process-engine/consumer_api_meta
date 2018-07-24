@@ -15,10 +15,20 @@ describe(`Consumer API: ${testCase}`, () => {
   let testFixtureProvider;
   let consumerContext;
 
+  const processModelId = 'test_consumer_api_process_start';
+  const processModelIdNonExecutable = 'test_consumer_api_non_executable_process';
+
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    const processModelsToImport = [
+      processModelId,
+      processModelIdNonExecutable,
+    ];
+
+    await testFixtureProvider.importProcessFiles(processModelsToImport);
   });
 
   after(async () => {
@@ -27,7 +37,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, if the given process_model_id does not exist', async () => {
 
-    const processModelId = 'invalidprocessModelId';
+    const invalidProcessModelId = 'invalidprocessModelId';
     const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
@@ -39,7 +49,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
+        .startProcessInstance(consumerContext, invalidProcessModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -52,7 +62,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, if the given start_event_id does not exist', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'invalidStartEventId';
     const payload = {
       correlationId: uuid.v4(),
@@ -77,7 +86,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, if the given end_event_id does not exist', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'StartEvent_1';
     const endEventId = 'invalidEndEventId';
     const payload = {
@@ -103,7 +111,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, if the process model is not marked as executable', async () => {
 
-    const processModelId = 'test_consumer_api_non_executable_process';
     const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
@@ -115,7 +122,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelIdNonExecutable, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -128,7 +135,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, if the given startCallbackType option is invalid', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
@@ -155,7 +161,6 @@ describe(`Consumer API: ${testCase}`, () => {
   // TODO: What exactly constitutes a valid payload anyway?
   it.skip('should fail to start the process, if the given payload is invalid', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'StartEvent_1';
     const payload = 'i am missing vital properties';
 
@@ -176,7 +181,7 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail, if the request was aborted before the desired return_on event was reached', async () => {
-    const processModelId = 'test_consumer_api_process_start';
+
     const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),

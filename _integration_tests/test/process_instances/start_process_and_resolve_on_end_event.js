@@ -14,12 +14,22 @@ describe(`Consumer API: ${testCase}`, () => {
   let testFixtureProvider;
   let consumerContext;
 
+  const processModelId = 'test_consumer_api_process_start';
+  const processModelIdSublanes = 'test_consumer_api_sublane_process';
+
   const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    const processModelsToImport = [
+      processModelId,
+      processModelIdSublanes,
+    ];
+
+    await testFixtureProvider.importProcessFiles(processModelsToImport);
   });
 
   after(async () => {
@@ -28,7 +38,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should start the process and return the provided correlation ID, after the given end event was reached', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'StartEvent_1';
     const endEventId = 'EndEvent_Success';
     const payload = {
@@ -46,7 +55,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should start the process, wait until the end event was reached and return a generated correlation ID, when none is provided', async () => {
 
-    const processModelId = 'test_consumer_api_process_start';
     const startEventId = 'StartEvent_1';
     const endEventId = 'EndEvent_Success';
     const payload = {
@@ -62,7 +70,7 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should execute a process with sublanes, when the user can access all lanes', async () => {
-    const processModelId = 'test_consumer_api_sublane_process';
+
     const startEventId = 'StartEvent_1';
     const endEventId = 'EndEvent_1';
 
@@ -74,14 +82,14 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(consumerContext, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
   });
 
   it('should execute a process with sublanes, when the user can only access one sublane and process execution never changes sublanes', async () => {
-    const processModelId = 'test_consumer_api_sublane_process';
+
     const startEventId = 'StartEvent_1';
     const endEventId = 'EndEvent_1';
 
@@ -95,7 +103,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelId, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(laneuserContext, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();

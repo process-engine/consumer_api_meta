@@ -9,6 +9,8 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
   let testFixtureProvider;
   let consumerContext;
 
+  const processModelId = 'test_consumer_api_correlation_result';
+
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
@@ -21,7 +23,6 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
 
   it('should return a list of events for a given process model in a given correlation', async () => {
 
-    const processModelId = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
 
     const eventList = await testFixtureProvider
@@ -43,7 +44,6 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
 
   it('should fail to retrieve the correlation\'s events, when the user is unauthorized', async () => {
 
-    const processModelId = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
 
     try {
@@ -55,17 +55,14 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
 
-    const processModelId = 'test_get_events_for_process_model';
     const correlationId = 'correlationId';
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
@@ -79,10 +76,8 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -101,17 +96,14 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve a list of events, if the correlation_id does not exist', async () => {
 
-    const processModelId = 'test_get_events_for_process_model';
     const invalidCorrelationId = 'invalidCorrelationId';
 
     try {
@@ -123,10 +115,8 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 

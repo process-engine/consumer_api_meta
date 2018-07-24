@@ -12,10 +12,14 @@ describe(`Consumer API: ${testCase}`, () => {
   let testFixtureProvider;
   let consumerContext;
 
+  const processModelId = 'test_consumer_api_usertask';
+
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    await testFixtureProvider.importProcessFiles([processModelId]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
   });
@@ -25,7 +29,6 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should successfully finish the given user task.', async () => {
-    const processModelId = 'consumer_api_usertask_test';
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
@@ -43,8 +46,6 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to finish the user task, if the given process_model_id does not exist', async () => {
-
-    const processModelId = 'consumer_api_usertask_test';
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
@@ -74,8 +75,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to finish the user task, if the given correlation_id does not exist', async () => {
 
-    const processModelId = 'consumer_api_usertask_test';
-
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
@@ -104,8 +103,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to finish the user task, if the given user_task_id does not exist', async () => {
 
-    const processModelId = 'consumer_api_usertask_test';
-
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
@@ -131,8 +128,6 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to finish an already finished user task.', async () => {
-
-    const processModelId = 'consumer_api_usertask_test';
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
@@ -164,8 +159,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to finish the user task, if the given payload is invalid', async () => {
 
-    const processModelId = 'consumer_api_usertask_test';
-
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
@@ -185,8 +178,6 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to finish the user task, when the user is unauthorized', async () => {
-
-    const processModelId = 'consumer_api_usertask_test';
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
@@ -213,8 +204,6 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to finish the user task, when the user is forbidden to retrieve it', async () => {
-
-    const processModelId = 'consumer_api_usertask_test';
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);

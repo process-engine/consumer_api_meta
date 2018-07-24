@@ -13,12 +13,20 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
   let consumerContext;
   let correlationId;
 
-  const processModelId = 'consumer_api_usertask_test';
+  const processModelId = 'test_consumer_api_usertask';
+  const processModelIdNoUserTasks = 'test_consumer_api_usertask_empty';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    const processModelsToImport = [
+      processModelId,
+      processModelIdNoUserTasks,
+    ];
+
+    await testFixtureProvider.importProcessFiles(processModelsToImport);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
@@ -64,7 +72,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
 
   it('should return an empty user task list, if the given process model does not have any user tasks', async () => {
 
-    const processModelIdNoUserTasks = 'consumer_api_usertask_test_empty';
     await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdNoUserTasks);
 
     await processInstanceHandler.wait(500);

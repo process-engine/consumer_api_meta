@@ -13,6 +13,13 @@ describe('Consumer API:   GET  ->  /processModels', () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
+
+    const processModelsToImport = [
+      'test_consumer_api_process_start',
+      'test_consumer_api_non_executable_process',
+    ];
+
+    await testFixtureProvider.importProcessFiles(processModelsToImport);
   });
 
   after(async () => {
@@ -95,10 +102,8 @@ describe('Consumer API:   GET  ->  /processModels', () => {
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
