@@ -4,14 +4,10 @@ const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-const testTimeoutMilliseconds = 5000;
-
-describe('Consumer API:   GET  ->  /processModels', function getProcessModels() {
+describe('Consumer API:   GET  ->  /processModels', () => {
 
   let testFixtureProvider;
   let consumerContext;
-
-  this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();

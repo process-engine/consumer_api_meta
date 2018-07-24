@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "start": "cross-env NODE_ENV=test CONFIG_PATH=config node index.js",
-    "test-internal": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=internal mocha test/**/*.js --exit",
-    "test-external": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=external mocha test/**/*.js --exit",
+    "test-internal": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=internal mocha -t 15000 test/**/*.js --exit",
+    "test-external": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=external mocha -t 15000 test/**/*.js --exit",
     "test": "npm run test-internal && npm run test-external",
     "build": "gulp build"
   },

@@ -7,14 +7,10 @@ const StartCallbackType = require('@process-engine/consumer_api_contracts').Star
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-const testTimeoutMilliseconds = 5000;
-
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start';
-describe(`Consumer API: ${testCase}`, function startProcessInstance() {
+describe(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
-
-  this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();

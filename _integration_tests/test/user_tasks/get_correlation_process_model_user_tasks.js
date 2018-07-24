@@ -5,10 +5,8 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-const testTimeoutMilliseconds = 5000;
-
 const testCase = 'GET  ->  /process_models/:process_model_key/correlations/:correlation_id/userTasks';
-describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorrelation() {
+describe(`Consumer API: ${testCase}`, () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -17,8 +15,6 @@ describe(`Consumer API: ${testCase}`, function getUserTasksForProcessModelInCorr
   let correlationId;
 
   const processModelId = 'consumer_api_usertask_test';
-
-  this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();

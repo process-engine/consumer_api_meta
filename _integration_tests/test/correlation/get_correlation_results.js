@@ -7,17 +7,13 @@ const startCallbackType = require('@process-engine/consumer_api_contracts').Star
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-const testTimeoutMilliseconds = 5000;
-
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_key/results', function startProcessInstance() {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_key/results', () => {
 
   let testFixtureProvider;
   let consumerContext;
   let correlationId;
 
   const processModelIdDefault = 'test_consumer_api_correlation_result';
-
-  this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();

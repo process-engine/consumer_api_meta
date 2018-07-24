@@ -5,16 +5,12 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-const testTimeoutMilliseconds = 5000;
-
 const testCase = 'POST -> /process_models/:process_model_key/correlations/:correlation_id/user_tasks/:user_task_id/finish';
-describe(`Consumer API: ${testCase}`, function finishUserTask() {
+describe(`Consumer API: ${testCase}`, () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
   let consumerContext;
-
-  this.timeout(testTimeoutMilliseconds);
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
