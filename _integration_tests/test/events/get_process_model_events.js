@@ -4,7 +4,7 @@ const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', () => {
+describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', () => {
 
   let testFixtureProvider;
   let consumerContext;
@@ -19,13 +19,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', (
     await testFixtureProvider.tearDown();
   });
 
-  it('should return a process models events by its process_model_key through the consumer api', async () => {
+  it('should return a process models events by its process_model_id through the consumer api', async () => {
 
-    const processModelKey = 'test_get_events_for_process_model';
+    const processModelId = 'test_get_events_for_process_model';
 
     const eventList = await testFixtureProvider
       .consumerApiClientService
-      .getEventsForProcessModel(consumerContext, processModelKey);
+      .getEventsForProcessModel(consumerContext, processModelId);
 
     should(eventList).have.property('events');
 
@@ -42,12 +42,12 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', (
 
   it('should fail to retrieve the process model\'s events, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_get_events_for_process_model';
+    const processModelId = 'test_get_events_for_process_model';
 
     try {
       const eventList = await testFixtureProvider
         .consumerApiClientService
-        .getEventsForProcessModel({}, processModelKey);
+        .getEventsForProcessModel({}, processModelId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -63,14 +63,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', (
   // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the process model\'s events, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_get_events_for_process_model';
+    const processModelId = 'test_get_events_for_process_model';
 
     const restrictedContext = testFixtureProvider.context.restrictedUser;
 
     try {
       const eventList = await testFixtureProvider
         .consumerApiClientService
-        .getEventsForProcessModel(restrictedContext, processModelKey);
+        .getEventsForProcessModel(restrictedContext, processModelId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -84,14 +84,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/events', (
   });
 
   // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the process model\'s events, if the process_model_key does not exist', async () => {
+  it.skip('should fail to retrieve the process model\'s events, if the process_model_id does not exist', async () => {
 
-    const invalidProcessModelKey = 'invalidProcessModelKey';
+    const invalidprocessModelId = 'invalidprocessModelId';
 
     try {
       const processModel = await testFixtureProvider
         .aconsumerApiClientService
-        .getEventsForProcessModel(consumerContext, invalidProcessModelKey);
+        .getEventsForProcessModel(consumerContext, invalidprocessModelId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {

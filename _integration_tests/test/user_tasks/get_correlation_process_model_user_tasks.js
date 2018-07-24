@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-const testCase = 'GET  ->  /process_models/:process_model_key/correlations/:correlation_id/userTasks';
+const testCase = 'GET  ->  /process_models/:process_model_id/correlations/:correlation_id/userTasks';
 describe(`Consumer API: ${testCase}`, () => {
 
   let processInstanceHandler;
@@ -64,7 +64,7 @@ describe(`Consumer API: ${testCase}`, () => {
     });
   });
 
-  it('should fail to retrieve a list of user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve a list of user tasks, if the process_model_id does not exist', async () => {
 
     const invalidProcessModelId = 'invalidProcessModelId';
 

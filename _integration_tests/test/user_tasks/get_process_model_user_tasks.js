@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks', () => {
+describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -44,7 +44,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
       .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
   }
 
-  it('should return a process model\'s user tasks by its process_model_key through the consumer api', async () => {
+  it('should return a process model\'s user tasks by its process_model_id through the consumer api', async () => {
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
@@ -78,14 +78,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key/userTasks'
     should(userTaskList.userTasks.length).be.equal(0);
   });
 
-  it('should fail to retrieve the process model\'s user tasks, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve the process model\'s user tasks, if the process_model_id does not exist', async () => {
 
-    const invalidProcessModelKey = 'invalidProcessModelKey';
+    const invalidprocessModelId = 'invalidprocessModelId';
 
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForProcessModel(consumerContext, invalidProcessModelKey);
+        .getUserTasksForProcessModel(consumerContext, invalidprocessModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {

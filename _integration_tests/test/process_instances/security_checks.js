@@ -7,7 +7,7 @@ const StartCallbackType = require('@process-engine/consumer_api_contracts').Star
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start';
+const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start';
 describe(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
@@ -23,8 +23,8 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to start the process, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {
@@ -37,7 +37,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance({}, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance({}, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -52,8 +52,8 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should fail to execute a process without sublanes, if the user cannot access the lane with the start event', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {
@@ -68,7 +68,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(restrictedContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(restrictedContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -82,9 +82,9 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to execute a process with sublanes, if the user subscribed to an end event he cannot access', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_2';
+    const processModelId = 'test_consumer_api_sublane_process';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_2';
 
     const payload = {
       inputValues: {
@@ -99,7 +99,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+        .startProcessInstance(userContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
       should.fail(result, undefined, 'This request should have failed!');
 
@@ -115,8 +115,8 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to start a process with sublanes, if the user cannot access the root lane.', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'Start_Event_1';
+    const processModelId = 'test_consumer_api_sublane_process';
+    const startEventId = 'Start_Event_1';
 
     const payload = {
       inputValues: {
@@ -130,7 +130,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(userContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'The user can execute the process even if he has no access rights to the parent lane.');
     } catch (error) {
@@ -145,9 +145,9 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   it('should fail to start a process with sublanes, if the user cannot access the sublanes.', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_1';
+    const processModelId = 'test_consumer_api_sublane_process';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_1';
 
     const payload = {
       inputValues: {
@@ -162,7 +162,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+        .startProcessInstance(userContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 

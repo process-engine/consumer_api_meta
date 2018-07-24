@@ -8,7 +8,7 @@ const StartCallbackType = require('@process-engine/consumer_api_contracts').Star
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
 // eslint-disable-next-line
-const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start?start_callback_type=3&end_event_key=value';
+const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start?start_callback_type=3&end_event_id=value';
 describe(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
@@ -28,9 +28,9 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should start the process and return the provided correlation ID, after the given end event was reached', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_Success';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_Success';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -38,7 +38,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -46,25 +46,25 @@ describe(`Consumer API: ${testCase}`, () => {
 
   it('should start the process, wait until the end event was reached and return a generated correlation ID, when none is provided', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_Success';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_Success';
     const payload = {
       inputValues: {},
     };
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
   });
 
   it('should execute a process with sublanes, when the user can access all lanes', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_1';
+    const processModelId = 'test_consumer_api_sublane_process';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_1';
 
     const payload = {
       inputValues: {
@@ -74,16 +74,16 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
   });
 
   it('should execute a process with sublanes, when the user can only access one sublane and process execution never changes sublanes', async () => {
-    const processModelKey = 'test_consumer_api_sublane_process';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'EndEvent_1';
+    const processModelId = 'test_consumer_api_sublane_process';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'EndEvent_1';
 
     const payload = {
       inputValues: {
@@ -95,7 +95,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+      .startProcessInstance(laneuserContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();

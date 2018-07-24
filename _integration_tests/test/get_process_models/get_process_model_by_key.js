@@ -4,7 +4,7 @@ const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
+describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
 
   let testFixtureProvider;
   let consumerContext;
@@ -19,13 +19,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should return a process model by its process_model_key through the consumer api', async () => {
+  it('should return a process model by its process_model_id through the consumer api', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
+    const processModelId = 'test_consumer_api_process_start';
 
     const processModel = await testFixtureProvider
       .consumerApiClientService
-      .getProcessModelByKey(consumerContext, processModelKey);
+      .getProcessModelByKey(consumerContext, processModelId);
 
     should(processModel).have.property('key');
     should(processModel).have.property('startEvents');
@@ -36,11 +36,11 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
 
   it('should not list any start events, if the retrieved process model is not marked as executable', async () => {
 
-    const processModelKey = 'test_consumer_api_non_executable_process';
+    const processModelId = 'test_consumer_api_non_executable_process';
 
     const processModel = await testFixtureProvider
       .consumerApiClientService
-      .getProcessModelByKey(consumerContext, processModelKey);
+      .getProcessModelByKey(consumerContext, processModelId);
 
     should(processModel).have.property('key');
     should(processModel).have.property('startEvents');
@@ -51,12 +51,12 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
 
   it('should fail to retrieve the process model, when the user is unauthorized', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
+    const processModelId = 'test_consumer_api_process_start';
 
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey({}, processModelKey);
+        .getProcessModelByKey({}, processModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
@@ -71,13 +71,13 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
 
   it('should fail to retrieve the process model, when the user forbidden to retrieve it', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
+    const processModelId = 'test_consumer_api_process_start';
     const restrictedContext = testFixtureProvider.context.restrictedUser;
 
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey(restrictedContext, processModelKey);
+        .getProcessModelByKey(restrictedContext, processModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
@@ -90,14 +90,14 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_key', () => {
     }
   });
 
-  it('should fail to retrieve the process model, if the process_model_key does not exist', async () => {
+  it('should fail to retrieve the process model, if the process_model_id does not exist', async () => {
 
-    const invalidProcessModelKey = 'invalidProcessModelKey';
+    const invalidprocessModelId = 'invalidprocessModelId';
 
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey(consumerContext, invalidProcessModelKey);
+        .getProcessModelByKey(consumerContext, invalidprocessModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {

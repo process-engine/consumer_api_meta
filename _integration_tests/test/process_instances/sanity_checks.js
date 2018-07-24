@@ -9,7 +9,7 @@ const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider')
 
 const testTimeoutMilliseconds = 5000;
 // eslint-disable-next-line
-const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_key/start_events/:start_event_key/start';
+const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start';
 describe(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
@@ -25,10 +25,10 @@ describe(`Consumer API: ${testCase}`, () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should fail to start the process, if the given process_model_key does not exist', async () => {
+  it('should fail to start the process, if the given process_model_id does not exist', async () => {
 
-    const processModelKey = 'invalidProcessModelKey';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'invalidprocessModelId';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -39,23 +39,21 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /key.*?not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      const expectedErrorMessage = /not found/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
-  it('should fail to start the process, if the given start_event_key does not exist', async () => {
+  it('should fail to start the process, if the given start_event_id does not exist', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'invalidStartEventKey';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'invalidStartEventId';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -66,24 +64,22 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /startevent.*?not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
-  it('should fail to start the process, if the given end_event_key does not exist', async () => {
+  it('should fail to start the process, if the given end_event_id does not exist', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
-    const endEventKey = 'invalidEndEventKey';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
+    const endEventId = 'invalidEndEventId';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -94,23 +90,21 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType, endEventKey);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType, endEventId);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /endevent.*?not found/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail to start the process, if the process model is not marked as executable', async () => {
 
-    const processModelKey = 'test_consumer_api_non_executable_process';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_non_executable_process';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -121,23 +115,21 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /not executable/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail to start the process, if the given startCallbackType option is invalid', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {},
@@ -148,16 +140,14 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /not a valid return option/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
@@ -165,8 +155,8 @@ describe(`Consumer API: ${testCase}`, () => {
   // TODO: What exactly constitutes a valid payload anyway?
   it.skip('should fail to start the process, if the given payload is invalid', async () => {
 
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
     const payload = 'i am missing vital properties';
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
@@ -174,22 +164,20 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /invalid payload/i;
-      should(error.code)
-        .match(expectedErrorCode);
-      should(error.message)
-        .match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
     }
   });
 
   it('should fail, if the request was aborted before the desired return_on event was reached', async () => {
-    const processModelKey = 'test_consumer_api_process_start';
-    const startEventKey = 'StartEvent_1';
+    const processModelId = 'test_consumer_api_process_start';
+    const startEventId = 'StartEvent_1';
     const payload = {
       correlationId: uuid.v4(),
       inputValues: {
@@ -203,16 +191,14 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+        .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 500;
       const expectedErrorMessage = /critical error/i;
-      should(error.message)
-        .match(expectedErrorMessage);
-      should(error.code)
-        .match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 });

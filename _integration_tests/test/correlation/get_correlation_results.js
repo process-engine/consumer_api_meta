@@ -7,7 +7,7 @@ const startCallbackType = require('@process-engine/consumer_api_contracts').Star
 
 const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_key/results', () => {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_id/results', () => {
 
   let testFixtureProvider;
   let consumerContext;
@@ -126,14 +126,14 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     }
   });
 
-  it('should fail to get the results, if the given process model key does not exist within the given correlation', async () => {
+  it('should fail to get the results, if the given process model id does not exist within the given correlation', async () => {
 
-    const invalidProcessModelKey = 'invalidProcessmodelKey';
+    const invalidprocessModelId = 'invalidprocessModelId';
 
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getProcessResultForCorrelation(consumerContext, correlationId, invalidProcessModelKey);
+        .getProcessResultForCorrelation(consumerContext, correlationId, invalidprocessModelId);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
