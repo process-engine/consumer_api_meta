@@ -33,9 +33,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
 
     const processModel = await testFixtureProvider
       .consumerApiClientService
-      .getProcessModelByKey(consumerContext, processModelId);
+      .getProcessModelById(consumerContext, processModelId);
 
-    should(processModel).have.property('key');
+    should(processModel).have.property('id');
     should(processModel).have.property('startEvents');
     should(processModel).have.property('endEvents');
     should(processModel.startEvents.length).be.greaterThan(0);
@@ -46,9 +46,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
 
     const processModel = await testFixtureProvider
       .consumerApiClientService
-      .getProcessModelByKey(consumerContext, processModelIdNonExecutable);
+      .getProcessModelById(consumerContext, processModelIdNonExecutable);
 
-    should(processModel).have.property('key');
+    should(processModel).have.property('id');
     should(processModel).have.property('startEvents');
     should(processModel).have.property('endEvents');
     should(processModel.startEvents.length).be.equal(0);
@@ -60,7 +60,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey({}, processModelId);
+        .getProcessModelById({}, processModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
@@ -78,7 +78,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey(restrictedContext, processModelId);
+        .getProcessModelById(restrictedContext, processModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
@@ -96,7 +96,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getProcessModelByKey(consumerContext, invalidprocessModelId);
+        .getProcessModelById(consumerContext, invalidprocessModelId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
