@@ -1,13 +1,19 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
-import {IIdentity, IIdentityService} from '@essential-projects/iam_contracts';
+import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
-import {ExecutionContext, IImportProcessService} from '@process-engine/process_engine_contracts';
+import {
+  ExecutionContext,
+  IExecutionContextFacade,
+  IExecutionContextFacadeFactory,
+  IProcessModelService,
+} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -33,7 +39,10 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 
 export class TestFixtureProvider {
   private httpBootstrapper: AppBootstrapper;
+
+  private _executionContextFacade: IExecutionContextFacade;
   private _consumerApiClientService: IConsumerApiService;
+  private _processModelService: IProcessModelService;
 
   private container: InvocationContainer;
 
@@ -47,11 +56,16 @@ export class TestFixtureProvider {
     return this._consumerApiClientService;
   }
 
+  public get processModelService(): IProcessModelService {
+    return this._processModelService;
+  }
+
   public async initializeAndStart(): Promise<void> {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this._createConsumerContextForUsers();
     this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
+    this._processModelService = await this.resolveAsync<IProcessModelService>('ProcessModelService');
   }
 
   public async tearDown(): Promise<void> {
@@ -111,24 +125,36 @@ export class TestFixtureProvider {
 
   public async importProcessFiles(processFileNames: Array<string>): Promise<void> {
 
-    const importService: IImportProcessService = await this.resolveAsync<IImportProcessService>('ImportProcessService');
-
-    const identityService: IIdentityService = await this.resolveAsync<IIdentityService>('IdentityService');
-
-    const dummyIdentity: IIdentity = await identityService.getIdentity('dummyToken');
-    const dummyContext: ExecutionContext = new ExecutionContext(dummyIdentity);
-
     for (const processFileName of processFileNames) {
-      await this._registerProcess(dummyContext, processFileName, importService);
+      await this._registerProcess(processFileName);
     }
   }
 
-  private async _registerProcess(dummyContext: ExecutionContext, processFileName: string, importService: IImportProcessService): Promise<void> {
+  private async _registerProcess(processFileName: string): Promise<void> {
 
-    const bpmnDirectoryPath: string = this._getBpmnDirectoryPath();
-    const processFilePath: string = path.join(bpmnDirectoryPath, `${processFileName}.bpmn`);
+    const dummyIdentity: IIdentity = {
+      token: 'defaultUser',
+    };
 
-    await importService.importBpmnFromFile(dummyContext, processFilePath, true);
+    const executionContext: ExecutionContext = new ExecutionContext(dummyIdentity);
+
+    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
+      await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
+
+    const executionContextFacade: IExecutionContextFacade = executionContextFacadeFactory.create(executionContext);
+
+    const xml: string = this._readProcessModelFromFile(processFileName);
+    await this.processModelService.persistProcessDefinitions(executionContextFacade, processFileName, xml, true);
+  }
+
+  private _readProcessModelFromFile(fileName: string): string {
+
+    const bpmnFolderLocation: string = this._getBpmnDirectoryPath();
+    const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+
+    const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+
+    return processModelAsXml;
   }
 
   /**

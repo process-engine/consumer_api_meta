@@ -63,9 +63,9 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     userTaskList.userTasks.forEach((userTask) => {
-      should(userTask).have.property('key');
       should(userTask).have.property('id');
-      should(userTask).have.property('processInstanceId');
+      should(userTask).have.property('correlationId');
+      should(userTask).have.property('processModelId');
       should(userTask).have.property('data');
     });
   });

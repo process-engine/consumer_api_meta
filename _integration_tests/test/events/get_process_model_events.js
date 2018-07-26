@@ -33,7 +33,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     should(eventList.events.length).be.greaterThan(0);
 
     eventList.events.forEach((userTask) => {
-      should(userTask).have.property('key');
       should(userTask).have.property('id');
       should(userTask).have.property('processInstanceId');
       should(userTask).have.property('data');

@@ -38,7 +38,7 @@ describe('Consumer API:   GET  ->  /processModels', () => {
     should(processModelList.processModels.length).be.greaterThan(0);
 
     processModelList.processModels.forEach((processModel) => {
-      should(processModel).have.property('key');
+      should(processModel).have.property('id');
       should(processModel).have.property('startEvents');
       should(processModel).have.property('endEvents');
       should(processModel.startEvents).be.instanceOf(Array);
@@ -59,8 +59,8 @@ describe('Consumer API:   GET  ->  /processModels', () => {
     should(processModelList.processModels).be.instanceOf(Array);
 
     processModelList.processModels.forEach((processModel) => {
-      should(processModel).have.property('key');
-      should(processModel.key).not.be.equal('test_consumer_api_process_start');
+      should(processModel).have.property('id');
+      should(processModel.id).not.be.equal('test_consumer_api_process_start');
       should(processModel).have.property('startEvents');
       should(processModel).have.property('endEvents');
       should(processModel.startEvents).be.instanceOf(Array);
@@ -79,13 +79,13 @@ describe('Consumer API:   GET  ->  /processModels', () => {
     should(processModelList.processModels).be.instanceOf(Array);
 
     processModelList.processModels.forEach((processModel) => {
-      should(processModel).have.property('key');
+      should(processModel).have.property('id');
       should(processModel).have.property('startEvents');
       should(processModel).have.property('endEvents');
       should(processModel.startEvents).be.instanceOf(Array);
       should(processModel.endEvents).be.instanceOf(Array);
 
-      if (processModel.key === 'test_consumer_api_non_executable_process') {
+      if (processModel.id === 'test_consumer_api_non_executable_process') {
         should(processModel.startEvents.length).be.equal(0);
         should(processModel.endEvents.length).be.equal(0);
       }

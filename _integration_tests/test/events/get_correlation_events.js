@@ -32,7 +32,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
     should(eventList.events.length).be.greaterThan(0);
 
     eventList.events.forEach((event) => {
-      should(event).have.property('key');
       should(event).have.property('id');
       should(event).have.property('processInstanceId');
       should(event).have.property('data');
