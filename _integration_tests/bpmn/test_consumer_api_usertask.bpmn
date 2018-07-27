@@ -23,7 +23,10 @@
     <bpmn:userTask id="Task_1vdwmn1" name="" camunda:formKey="Form Key">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="Form_XGSVBgio" label="" type="boolean" defaultValue="" />
+          <camunda:formField id="Form_XGSVBgio" label="test_enum" type="enum" defaultValue="testvalue">
+            <camunda:value id="Value_2ris55f" name="testytest" />
+            <camunda:value id="Value_2f53b5n" name="testvalue" />
+          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0fkan76</bpmn:incoming>

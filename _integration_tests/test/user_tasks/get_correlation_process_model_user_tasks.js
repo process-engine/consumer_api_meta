@@ -58,12 +58,24 @@ describe(`Consumer API: ${testCase}`, () => {
     should(userTaskList.userTasks).be.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
-    userTaskList.userTasks.forEach((userTask) => {
-      should(userTask).have.property('id');
-      should(userTask).have.property('correlationId');
-      should(userTask).have.property('processModelId');
-      should(userTask).have.property('data');
-    });
+    const userTask = userTaskList.userTasks[0];
+
+    should(userTask).have.property('id');
+    should(userTask).have.property('correlationId');
+    should(userTask).have.property('processModelId');
+    should(userTask).have.property('data');
+
+    should(userTask.data).have.property('formFields');
+    should(userTask.data.formFields).be.instanceOf(Array);
+    should(userTask.data.formFields.length).be.equal(1);
+
+    const formField = userTask.data.formFields[0];
+
+    should(formField).have.property('id');
+    should(formField).have.property('type');
+    should(formField).have.property('enumValues');
+    should(formField).have.property('label');
+    should(formField).have.property('defaultValue');
   });
 
   it('should fail to retrieve a list of user tasks, if the process_model_id does not exist', async () => {
