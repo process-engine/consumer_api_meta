@@ -115,11 +115,11 @@ pipeline {
 
           // SQLite
           def db_storage_folder_path = '${env.WORKSPACE}/process_engine_databases';
-          def db_storage_process_model = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
-          def db_storage_flow_node_instance = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
-          def db_storage_timer = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
+          def db_storage_path_process_model = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
+          def db_storage_path_flow_node_instance = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
+          def db_storage_path_timer = '--env process_engine__process_model_repository__storage=${db_storage_folder_path}/process_model.sqlite';
 
-          server_image.inside("${node_env} ${consumer_api_mode} ${junit_report_path} ${config_path} ${db_host_old} ${db_process_model} ${db_flow_node_instance} ${db_link}") {
+          server_image.inside("${node_env} ${db_storage_path_process_model} ${db_storage_path_flow_node_instance} ${db_storage_path_timer} ${consumer_api_mode} ${junit_report_path} ${config_path} ${db_host_old} ${db_process_model} ${db_flow_node_instance} ${db_link}") {
             error_code = sh(script: "node /usr/src/app/node_modules/.bin/mocha --timeout 60000 /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit > result.txt", returnStatus: true);
             testresults = sh(script: "cat result.txt", returnStdout: true).trim();
 
