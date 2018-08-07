@@ -90,11 +90,11 @@ pipeline {
                             .id;
 
           // wait for the DB to start up
-          docker
-            .image('postgres')
-            .inside("--link ${db_container_id}:db") {
-              sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
-          }
+          // docker
+          //   .image('postgres')
+          //   .inside("--link ${db_container_id}:db") {
+          //     sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
+          // }
         }
       }
     }
