@@ -71,7 +71,7 @@ pipeline {
   agent any
 
   stages {
-    stage('Prepare SQlite') {
+    stage('Prepare') {
       steps {
         script {
 
@@ -84,21 +84,10 @@ pipeline {
 
           // db_imageI_id     = db_image.id;
           server_image_id  = server_image.id;
-
-          // db_container_id = db_image
-          //                   .run('--env POSTGRES_USER=admin --env POSTGRES_PASSWORD=admin --env POSTGRES_DB=processengine')
-          //                   .id;
-
-          // wait for the DB to start up
-          // docker
-          //   .image('postgres')
-          //   .inside("--link ${db_container_id}:db") {
-          //     sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
-          // }
         }
       }
     }
-    stage('Consumer API Tests SQlite') {
+    stage('Consumer API Tests') {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
@@ -106,12 +95,6 @@ pipeline {
           def consumer_api_mode = '--env CONSUMER_API_ACCESS_TYPE=internal ';
           def junit_report_path = '--env JUNIT_REPORT_PATH=report.xml';
           def config_path = '--env CONFIG_PATH=/usr/src/app/config';
-
-          // Postgres
-          // def db_host_old = '--env datastore__service__data_sources__default__adapter__server__host=db';
-          // def db_flow_node_instance = '--env process_engine__flow_node_instance_repository__host=db';
-          // def db_process_model = '--env process_engine__process_model_repository__host=db';
-          // def db_link = "--link ${db_container_id}:db";
 
           // SQLite
           def db_storage_folder_path = "$WORKSPACE/process_engine_databases";
@@ -134,71 +117,6 @@ pipeline {
         }
       }
     }    
-    stage('Prepare Postgres') {
-      steps {
-        script {
-
-          def first_seven_digits_of_git_hash = env.GIT_COMMIT.substring(0, 8);
-          def safe_branch_name = env.BRANCH_NAME.replace("/", "_");
-          def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}";
-
-          // db_image       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests');
-          server_image   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests');
-
-          // db_imageI_id     = db_image.id;
-          server_image_id  = server_image.id;
-
-          // db_container_id = db_image
-          //                   .run('--env POSTGRES_USER=admin --env POSTGRES_PASSWORD=admin --env POSTGRES_DB=processengine')
-          //                   .id;
-
-          // wait for the DB to start up
-          // docker
-          //   .image('postgres')
-          //   .inside("--link ${db_container_id}:db") {
-          //     sh(script: 'while ! pg_isready -U postgres -h db ; do sleep 5; done');
-          // }
-        }
-      }
-    }
-    stage('Consumer API Tests Postgres') {
-      steps {
-        script {
-          // image.inside mounts the current Workspace as the working directory in the container
-          def node_env = '--env NODE_ENV=test';
-          def consumer_api_mode = '--env CONSUMER_API_ACCESS_TYPE=internal ';
-          def junit_report_path = '--env JUNIT_REPORT_PATH=report.xml';
-          def config_path = '--env CONFIG_PATH=/usr/src/app/config';
-
-          // Postgres
-          // def db_host_old = '--env datastore__service__data_sources__default__adapter__server__host=db';
-          // def db_flow_node_instance = '--env process_engine__flow_node_instance_repository__host=db';
-          // def db_process_model = '--env process_engine__process_model_repository__host=db';
-          // def db_link = "--link ${db_container_id}:db";
-
-          // SQLite
-          def db_storage_folder_path = "$WORKSPACE/process_engine_databases";
-          def db_storage_path_process_model = "--env process_engine__process_model_repository__storage=$db_storage_folder_path/process_model.sqlite";
-          def db_storage_path_flow_node_instance = "--env process_engine__process_model_repository__storage=$db_storage_folder_path/flow_node_instance.sqlite";
-          def db_storage_path_timer = "--env process_engine__process_model_repository__storage=$db_storage_folder_path/timer.sqlite";
-
-          def serverImageInside = server_image.inside("${node_env} ${db_storage_path_process_model} ${db_storage_path_flow_node_instance} ${db_storage_path_timer} ${consumer_api_mode} ${junit_report_path} ${config_path}") {
-            error_code = sh(script: "node /usr/src/app/node_modules/.bin/mocha --timeout 60000 /usr/src/app/test/**/*.js --colors --reporter mocha-jenkins-reporter --exit > result.txt", returnStatus: true);
-            testresults = sh(script: "cat result.txt", returnStdout: true).trim();
-
-            junit 'report.xml'
-
-            test_failed = false;
-            if (error_code > 0) {
-              test_failed = true;
-              currentBuild.result = 'FAILURE';
-            }
-          }
-
-          echo serverImageInside;
-        }
-      }
-    }
     stage('Publish') {
       steps {
         script {
