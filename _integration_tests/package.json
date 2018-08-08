@@ -15,8 +15,7 @@
     "test-internal": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=internal mocha -t 15000 test/**/*.js --exit",
     "test-external": "cross-env NODE_ENV=test CONFIG_PATH=config CONSUMER_API_ACCESS_TYPE=external mocha -t 15000 test/**/*.js --exit",
     "test": "npm run test-internal && npm run test-external",
-    "build": "gulp build",
-    "postinstall": "npm rebuild"
+    "build": "gulp build"
   },
   "dependencies": {
     "@essential-projects/bootstrapper": "^3.0.0",
