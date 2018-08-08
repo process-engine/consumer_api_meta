@@ -12,9 +12,7 @@ def cleanup_workspace() {
 }
 
 def cleanup_docker() {
-  sh(script: "docker stop ${db_container_id}");
-  sh(script: "docker rm ${db_container_id}");
-  sh(script: "docker rmi ${server_image_id} ${db_imageI_id}");
+  sh(script: "docker rmi ${server_image_id}");
 
   // Build stages in dockerfiles leave dangling images behind (see https://github.com/moby/moby/issues/34151).
   // Dangling images are images that are not used anywhere and don't have a tag. It is safe to remove them (see https://stackoverflow.com/a/45143234).

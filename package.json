@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "minstall --trust-local-modules . && npm rebuild"
+    "postinstall": "minstall --trust-local-modules ."
   },
   "author": "",
   "license": "ISC",
