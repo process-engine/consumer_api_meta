@@ -77,10 +77,8 @@ pipeline {
           def safe_branch_name = env.BRANCH_NAME.replace("/", "_");
           def image_tag = "${safe_branch_name}-${first_seven_digits_of_git_hash}-b${env.BUILD_NUMBER}";
 
-          // db_image       = docker.build("consumertest_db_image:${image_tag}", '--file _integration_tests/Dockerfile.database _integration_tests');
           server_image   = docker.build("consumertest_server_image:${image_tag}", '--no-cache --file _integration_tests/Dockerfile.tests _integration_tests');
 
-          // db_imageI_id     = db_image.id;
           server_image_id  = server_image.id;
         }
       }
@@ -114,7 +112,7 @@ pipeline {
           }
         }
       }
-    }    
+    }
     stage('Publish') {
       steps {
         script {
