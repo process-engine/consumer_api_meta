@@ -2,6 +2,7 @@
 dist
 node_modules
 package-lock.json
+processengine.sqlite
 
 consumer_api_client
 consumer_api_contracts
