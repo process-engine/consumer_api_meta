@@ -87,7 +87,7 @@ pipeline {
       steps {
         script {
           // image.inside mounts the current Workspace as the working directory in the container
-          def node_env = '--env NODE_ENV=test';
+          def node_env = '--env NODE_ENV=sqlite';
           def consumer_api_mode = '--env CONSUMER_API_ACCESS_TYPE=internal ';
           def junit_report_path = '--env JUNIT_REPORT_PATH=report.xml';
           def config_path = '--env CONFIG_PATH=/usr/src/app/config';
