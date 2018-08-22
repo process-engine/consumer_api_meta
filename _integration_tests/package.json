@@ -33,7 +33,7 @@
     "@process-engine/consumer_api_http": "^0.11.0",
     "@process-engine/flow_node_instance.repository.sequelize": "feature~store_enter_and_exit_token_separately",
     "@process-engine/iam": "^1.0.0",
-    "@process-engine/process_engine": "feature~add_metrics",
+    "@process-engine/process_engine": "feature~store_enter_and_exit_token_separately",
     "@process-engine/process_engine_contracts": "feature~store_enter_and_exit_token_separately",
     "@process-engine/process_model.repository.sequelize": "^2.1.2",
     "@process-engine/timers.repository.sequelize": "^1.0.2",
