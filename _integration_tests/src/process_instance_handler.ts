@@ -6,16 +6,8 @@ import {
   ProcessStartRequestPayload,
   ProcessStartResponsePayload,
   StartCallbackType,
-  UserTaskResult,
 } from '@process-engine/consumer_api_contracts';
-import {
-  ExecutionContext,
-  IExecutionContextFacade,
-  IExecutionContextFacadeFactory,
-  IFlowNodeInstanceService,
-} from '@process-engine/process_engine_contracts';
-
-import {IIdentity} from '@essential-projects/iam_contracts';
+import {IFlowNodeInstanceService} from '@process-engine/process_engine_contracts';
 
 import {TestFixtureProvider} from './test_fixture_provider';
 
@@ -57,8 +49,6 @@ export class ProcessInstanceHandler {
     const maxNumberOfRetries: number = 10;
     const delayBetweenRetriesInMs: number = 500;
 
-    const executionContextFacade: IExecutionContextFacade = await this._getExecutionContextFacade();
-
     const flowNodeInstanceService: IFlowNodeInstanceService =
       await this.testFixtureProvider.resolveAsync<IFlowNodeInstanceService>('FlowNodeInstanceService');
 
@@ -67,7 +57,7 @@ export class ProcessInstanceHandler {
       await this.wait(delayBetweenRetriesInMs);
 
       const flowNodeInstances: Array<any> =
-        await flowNodeInstanceService.querySuspendedByCorrelation(executionContextFacade, correlationId);
+        await flowNodeInstanceService.querySuspendedByCorrelation(correlationId);
 
       if (flowNodeInstances && flowNodeInstances.length >= 1) {
         return;
@@ -84,19 +74,4 @@ export class ProcessInstanceHandler {
       }, delayTimeInMs);
     });
   }
-
-  private async _getExecutionContextFacade(): Promise<IExecutionContextFacade> {
-
-    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
-      await this.testFixtureProvider.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
-
-    const identity: IIdentity = {
-      token: this.testFixtureProvider.context.defaultUser.identity,
-    };
-    const executionContext: ExecutionContext = new ExecutionContext(identity);
-    const executionContextFacade: IExecutionContextFacade = executionContextFacadeFactory.create(executionContext);
-
-    return executionContextFacade;
-  }
-
 }
