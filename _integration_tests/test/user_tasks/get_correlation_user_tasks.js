@@ -14,13 +14,15 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   let correlationId;
 
   const processModelId = 'test_consumer_api_usertask';
+  const processModelIdCallActivity = 'test_consumer_api_usertask_call_acvtivity';
+  const processModelIdCallActivitySubprocess = 'test_consumer_api_usertask_call_acvtivity_subprocess';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
 
-    await testFixtureProvider.importProcessFiles([processModelId]);
+    await testFixtureProvider.importProcessFiles([processModelId, processModelIdCallActivity, processModelIdCallActivitySubprocess]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
@@ -34,7 +36,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   });
 
   async function finishWaitingUserTasksAfterTests() {
-    const userTaskId = 'Task_1vdwmn1';
     const userTaskResult = {
       formFields: {
         Form_XGSVBgio: true,
@@ -43,7 +44,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
     await testFixtureProvider
       .consumerApiClientService
-      .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+      .finishUserTask(consumerContext, processModelId, correlationId, 'Task_1vdwmn1', userTaskResult);
   }
 
   it('should return a correlation\'s user tasks by its correlationId through the consumer api', async () => {
@@ -75,6 +76,49 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
     should(formField).have.property('enumValues');
     should(formField).have.property('label');
     should(formField).have.property('defaultValue');
+  });
+
+  it('should return a list of user tasks from a call activity, by the given correlationId through the consumer api', async () => {
+
+    const correlationIdCallActivity = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdCallActivity);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationIdCallActivity);
+
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForCorrelation(consumerContext, correlationIdCallActivity);
+
+    should(userTaskList).have.property('userTasks');
+
+    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks.length).be.greaterThan(0);
+
+    const userTask = userTaskList.userTasks[0];
+
+    should(userTask).have.property('id');
+    should(userTask).have.property('correlationId');
+    should(userTask).have.property('processModelId');
+    should(userTask).have.property('data');
+
+    should(userTask.data).have.property('formFields');
+    should(userTask.data.formFields).be.instanceOf(Array);
+    should(userTask.data.formFields.length).be.equal(1);
+
+    const formField = userTask.data.formFields[0];
+
+    should(formField).have.property('id');
+    should(formField).have.property('type');
+    should(formField).have.property('label');
+    should(formField).have.property('defaultValue');
+
+    const userTaskResult = {
+      formFields: {
+        FormField_01comr3: 'result',
+      },
+    };
+
+    await testFixtureProvider
+      .consumerApiClientService
+      .finishUserTask(consumerContext, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'Task_13ppr5w', userTaskResult);
   });
 
   it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
