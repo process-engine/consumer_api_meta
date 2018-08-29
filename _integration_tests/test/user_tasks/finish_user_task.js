@@ -45,6 +45,19 @@ describe(`Consumer API: ${testCase}`, () => {
       .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
   });
 
+  it('should successfully finish the user task, if no result is provided', async () => {
+
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {};
+
+    await testFixtureProvider
+      .consumerApiClientService
+      .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+  });
+
   it('should fail to finish the user task, if the given process_model_id does not exist', async () => {
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
@@ -154,26 +167,6 @@ describe(`Consumer API: ${testCase}`, () => {
       const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to finish the user task, if the given payload is invalid', async () => {
-
-    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
-
-    const userTaskId = 'Task_1vdwmn1';
-    const userTaskResult = 'invalidUserTaskResult';
-
-    try {
-      await testFixtureProvider
-        .consumerApiClientService
-        .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
-
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 400;
-      should(error.code).be.match(expectedErrorCode);
     }
   });
 
