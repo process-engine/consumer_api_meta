@@ -26,7 +26,6 @@
     <bpmn:scriptTask id="scriptTask_SimulateProcessError" name="Simulate Process Error">
       <bpmn:extensionElements>
         <camunda:executionListener class="" event="" />
-        <camunda:properties />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0s3n7ck</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0aopc8s</bpmn:outgoing>
@@ -45,7 +44,6 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0dqpbny" sourceRef="scriptTask_WriteConsoleLog" targetRef="EndEvent_Success">
       <bpmn:extensionElements>
-        <camunda:properties />
       </bpmn:extensionElements>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0aopc8s" sourceRef="scriptTask_SimulateProcessError" targetRef="EndEvent_Error" />
