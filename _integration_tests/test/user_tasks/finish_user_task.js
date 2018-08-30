@@ -218,7 +218,7 @@ describe(`Consumer API: ${testCase}`, () => {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
-      const expectedErrorMessage = /access denied/i;
+      const expectedErrorMessage = /access.*?denied/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
     }
