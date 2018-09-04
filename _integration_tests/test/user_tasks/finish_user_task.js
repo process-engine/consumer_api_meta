@@ -170,6 +170,54 @@ describe(`Consumer API: ${testCase}`, () => {
     }
   });
 
+  it('should fail to finish the user task, if the provided result is not an object, but a String', async () => {
+
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      formFields: 'i am invalid',
+    };
+
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 400;
+      const expectedErrorMessage = /not.*?an object/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+    }
+  });
+
+  it('should fail to finish the user task, if the provided result is not an object, but an Array', async () => {
+
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+
+    const userTaskId = 'Task_1vdwmn1';
+    const userTaskResult = {
+      formFields: ['i am invalid'],
+    };
+
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(consumerContext, processModelId, correlationId, userTaskId, userTaskResult);
+
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 400;
+      const expectedErrorMessage = /not.*?an object/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+    }
+  });
+
   it('should fail to finish the user task, when the user is unauthorized', async () => {
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
