@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.0
--- Dumped by pg_dump version 10.4
+-- Dumped from database version 10.5 (Debian 10.5-1.pgdg90+1)
+-- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -34,6 +34,21 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: Correlations; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public."Correlations" (
+    id uuid NOT NULL,
+    "correlationId" character varying(255) NOT NULL,
+    "processModelHash" text NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Correlations" OWNER TO admin;
+
+--
 -- Name: FlowNodeInstances; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -41,7 +56,8 @@ CREATE TABLE public."FlowNodeInstances" (
     id uuid NOT NULL,
     "flowNodeInstanceId" character varying(255) NOT NULL,
     "flowNodeId" character varying(255) NOT NULL,
-    "state" integer NOT NULL DEFAULT 0,
+    state character varying(255) DEFAULT 0 NOT NULL,
+    error character varying(255),
     "isSuspended" boolean DEFAULT false NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
@@ -58,6 +74,7 @@ CREATE TABLE public."ProcessDefinitions" (
     id uuid NOT NULL,
     name character varying(255) NOT NULL,
     xml text NOT NULL,
+    hash text NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
 );
@@ -75,11 +92,12 @@ CREATE TABLE public."ProcessTokens" (
     "processModelId" character varying(255) NOT NULL,
     "correlationId" character varying(255) NOT NULL,
     identity text NOT NULL,
-    "createdAt" timestamp with time zone DEFAULT now(),
+    "createdAt" timestamp with time zone DEFAULT '2018-09-05 08:47:19.863+00'::timestamp with time zone,
     caller character varying(255),
+    type character varying(255),
     payload text,
-    "updatedAt" timestamp with time zone NOT NULL,
-    "flowNodeInstanceId" uuid
+    "flowNodeInstanceId" character varying(255) NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
 );
 
 
@@ -103,6 +121,61 @@ CREATE TABLE public."Timers" (
 
 ALTER TABLE public."Timers" OWNER TO admin;
 
+--
+-- Data for Name: Correlations; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."Correlations" (id, "correlationId", "processModelHash", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Data for Name: FlowNodeInstances; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."FlowNodeInstances" (id, "flowNodeInstanceId", "flowNodeId", state, error, "isSuspended", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Data for Name: ProcessDefinitions; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."ProcessDefinitions" (id, name, xml, hash, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Data for Name: ProcessTokens; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."ProcessTokens" (id, "processInstanceId", "processModelId", "correlationId", identity, "createdAt", caller, type, payload, "flowNodeInstanceId", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Data for Name: Timers; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."Timers" (id, type, "expirationDate", rule, "eventName", "lastElapsed", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Correlations Correlations_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."Correlations"
+    ADD CONSTRAINT "Correlations_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: FlowNodeInstances FlowNodeInstances_flowNodeInstanceId_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."FlowNodeInstances"
+    ADD CONSTRAINT "FlowNodeInstances_flowNodeInstanceId_key" UNIQUE ("flowNodeInstanceId");
+
 
 --
 -- Name: FlowNodeInstances FlowNodeInstances_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
@@ -110,14 +183,6 @@ ALTER TABLE public."Timers" OWNER TO admin;
 
 ALTER TABLE ONLY public."FlowNodeInstances"
     ADD CONSTRAINT "FlowNodeInstances_pkey" PRIMARY KEY (id);
-
-
---
--- Name: ProcessDefinitions ProcessDefinitions_name_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public."ProcessDefinitions"
-    ADD CONSTRAINT "ProcessDefinitions_name_key" UNIQUE (name);
 
 
 --
@@ -149,7 +214,7 @@ ALTER TABLE ONLY public."Timers"
 --
 
 ALTER TABLE ONLY public."ProcessTokens"
-    ADD CONSTRAINT "ProcessTokens_flowNodeInstanceId_fkey" FOREIGN KEY ("flowNodeInstanceId") REFERENCES public."FlowNodeInstances"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ADD CONSTRAINT "ProcessTokens_flowNodeInstanceId_fkey" FOREIGN KEY ("flowNodeInstanceId") REFERENCES public."FlowNodeInstances"("flowNodeInstanceId") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
