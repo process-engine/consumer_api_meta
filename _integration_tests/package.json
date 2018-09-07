@@ -29,7 +29,7 @@
     "@essential-projects/timing": "^3.0.4",
     "@process-engine/consumer_api_client": "^0.13.2",
     "@process-engine/consumer_api_contracts": "^0.16.0",
-    "@process-engine/consumer_api_core": "^0.22.1",
+    "@process-engine/consumer_api_core": "feature~filter_non_user_tasks_before_converting_flownodes",
     "@process-engine/consumer_api_http": "^0.11.1",
     "@process-engine/correlations.repository.sequelize": "1.0.0",
     "@process-engine/flow_node_instance.repository.sequelize": "^4.0.1",
