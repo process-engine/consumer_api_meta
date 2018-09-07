@@ -15,13 +15,14 @@ describe(`Consumer API: ${testCase}`, () => {
   let correlationId;
 
   const processModelId = 'test_consumer_api_usertask';
+  const processModelIdNoUserTasks = 'test_consumer_api_usertask_empty';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
 
-    await testFixtureProvider.importProcessFiles([processModelId]);
+    await testFixtureProvider.importProcessFiles([processModelId, processModelIdNoUserTasks]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
@@ -76,6 +77,21 @@ describe(`Consumer API: ${testCase}`, () => {
     should(formField).have.property('enumValues');
     should(formField).have.property('label');
     should(formField).have.property('defaultValue');
+  });
+
+  it('should return an empty user task list, if the given correlation does not have any user tasks', async () => {
+
+    await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdNoUserTasks);
+
+    await processInstanceHandler.wait(500);
+
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(consumerContext, processModelIdNoUserTasks);
+
+    should(userTaskList).have.property('userTasks');
+    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks.length).be.equal(0);
   });
 
   it('should fail to retrieve a list of user tasks, if the process_model_id does not exist', async () => {

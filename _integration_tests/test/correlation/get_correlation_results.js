@@ -143,7 +143,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /process model.*?not found/i;
+      const expectedErrorMessage = /processmodel.*?not found/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
     }
