@@ -14,6 +14,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   let correlationId;
 
   const processModelId = 'test_consumer_api_usertask';
+  const processModelIdNoUserTasks = 'test_consumer_api_usertask_empty';
   const processModelIdCallActivity = 'test_consumer_api_usertask_call_acvtivity';
   const processModelIdCallActivitySubprocess = 'test_consumer_api_usertask_call_acvtivity_subprocess';
 
@@ -22,7 +23,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
     await testFixtureProvider.initializeAndStart();
     consumerContext = testFixtureProvider.context.defaultUser;
 
-    await testFixtureProvider.importProcessFiles([processModelId, processModelIdCallActivity, processModelIdCallActivitySubprocess]);
+    await testFixtureProvider.importProcessFiles([processModelId, processModelIdNoUserTasks, processModelIdCallActivity, processModelIdCallActivitySubprocess]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
@@ -119,6 +120,21 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
     await testFixtureProvider
       .consumerApiClientService
       .finishUserTask(consumerContext, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'Task_13ppr5w', userTaskResult);
+  });
+
+  it('should return an empty user task list, if the given correlation does not have any user tasks', async () => {
+
+    await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdNoUserTasks);
+
+    await processInstanceHandler.wait(500);
+
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(consumerContext, processModelIdNoUserTasks);
+
+    should(userTaskList).have.property('userTasks');
+    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks.length).be.equal(0);
   });
 
   it('should fail to retrieve the correlation\'s user tasks, if the correlationId does not exist', async () => {
