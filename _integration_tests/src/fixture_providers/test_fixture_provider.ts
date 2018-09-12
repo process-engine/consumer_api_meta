@@ -53,6 +53,8 @@ export class TestFixtureProvider {
     await this._createMockIdentities();
 
     this._consumerApiClientService = await this.resolveAsync<IConsumerApi>('ConsumerApiClientService');
+    const consumerApiExternalAccessor: IConsumerApi = await this.resolveAsync<IConsumerApi>('ConsumerApiExternalAccessor');
+    consumerApiExternalAccessor.initializeSocket(this.identities.defaultUser);
     this._processModelService = await this.resolveAsync<IProcessModelService>('ProcessModelService');
   }
 

@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe('Consumer API:   Receive User Task Waiting Notification', () => {
+describe.only('Consumer API:   Receive User Task Waiting Notification', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -61,11 +61,17 @@ describe('Consumer API:   Receive User Task Waiting Notification', () => {
 
     await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
 
-    // const userTaskList = await testFixtureProvider
-    //   .consumerApiClientService
-    //   .getUserTasksForProcessModel(consumerContext, processModelId);
+    const userTaskList = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(consumerContext, processModelId);
 
     should(userTaskWaitingMessage).not.be.undefined();
+
+    const listContainsUserTaskIdFromMessage = userTaskList.userTasks.some((userTask) => {
+      return userTask.id === userTaskWaitingMessage.userTaskId;
+    });
+
+    should(listContainsUserTaskIdFromMessage).be.true();
 
   });
 
