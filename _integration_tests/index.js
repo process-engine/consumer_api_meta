@@ -12,6 +12,7 @@ const iocModuleNames = [
   '@essential-projects/services',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/correlations.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
   '@process-engine/iam',
   '@process-engine/process_engine',
