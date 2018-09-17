@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe.only('Consumer API:   Receive User Task Waiting Notification', () => {
+describe('Consumer API:   Receive User Task Notifications', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -72,6 +72,41 @@ describe.only('Consumer API:   Receive User Task Waiting Notification', () => {
     });
 
     should(listContainsUserTaskIdFromMessage).be.true();
+
+  });
+
+  it('should send a notification via socket when user task is finished', async () => {
+
+    correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+
+    let userTaskFinishedMessage;
+
+    testFixtureProvider.consumerApiClientService.onUserTaskFinished((message) => {
+      userTaskFinishedMessage = message;
+    });
+
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+
+    const userTaskListBeforeFinish = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(consumerContext, processModelId);
+
+    await finishWaitingUserTasksAfterTests();
+
+    const userTaskListAfterFinish = await testFixtureProvider
+      .consumerApiClientService
+      .getUserTasksForProcessModel(consumerContext, processModelId);
+
+    should(userTaskFinishedMessage).not.be.undefined();
+
+    const finishedMessageReceivedForUserTaskThatWasWaiting = userTaskListBeforeFinish.userTasks.some((userTask) => {
+      return userTask.id === userTaskFinishedMessage.userTaskId;
+    });
+
+    should(finishedMessageReceivedForUserTaskThatWasWaiting).be.true();
+
+    const userTaskListAfterFinishDoesNotContainUserTask = userTaskListAfterFinish.userTasks.length === 0;
+    should(userTaskListAfterFinishDoesNotContainUserTask).be.true();
 
   });
 
