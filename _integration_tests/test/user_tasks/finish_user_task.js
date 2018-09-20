@@ -40,6 +40,8 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
+    console.log('before finish')
+
     await testFixtureProvider
       .consumerApiClientService
       .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);

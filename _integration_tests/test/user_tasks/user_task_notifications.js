@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe.only('Consumer API:   Receive User Task Notifications', () => {
+describe('Consumer API:   Receive User Task Notifications', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
