@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe('Consumer API:   Receive User Task Notifications', () => {
+describe.only('Consumer API:   Receive User Task Notifications', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -32,7 +32,6 @@ describe('Consumer API:   Receive User Task Notifications', () => {
   });
 
   after(async () => {
-    await finishWaitingUserTasksAfterTests();
     await testFixtureProvider.tearDown();
   });
 
@@ -73,6 +72,7 @@ describe('Consumer API:   Receive User Task Notifications', () => {
 
     should(listContainsUserTaskIdFromMessage).be.true();
 
+    await finishWaitingUserTasksAfterTests();
   });
 
   it('should send a notification via socket when user task is finished', async () => {
