@@ -104,10 +104,6 @@ describe('Consumer API:   Receive User Task Notifications', () => {
     });
 
     should(finishedMessageReceivedForUserTaskThatWasWaiting).be.true();
-
-    const userTaskListAfterFinishDoesNotContainUserTask = userTaskListAfterFinish.userTasks.length === 0;
-    should(userTaskListAfterFinishDoesNotContainUserTask).be.true();
-
   });
 
 });
