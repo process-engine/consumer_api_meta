@@ -8,12 +8,7 @@ import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IConsumerApi} from '@process-engine/consumer_api_contracts';
-import {
-  ExecutionContext,
-  IExecutionContextFacade,
-  IExecutionContextFacadeFactory,
-  IProcessModelService,
-} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -44,7 +39,6 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 export class TestFixtureProvider {
   private httpBootstrapper: AppBootstrapper;
 
-  private _executionContextFacade: IExecutionContextFacade;
   private _consumerApiClientService: IConsumerApi;
   private _processModelService: IProcessModelService;
 
@@ -140,15 +134,8 @@ export class TestFixtureProvider {
       token: 'defaultUser',
     };
 
-    const executionContext: ExecutionContext = new ExecutionContext(dummyIdentity);
-
-    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
-      await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
-
-    const executionContextFacade: IExecutionContextFacade = executionContextFacadeFactory.create(executionContext);
-
     const xml: string = this._readProcessModelFromFile(processFileName);
-    await this.processModelService.persistProcessDefinitions(executionContextFacade, processFileName, xml, true);
+    await this.processModelService.persistProcessDefinitions(dummyIdentity, processFileName, xml, true);
   }
 
   private _readProcessModelFromFile(fileName: string): string {

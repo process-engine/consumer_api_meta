@@ -37,7 +37,7 @@
     "@process-engine/iam": "1.2.0",
     "@process-engine/metrics_api_core": "0.1.0",
     "@process-engine/metrics.repository.file_system": "0.1.0",
-    "@process-engine/process_engine_contracts": "26.2.0",
+    "@process-engine/process_engine_contracts": "feature~remove_execution_context",
     "@process-engine/process_engine_core": "feature~remove_execution_context",
     "@process-engine/process_model.repository.sequelize": "3.1.1",
     "@process-engine/timers.repository.sequelize": "2.1.1",
