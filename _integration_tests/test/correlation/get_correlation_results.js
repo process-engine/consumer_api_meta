@@ -19,7 +19,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       processModelIdDefault,
@@ -170,7 +170,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
     try {
       const results = await testFixtureProvider
         .consumerApiClientService
-        .getProcessResultForCorrelation(testFixtureProvider.context.restrictedUser, correlationId, processModelIdDefault);
+        .getProcessResultForCorrelation(testFixtureProvider.identities.restrictedUser, correlationId, processModelIdDefault);
 
       should.fail(results, undefined, 'This request should have failed!');
     } catch (error) {

@@ -10,7 +10,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   let processInstanceHandler;
   let testFixtureProvider;
 
-  let consumerContext;
+  let defaultIdentity;
   let correlationId;
 
   const processModelId = 'test_consumer_api_usertask';
@@ -21,9 +21,14 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    defaultIdentity = testFixtureProvider.identities.defaultUser;
 
-    await testFixtureProvider.importProcessFiles([processModelId, processModelIdNoUserTasks, processModelIdCallActivity, processModelIdCallActivitySubprocess]);
+    await testFixtureProvider.importProcessFiles([
+      processModelId,
+      processModelIdNoUserTasks,
+      processModelIdCallActivity,
+      processModelIdCallActivitySubprocess,
+    ]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
@@ -45,14 +50,14 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
     await testFixtureProvider
       .consumerApiClientService
-      .finishUserTask(consumerContext, processModelId, correlationId, 'Task_1vdwmn1', userTaskResult);
+      .finishUserTask(defaultIdentity, processModelId, correlationId, 'Task_1vdwmn1', userTaskResult);
   }
 
   it('should return a correlation\'s user tasks by its correlationId through the consumer api', async () => {
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getUserTasksForCorrelation(consumerContext, correlationId);
+      .getUserTasksForCorrelation(defaultIdentity, correlationId);
 
     should(userTaskList).have.property('userTasks');
 
@@ -82,11 +87,11 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
   it('should return a list of user tasks from a call activity, by the given correlationId through the consumer api', async () => {
 
     const correlationIdCallActivity = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdCallActivity);
-    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationIdCallActivity);
+    await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationIdCallActivity, processModelIdCallActivitySubprocess);
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getUserTasksForCorrelation(consumerContext, correlationIdCallActivity);
+      .getUserTasksForCorrelation(defaultIdentity, correlationIdCallActivity);
 
     should(userTaskList).have.property('userTasks');
 
@@ -119,7 +124,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
     await testFixtureProvider
       .consumerApiClientService
-      .finishUserTask(consumerContext, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'Task_13ppr5w', userTaskResult);
+      .finishUserTask(defaultIdentity, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'Task_13ppr5w', userTaskResult);
   });
 
   it('should return an empty user task list, if the given correlation does not have any user tasks', async () => {
@@ -130,7 +135,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
     const userTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getUserTasksForProcessModel(consumerContext, processModelIdNoUserTasks);
+      .getUserTasksForProcessModel(defaultIdentity, processModelIdNoUserTasks);
 
     should(userTaskList).have.property('userTasks');
     should(userTaskList.userTasks).be.instanceOf(Array);
@@ -144,7 +149,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
     try {
       const processModel = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForCorrelation(consumerContext, invalidCorrelationId);
+        .getUserTasksForCorrelation(defaultIdentity, invalidCorrelationId);
 
       should.fail(processModel, undefined, 'This request should have failed!');
     } catch (error) {
@@ -173,7 +178,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
   it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       const userTaskList = await testFixtureProvider

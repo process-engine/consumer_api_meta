@@ -12,7 +12,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
   });
 
   after(async () => {
@@ -60,7 +60,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
 
     const correlationId = 'test_get_events_for_process_model';
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       const eventList =

@@ -14,7 +14,7 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
   });
 
   after(async () => {
@@ -64,7 +64,7 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
 
     const correlationId = 'correlationId';
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       const processModel = await testFixtureProvider

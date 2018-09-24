@@ -12,7 +12,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
   });
 
   after(async () => {
@@ -61,7 +61,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     const eventId = 'test_event_to_trigger';
     const eventTriggerPayload = {};
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       await testFixtureProvider
