@@ -19,7 +19,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       processModelId,
@@ -134,7 +134,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
 
   it('should fail to retrieve the process model\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       const userTaskList = await testFixtureProvider

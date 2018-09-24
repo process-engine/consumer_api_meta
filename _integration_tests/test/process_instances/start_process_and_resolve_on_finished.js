@@ -20,7 +20,7 @@ describe(`Consumer API: ${testCase}`, () => {
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       processModelId,
@@ -95,7 +95,7 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.context.defaultUser;
+    const userContext = testFixtureProvider.identities.defaultUser;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     const result = await testFixtureProvider

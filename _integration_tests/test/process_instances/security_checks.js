@@ -71,7 +71,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       const result = await testFixtureProvider
@@ -98,7 +98,7 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.context.userWithAccessToSubLaneC;
+    const userContext = testFixtureProvider.identities.userWithAccessToSubLaneC;
 
     const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
@@ -128,7 +128,7 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.context.userWithNoAccessToLaneA;
+    const userContext = testFixtureProvider.identities.userWithNoAccessToLaneA;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     try {
@@ -159,7 +159,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
-    const userContext = testFixtureProvider.context.userWithAccessToLaneA;
+    const userContext = testFixtureProvider.identities.userWithAccessToLaneA;
 
     try {
       const result = await testFixtureProvider

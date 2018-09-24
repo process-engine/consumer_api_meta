@@ -17,7 +17,7 @@ describe(`Consumer API: ${testCase}`, () => {
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     await testFixtureProvider.importProcessFiles([processModelId]);
 
@@ -256,7 +256,7 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     try {
       await testFixtureProvider

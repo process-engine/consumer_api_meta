@@ -7,13 +7,8 @@ import {Logger} from 'loggerhythm';
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-import {ConsumerContext, IConsumerApiService} from '@process-engine/consumer_api_contracts';
-import {
-  ExecutionContext,
-  IExecutionContextFacade,
-  IExecutionContextFacadeFactory,
-  IProcessModelService,
-} from '@process-engine/process_engine_contracts';
+import {IConsumerApi} from '@process-engine/consumer_api_contracts';
+import {IProcessModelService} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -29,6 +24,8 @@ const iocModuleNames: Array<string> = [
   '@process-engine/correlations.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
   '@process-engine/iam',
+  '@process-engine/metrics_api_core',
+  '@process-engine/metrics.repository.file_system',
   '@process-engine/process_engine_core',
   '@process-engine/process_model.repository.sequelize',
   '@process-engine/timers.repository.sequelize',
@@ -42,19 +39,18 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 export class TestFixtureProvider {
   private httpBootstrapper: AppBootstrapper;
 
-  private _executionContextFacade: IExecutionContextFacade;
-  private _consumerApiClientService: IConsumerApiService;
+  private _consumerApiClientService: IConsumerApi;
   private _processModelService: IProcessModelService;
 
   private container: InvocationContainer;
 
-  private _consumerContexts: {[name: string]: ConsumerContext} = {};
+  private _identities: {[name: string]: IIdentity} = {};
 
-  public get context(): {[name: string]: ConsumerContext} {
-    return this._consumerContexts;
+  public get identities(): {[name: string]: IIdentity} {
+    return this._identities;
   }
 
-  public get consumerApiClientService(): IConsumerApiService {
+  public get consumerApiClientService(): IConsumerApi {
     return this._consumerApiClientService;
   }
 
@@ -65,8 +61,8 @@ export class TestFixtureProvider {
   public async initializeAndStart(): Promise<void> {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
-    await this._createConsumerContextForUsers();
-    this._consumerApiClientService = await this.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
+    await this._createIdentityForUsers();
+    this._consumerApiClientService = await this.resolveAsync<IConsumerApi>('ConsumerApiClientService');
     this._processModelService = await this.resolveAsync<IProcessModelService>('ProcessModelService');
   }
 
@@ -104,24 +100,24 @@ export class TestFixtureProvider {
     }
   }
 
-  private async _createConsumerContextForUsers(): Promise<void> {
+  private async _createIdentityForUsers(): Promise<void> {
 
     // all access user
-    this._consumerContexts.defaultUser = await this._createConsumerContext('defaultUser');
+    this._identities.defaultUser = await this._createIdentity('defaultUser');
     // no access user
-    this._consumerContexts.restrictedUser = await this._createConsumerContext('restrictedUser');
+    this._identities.restrictedUser = await this._createIdentity('restrictedUser');
     // partially restricted users
-    this._consumerContexts.userWithAccessToSubLaneC = await this._createConsumerContext('userWithAccessToSubLaneC');
-    this._consumerContexts.userWithAccessToLaneA = await this._createConsumerContext('userWithAccessToLaneA');
-    this._consumerContexts.userWithNoAccessToLaneA = await this._createConsumerContext('userWithNoAccessToLaneA');
+    this._identities.userWithAccessToSubLaneC = await this._createIdentity('userWithAccessToSubLaneC');
+    this._identities.userWithAccessToLaneA = await this._createIdentity('userWithAccessToLaneA');
+    this._identities.userWithNoAccessToLaneA = await this._createIdentity('userWithNoAccessToLaneA');
   }
 
-  private async _createConsumerContext(username: string): Promise<ConsumerContext> {
+  private async _createIdentity(username: string): Promise<IIdentity> {
 
     // Note: Since the iam facade is mocked, it doesn't matter what kind of token is used here.
     // It only matters that one is present.
-    return <ConsumerContext> {
-      identity: username,
+    return <IIdentity> {
+      token: username,
     };
   }
 
@@ -138,15 +134,8 @@ export class TestFixtureProvider {
       token: 'defaultUser',
     };
 
-    const executionContext: ExecutionContext = new ExecutionContext(dummyIdentity);
-
-    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
-      await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
-
-    const executionContextFacade: IExecutionContextFacade = executionContextFacadeFactory.create(executionContext);
-
     const xml: string = this._readProcessModelFromFile(processFileName);
-    await this.processModelService.persistProcessDefinitions(executionContextFacade, processFileName, xml, true);
+    await this.processModelService.persistProcessDefinitions(dummyIdentity, processFileName, xml, true);
   }
 
   private _readProcessModelFromFile(fileName: string): string {

@@ -4,6 +4,9 @@ node_modules
 package-lock.json
 processengine.sqlite
 
+logs
+metrics
+
 consumer_api_client
 consumer_api_contracts
 consumer_api_core

@@ -12,7 +12,7 @@ describe('Consumer API:   GET  ->  /processModels', () => {
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       'test_consumer_api_process_start',
@@ -48,7 +48,7 @@ describe('Consumer API:   GET  ->  /processModels', () => {
 
   it('should filter out processes models that the user is not authorized to see', async () => {
 
-    const restrictedContext = testFixtureProvider.context.restrictedUser;
+    const restrictedContext = testFixtureProvider.identities.restrictedUser;
 
     const processModelList = await testFixtureProvider
       .consumerApiClientService
