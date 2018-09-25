@@ -1,19 +1,16 @@
 'use strict';
 
-const {
+import {IamServiceMock} from '../mocks/index';
+
+import {
   ConsumerApiClientService,
   ExternalAccessor,
   InternalAccessor,
-} = require('@process-engine/consumer_api_client');
+} from '@process-engine/consumer_api_client';
 
-const IamServiceMock = require('./dist/commonjs/iam_service_mock').IamServiceMock;
+export function registerInContainer(container: any): void {
 
-const registerInContainer = (container) => {
-
-  // This removes the necessity for having a running IdentityServer during testing.
-  container.register('IamService', IamServiceMock);
-
-  const accessConsumerApiInternally = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
+  const accessConsumerApiInternally: boolean = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
 
   if (accessConsumerApiInternally) {
     container.register('ConsumerApiInternalAccessor', InternalAccessor)
@@ -28,6 +25,7 @@ const registerInContainer = (container) => {
     container.register('ConsumerApiClientService', ConsumerApiClientService)
       .dependencies('ConsumerApiExternalAccessor');
   }
-};
 
-module.exports.registerInContainer = registerInContainer;
+  // This removes the necessity for having a running IdentityServer during testing.
+  container.register('IamService', IamServiceMock);
+}

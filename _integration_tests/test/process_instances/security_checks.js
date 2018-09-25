@@ -3,9 +3,9 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
+const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType; //eslint-disable-line
 
-const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start';
 describe(`Consumer API: ${testCase}`, () => {
@@ -71,12 +71,12 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
-    const restrictedContext = testFixtureProvider.identities.restrictedUser;
+    const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(restrictedContext, processModelId, startEventId, payload, startCallbackType);
+        .startProcessInstance(restrictedIdentity, processModelId, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'This request should have failed!');
     } catch (error) {
@@ -98,14 +98,14 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.identities.userWithAccessToSubLaneC;
+    const userIdentity = testFixtureProvider.identities.userWithAccessToSubLaneC;
 
     const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
+        .startProcessInstance(userIdentity, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
 
       should.fail(result, undefined, 'This request should have failed!');
 
@@ -128,13 +128,13 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.identities.userWithNoAccessToLaneA;
+    const userIdentity = testFixtureProvider.identities.userWithNoAccessToLaneA;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelIdSublanes, startEventId, payload, startCallbackType);
+        .startProcessInstance(userIdentity, processModelIdSublanes, startEventId, payload, startCallbackType);
 
       should.fail(result, undefined, 'The user can execute the process even if he has no access rights to the parent lane.');
     } catch (error) {
@@ -159,12 +159,12 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
-    const userContext = testFixtureProvider.identities.userWithAccessToLaneA;
+    const userIdentity = testFixtureProvider.identities.userWithAccessToLaneA;
 
     try {
       const result = await testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(userContext, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
+        .startProcessInstance(userIdentity, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
 
       should.fail(result, undefined, 'The restricted user should not be able to execute the process inside the sublane');
 

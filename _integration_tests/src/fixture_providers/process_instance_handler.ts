@@ -7,7 +7,10 @@ import {
   ProcessStartResponsePayload,
   StartCallbackType,
 } from '@process-engine/consumer_api_contracts';
-import {IFlowNodeInstanceService, Runtime} from '@process-engine/process_engine_contracts';
+
+import {IFlowNodeInstanceService} from '@process-engine/process_engine_contracts';
+
+import {TestFixtureProvider} from './test_fixture_provider';
 
 /**
  * This class handles the creation of process instances and waits for a process instance to reach a user task.
@@ -16,13 +19,13 @@ import {IFlowNodeInstanceService, Runtime} from '@process-engine/process_engine_
  */
 export class ProcessInstanceHandler {
 
-  private _testFixtureProvider: any;
+  private _testFixtureProvider: TestFixtureProvider;
 
-  constructor(testFixtureProvider: any) {
+  constructor(testFixtureProvider: TestFixtureProvider) {
     this._testFixtureProvider = testFixtureProvider;
   }
 
-  private get testFixtureProvider(): any {
+  private get testFixtureProvider(): TestFixtureProvider {
     return this._testFixtureProvider;
   }
 
@@ -56,7 +59,7 @@ export class ProcessInstanceHandler {
       let flowNodeInstances: Array<any> = await flowNodeInstanceService.querySuspendedByCorrelation(correlationId);
 
       if (processModelId) {
-        flowNodeInstances = flowNodeInstances.filter((fni: Runtime.Types.FlowNodeInstance) => {
+        flowNodeInstances = flowNodeInstances.filter((fni: any) => {
           return fni.tokens[0].processModelId === processModelId;
         });
       }

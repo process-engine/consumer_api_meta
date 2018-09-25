@@ -3,16 +3,16 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
+const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType; //eslint-disable-line
 
-const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
 // eslint-disable-next-line
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start?start_callback_type=1';
 describe(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
-  let consumerContext;
+  let defaultIdentity;
 
   const processModelId = 'test_consumer_api_process_start';
   const processModelIdSublanes = 'test_consumer_api_sublane_process';
@@ -20,7 +20,7 @@ describe(`Consumer API: ${testCase}`, () => {
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.identities.defaultUser;
+    defaultIdentity = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       processModelId,
@@ -45,7 +45,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
+      .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -61,7 +61,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelId, startEventId, payload, startCallbackType);
+      .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -75,7 +75,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelId, startEventId, payload);
+      .startProcessInstance(defaultIdentity, processModelId, startEventId, payload);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -95,7 +95,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(consumerContext, processModelIdSublanes, startEventId, payload, startCallbackType);
+      .startProcessInstance(defaultIdentity, processModelIdSublanes, startEventId, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
@@ -110,12 +110,12 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    const userContext = testFixtureProvider.identities.userWithAccessToSubLaneC;
+    const userIdentity = testFixtureProvider.identities.userWithAccessToSubLaneC;
     const startCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(userContext, processModelIdSublanes, startEventId, payload, startCallbackType);
+      .startProcessInstance(userIdentity, processModelIdSublanes, startEventId, payload, startCallbackType);
 
     should(result).have.property('correlationId');
   });
