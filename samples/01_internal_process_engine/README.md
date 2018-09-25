@@ -16,7 +16,6 @@ process engine without using IoC, as this is would be completely impractical.
 This sample has the following minimal requirements:
 - NodeJS v8.9.x
 - Globally installed `gulp`
-- A running postgres server
 
 If you do not have `gulp` installed, you can do so by using the
 `npm install -g gulp` command.
@@ -62,8 +61,6 @@ In short, the sample will perform the following actions:
   ProcessEngine and the consumer api
   - The `ConsumerApiClientService` will be given an accessor for accessing the
     ProcessEngine included in this sample application
-- Create fixtures for a sample user
-  - The sample user will be removed when the program has finished
 - Use the `ConsumerApiClientService` to
   - start the sample process
   - retrieve the waiting user task for the sample process when it is reached
