@@ -38,13 +38,13 @@ export function getConsumerApiClientService(): ConsumerApiClientService {
 }
 
 /**
- * This will create and return a sample identity.
+ * This will create and return an identity for a sample user.
  * The identity is required for accessing process models
  * and must be provided to ALL consumer api functions.
  *
  * @function createIdentity
  * @async
- * @returns An identity, which contains an JWT AuthToken for the sample user.
+ * @returns A sample identity.
  */
 export async function createIdentity(): Promise<IIdentity> {
 
