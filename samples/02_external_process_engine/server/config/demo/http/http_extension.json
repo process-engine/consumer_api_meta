@@ -1,7 +1,7 @@
 {
   "server": {
     "host": "localhost",
-    "port": 9999
+    "port": 6666
   },
   "api": {
     "version": "v1"
