@@ -1,9 +1,9 @@
+import {InvocationContainer} from 'addict-ioc';
+
 import {
   ConsumerApiClientService,
   ExternalAccessor,
 } from '@process-engine/consumer_api_client';
-
-import {InvocationContainer} from 'addict-ioc';
 
 export function registerInContainer(container: InvocationContainer): void {
 

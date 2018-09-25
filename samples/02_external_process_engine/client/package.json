@@ -18,6 +18,7 @@
     "@essential-projects/bootstrapper": "3.0.0",
     "@essential-projects/bootstrapper_node": "3.0.1",
     "@essential-projects/http_contracts": "2.1.0",
+    "@essential-projects/iam_contracts": "3.1.0",
     "@essential-projects/services": "2.0.2",
     "@process-engine/consumer_api_client": "0.14.0",
     "@process-engine/consumer_api_contracts": "0.17.0",
