@@ -1,13 +1,11 @@
-import * as setup from './setup';
-
+import {Logger} from 'loggerhythm';
 import * as uuid from 'uuid';
 
-import {Logger} from 'loggerhythm';
+import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {
-  ConsumerContext,
-  IConsumerApiService,
-  ICorrelationResult,
+  CorrelationResult,
+  IConsumerApi,
   ProcessStartRequestPayload,
   ProcessStartResponsePayload,
   StartCallbackType,
@@ -15,6 +13,8 @@ import {
   UserTaskList,
   UserTaskResult,
 } from '@process-engine/consumer_api_contracts';
+
+import * as setup from './setup';
 
 const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
@@ -28,19 +28,22 @@ const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process
 // tslint:disable:no-magic-numbers
 async function executeSample(): Promise<void> {
 
+  // The key of the process model to start.
+  const processModelKey: string = 'sample_process';
+
   // Wait for the setup to finish and the bootstrapper to start
   await setup.start();
 
-  const consumerContext: ConsumerContext = await setup.createConsumerContext();
+  // Import the sample process into the database.
+  await setup.registerProcess(processModelKey);
+
+  const identity: IIdentity = await setup.createIdentity();
 
   // Retrieve the consumerApiClientService.
   // It will be using an InternalAccessor for accessing a ProcessEngine
   // that is included with the application.
-  const consumerApiClientService: IConsumerApiService =
-    await setup.resolveAsync<IConsumerApiService>('ConsumerApiClientService');
-
-  // The key of the process model to start.
-  const processModelKey: string = 'sample_process';
+  const consumerApiClientService: IConsumerApi =
+    await setup.resolveAsync<IConsumerApi>('ConsumerApiClientService');
 
   // The key of the start event with which to start the process instance.
   const startEventKey: string = 'StartEvent_1';
@@ -64,7 +67,7 @@ async function executeSample(): Promise<void> {
   // Start the process instance and wait for the service to resolve.
   // The result returns the id of the correlation that the process instance was added to.
   const processStartResult: ProcessStartResponsePayload =
-    await consumerApiClientService.startProcessInstance(consumerContext, processModelKey, startEventKey, payload, startCallbackType);
+    await consumerApiClientService.startProcessInstance(identity, processModelKey, startEventKey, payload, startCallbackType);
 
   const correlationId: string = processStartResult.correlationId;
 
@@ -73,7 +76,7 @@ async function executeSample(): Promise<void> {
 
   // Get a list of all waiting user tasks, using the process model key and the correlation id.
   const waitingUserTasks: UserTaskList =
-    await consumerApiClientService.getUserTasksForProcessModelInCorrelation(consumerContext, processModelKey, correlationId);
+    await consumerApiClientService.getUserTasksForProcessModelInCorrelation(identity, processModelKey, correlationId);
 
   // There should be one waiting user task.
   const userTask: UserTask = waitingUserTasks.userTasks[0];
@@ -86,14 +89,14 @@ async function executeSample(): Promise<void> {
     },
   };
 
-  await consumerApiClientService.finishUserTask(consumerContext, processModelKey, correlationId, userTask.key, userTaskResult);
+  await consumerApiClientService.finishUserTask(identity, processModelKey, correlationId, userTask.id, userTaskResult);
 
   // Now wait for the process to finish´
   await wait(500);
 
   // Lastly, retrieve the process instance result through the Consumer API and print it.
-  const processInstanceResult: ICorrelationResult =
-    await consumerApiClientService.getProcessResultForCorrelation(consumerContext, correlationId, processModelKey);
+  const processInstanceResult: Array<CorrelationResult> =
+    await consumerApiClientService.getProcessResultForCorrelation(identity, correlationId, processModelKey);
 
   logger.info('The process instance was finished with the following result:', processInstanceResult);
 }
