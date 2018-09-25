@@ -53,9 +53,6 @@ export async function start(): Promise<void> {
 
     const appPath: string = path.resolve(__dirname);
 
-    // We use the integrationtest-bootstrapper here, because it provides us with an easy way to register users.
-    // Also, the bootstrappers "reset" method allows us to clear those users from the database again.
-    // This way, the sample application will in no way affect data consistency.
     bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
     await bootstrapper.start();

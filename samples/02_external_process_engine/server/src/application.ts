@@ -121,10 +121,7 @@ function readProcessModelFromFile(fileName: string): string {
 }
 
 /**
- * Generate an absoulte path, which points to the bpmn directory.
- *
- * Checks if the cwd is "_integration_tests". If not, that directory name is appended.
- * This is necessary, because Jenkins uses a different cwd than the local machines do.
+ * Generate an absoulte path, which points to the bpmn directory of this sample.
  */
 function getBpmnDirectoryPath(): string {
 

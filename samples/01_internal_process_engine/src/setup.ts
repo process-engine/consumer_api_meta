@@ -11,7 +11,7 @@ import {IProcessModelService} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('ssample:internal:setup');
 
-// These are the names of the modules, whose ioc_modules will be included in the ioc container.
+// These are the names of the packages, whose ioc_modules will be registered at the ioc container.
 const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
@@ -32,7 +32,7 @@ const iocModuleNames: Array<string> = [
   '.', // This points to the top-level ioc module located in this sample.
 ];
 
-// This imports all the listed ioc modules and stores them.
+// This imports all the listed ioc modules.
 const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
   return require(`${moduleName}/ioc_module`);
 });
@@ -83,7 +83,7 @@ export async function start(): Promise<void> {
 }
 
 /**
- * Shuts the bootstrapper down and clears all fixtures from the database.
+ * Shuts down the HttpExtension. After that is done, the program will exit.
  *
  * @function shutdown
  * @async
@@ -160,10 +160,7 @@ function readProcessModelFromFile(fileName: string): string {
 }
 
 /**
- * Generate an absoulte path, which points to the bpmn directory.
- *
- * Checks if the cwd is "_integration_tests". If not, that directory name is appended.
- * This is necessary, because Jenkins uses a different cwd than the local machines do.
+ * Generate an absoulte path, which points to the bpmn directory of this sample.
  */
 function getBpmnDirectoryPath(): string {
 
