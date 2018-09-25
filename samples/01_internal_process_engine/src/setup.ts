@@ -13,35 +13,22 @@ const logger: Logger = Logger.createLogger('test:bootstrapper');
 const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
-  '@essential-projects/caching',
-  '@essential-projects/core',
-  '@essential-projects/data_model',
-  '@essential-projects/data_model_contracts',
-  '@essential-projects/datasource_adapter_base',
-  '@essential-projects/datasource_adapter_postgres',
-  '@essential-projects/datastore',
-  '@essential-projects/datastore_http',
-  '@essential-projects/datastore_messagebus',
   '@essential-projects/event_aggregator',
-  '@essential-projects/feature',
   '@essential-projects/http_extension',
-  '@essential-projects/http_integration_testing',
-  '@essential-projects/iam',
-  '@essential-projects/iam_http',
-  '@essential-projects/invocation',
-  '@essential-projects/messagebus',
-  '@essential-projects/messagebus_http',
-  '@essential-projects/messagebus_adapter_faye',
-  '@essential-projects/metadata',
-  '@essential-projects/security_service',
   '@essential-projects/services',
-  '@essential-projects/routing',
+  '@essential-projects/sequelize_connection_manager',
   '@essential-projects/timing',
-  '@essential-projects/validation',
+  '@process-engine/consumer_api_client',
   '@process-engine/consumer_api_core',
-  '@process-engine/process_engine',
-  '@process-engine/process_engine_http',
-  '@process-engine/process_repository',
+  '@process-engine/consumer_api_http',
+  '@process-engine/correlations.repository.sequelize',
+  '@process-engine/flow_node_instance.repository.sequelize',
+  '@process-engine/iam',
+  '@process-engine/metrics_api_core',
+  '@process-engine/metrics.repository.file_system',
+  '@process-engine/process_engine_core',
+  '@process-engine/process_model.repository.sequelize',
+  '@process-engine/timers.repository.sequelize',
   '.', // This points to the top-level ioc module located in this sample.
 ];
 
@@ -86,7 +73,7 @@ export async function start(): Promise<void> {
     const appPath: string = path.resolve(__dirname);
 
     // We use the integrationtest-bootstrapper here, because it provides us with an easy way to register users.
-    // Also, the bootstrappers "reset" method allows us to clear those users from the database again.
+    // Also, the bootstrappers 'reset' method allows us to clear those users from the database again.
     // This way, the sample application will in no way affect data consistency.
     bootstrapper = await container.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
 
