@@ -86,7 +86,12 @@ export class TestFixtureProvider {
   public getBpmnDirectoryPath(): string {
 
     const bpmnDirectoryName: string = 'bpmn';
-    const rootDirPath: string = process.cwd();
+    let rootDirPath: string = process.cwd();
+    const integrationTestDirName: string = '_integration_tests';
+
+    if (!rootDirPath.endsWith(integrationTestDirName)) {
+      rootDirPath = path.join(rootDirPath, integrationTestDirName);
+    }
 
     return path.join(rootDirPath, bpmnDirectoryName);
   }
