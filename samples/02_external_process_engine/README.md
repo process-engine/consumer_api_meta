@@ -23,7 +23,7 @@ The only difference is in how they are set up.
 
 All applications have the following minimal requirements:
 - NodeJS v8.9.x
-- Globally installed `gulp` 
+- Globally installed `gulp`
 - A running postgres server (Server only)
 
 If you do not have `gulp` installed, you can do so by using the
@@ -32,19 +32,14 @@ If you do not have `gulp` installed, you can do so by using the
 ## Setup
 
 You must run the following commands in the server and client applications:
-- `npm install`
+- `npm install` or
+- `npm install --no-package-lock` if you do not want npm to create a lockfile
 - `npm run build`
 
-Also make sure that the connection settings to your postgres instance
-are accurate and that the database exists!
+The sample uses SQLite as its datastorage. The database file will be placed
+directly into the sample folder and bears the name `processengine.sqlite`.
 
-You can find the postgres config file at the following location
-in the server application:
-`config/demo/data_sources/postgres.json`.
-
-Note:
-The datatables required by the ProcessEngine will be created automatically
-at startup.
+There is no need to configure anything.
 
 ## Executing the sample
 
