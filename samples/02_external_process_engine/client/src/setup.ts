@@ -1,13 +1,9 @@
-import * as path from 'path';
-
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
+import * as path from 'path';
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
-import {IAuthObject} from '@essential-projects/core_contracts';
-import {IHttpClient, IResponse} from '@essential-projects/http_contracts';
-
-import {ConsumerContext} from '@process-engine/consumer_api_contracts';
+import {IIdentity} from '@essential-projects/iam_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -57,9 +53,6 @@ export async function start(): Promise<void> {
 
     const appPath: string = path.resolve(__dirname);
 
-    // We use the integrationtest-bootstrapper here, because it provides us with an easy way to register users.
-    // Also, the bootstrappers "reset" method allows us to clear those users from the database again.
-    // This way, the sample application will in no way affect data consistency.
     bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
     await bootstrapper.start();
@@ -86,29 +79,17 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
 }
 
 /**
- * This will create and return a ConsumerContext for the sampleUser.
- * The context is required for accessing process models
+ * This will create and return an identity for a sample user.
+ * The identity is required for accessing process models
  * and must be provided to ALL consumer api functions.
  *
- * Note that this requires the sample server to be active, as this will perform a request against it.
- *
- * @function createConsumerContext
+ * @function createIdentity
  * @async
- * @returns A consumer context, which contains an JWT AuthToken for the sample user.
+ * @returns A sample identity.
  */
-export async function createConsumerContext(): Promise<ConsumerContext> {
-  const httpClient: IHttpClient = await resolveAsync<IHttpClient>('HttpService');
+export async function createIdentity(): Promise<IIdentity> {
 
-  const loginRoute: string = 'iam/login';
-
-  const loginPayload: any = {
-    username: 'sampleUser',
-    password: 'pass',
-  };
-
-  const loginResult: IResponse<IAuthObject> = await httpClient.post<any, IAuthObject>(loginRoute, loginPayload);
-
-  return <ConsumerContext> {
-    identity: loginResult.result.token,
+  return <IIdentity> {
+    token: 'defaultUser',
   };
 }

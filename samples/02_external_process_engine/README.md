@@ -1,4 +1,4 @@
-# Access external ProcessEngine with Consumer API
+# Access external ProcessEngine with ConsumerAPI
 
 This sample demonstrates how to use the `ConsumerApiClientService` to access
 a ProcessEngine, which is contained directly within the application.
@@ -8,7 +8,7 @@ a ProcessEngine, which is contained directly within the application.
 ## Sample Components
 
 This sample consists of three individual applications:
-- **Server**: Contains a process engine and an endpoint for the consumer api.
+- **Server**: Contains a process engine and an endpoint for the ConsumerAPI.
   Use this application to provide an endpoint for your clients
 - **Clients**: There are two different client applications that you can use to
   access the server application:
@@ -23,8 +23,7 @@ The only difference is in how they are set up.
 
 All applications have the following minimal requirements:
 - NodeJS v8.9.x
-- Globally installed `gulp` 
-- A running postgres server (Server only)
+- Globally installed `gulp`
 
 If you do not have `gulp` installed, you can do so by using the
 `npm install -g gulp` command.
@@ -32,19 +31,14 @@ If you do not have `gulp` installed, you can do so by using the
 ## Setup
 
 You must run the following commands in the server and client applications:
-- `npm install`
+- `npm install` or
+- `npm install --no-package-lock` if you do not want npm to create a lockfile
 - `npm run build`
 
-Also make sure that the connection settings to your postgres instance
-are accurate and that the database exists!
+The sample uses SQLite as its datastorage. The database file will be placed
+directly into the sample folder and bears the name `processengine.sqlite`.
 
-You can find the postgres config file at the following location
-in the server application:
-`config/demo/data_sources/postgres.json`.
-
-Note:
-The datatables required by the ProcessEngine will be created automatically
-at startup.
+There is no need to configure anything.
 
 ## Executing the sample
 
@@ -62,14 +56,13 @@ step of the program.
 
 The server handles the following operations:
 - Accept incoming HTTP Requests from the clients
-- Create a consumer context for a client, by use of the `/iam/login` route
-- Use the consumer api to perform each operation made by the client:
+- Use the ConsumerAPI to perform each operation made by the client:
   - start the sample process
   - retrieve waiting user tasks
   - finish a user task with a given payload
   - retrieve a process instance result
 
-Each client will perform the following actions against the server:
+Each client will perform the following actions:
 - Create an instance for the `ConsumerApiClientService`
   - The client will be given an accessor for accessing the server's
     ProcessEngine

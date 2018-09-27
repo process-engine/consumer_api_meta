@@ -1,11 +1,9 @@
 import {Logger} from 'loggerhythm';
 
-import {IAuthObject} from '@essential-projects/core_contracts';
-import {IResponse} from '@essential-projects/http_contracts';
+import {IIdentity} from '@essential-projects/iam_contracts';
 import {HttpService} from '@essential-projects/services';
 
 import {ConsumerApiClientService, ExternalAccessor} from '@process-engine/consumer_api_client';
-import {ConsumerContext} from '@process-engine/consumer_api_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -40,27 +38,17 @@ export function getConsumerApiClientService(): ConsumerApiClientService {
 }
 
 /**
- * This will create and return a ConsumerContext for the sampleUser.
- * The context is required for accessing process models
+ * This will create and return an identity for a sample user.
+ * The identity is required for accessing process models
  * and must be provided to ALL consumer api functions.
  *
- * Note that this requires the sample server to be active, as this will perform a request against it.
- *
- * @function createConsumerContext
+ * @function createIdentity
  * @async
- * @returns A consumer context, which contains an JWT AuthToken for the sample user.
+ * @returns A sample identity.
  */
-export async function createConsumerContext(): Promise<ConsumerContext> {
-  const loginRoute: string = 'iam/login';
+export async function createIdentity(): Promise<IIdentity> {
 
-  const loginPayload: any = {
-    username: 'sampleUser',
-    password: 'pass',
-  };
-
-  const loginResult: IResponse<IAuthObject> = await httpClient.post<any, IAuthObject>(loginRoute, loginPayload);
-
-  return <ConsumerContext> {
-    identity: loginResult.result.token,
+  return <IIdentity> {
+    token: 'defaultUser',
   };
 }

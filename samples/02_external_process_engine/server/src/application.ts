@@ -1,46 +1,34 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
-import {HttpIntegrationTestBootstrapper} from '@essential-projects/http_integration_testing';
+import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
+import {IIdentity} from '@essential-projects/iam_contracts';
 
-const logger: Logger = Logger.createLogger('test:bootstrapper');
+import {IProcessModelService} from '@process-engine/process_engine_contracts';
+
+const logger: Logger = Logger.createLogger('ssample:external:server');
 
 // These are the names of the modules, whose ioc_modules will be included in the ioc container.
 const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
-  '@essential-projects/caching',
-  '@essential-projects/core',
-  '@essential-projects/data_model',
-  '@essential-projects/data_model_contracts',
-  '@essential-projects/datasource_adapter_base',
-  '@essential-projects/datasource_adapter_postgres',
-  '@essential-projects/datastore',
-  '@essential-projects/datastore_http',
-  '@essential-projects/datastore_messagebus',
   '@essential-projects/event_aggregator',
-  '@essential-projects/feature',
   '@essential-projects/http_extension',
-  '@essential-projects/http_integration_testing',
-  '@essential-projects/iam',
-  '@essential-projects/iam_http',
-  '@essential-projects/invocation',
-  '@essential-projects/messagebus',
-  '@essential-projects/messagebus_http',
-  '@essential-projects/messagebus_adapter_faye',
-  '@essential-projects/metadata',
-  '@essential-projects/security_service',
   '@essential-projects/services',
-  '@essential-projects/routing',
   '@essential-projects/timing',
-  '@essential-projects/validation',
-  '@process-engine/consumer_api_http',
   '@process-engine/consumer_api_core',
-  '@process-engine/process_engine',
-  '@process-engine/process_engine_http',
-  '@process-engine/process_repository',
+  '@process-engine/consumer_api_http',
+  '@process-engine/correlations.repository.sequelize',
+  '@process-engine/flow_node_instance.repository.sequelize',
+  '@process-engine/iam',
+  '@process-engine/metrics_api_core',
+  '@process-engine/metrics.repository.file_system',
+  '@process-engine/process_engine_core',
+  '@process-engine/process_model.repository.sequelize',
+  '@process-engine/timers.repository.sequelize',
   '../../', // This points to the top-level ioc module located in this sample.
 ];
 
@@ -49,7 +37,7 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
   return require(`${moduleName}/ioc_module`);
 });
 
-let bootstrapper: HttpIntegrationTestBootstrapper;
+let bootstrapper: AppBootstrapper;
 
 let container: InvocationContainer;
 
@@ -84,32 +72,12 @@ async function start(): Promise<void> {
 
     const appPath: string = path.resolve(__dirname);
 
-    // We use the integrationtest-bootstrapper here, because it provides us with an easy way to register users.
-    // Also, the bootstrappers "reset" method allows us to clear those users from the database again.
-    // This way, the sample application will in no way affect data consistency.
-    bootstrapper = await container.resolveAsync<HttpIntegrationTestBootstrapper>('HttpIntegrationTestBootstrapper', [appPath]);
-
-    const identityFixtures: Array<any> = [{
-      // Register a default user that can access the sample process.
-      name: 'sampleUser',
-      password: 'pass',
-      roles: ['user'],
-    }];
-
-    bootstrapper.addFixtures('User', identityFixtures);
+    bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
     await bootstrapper.start();
+    await importSampleProcess();
 
     logger.info('Bootstrapper started.');
-
-    // This will register a listener for the console.
-    // When the process is given the interrupt-signal (i.e. ctrl+c),
-    // all fixtures are cleared, before the shutdown is concluded.
-    process.on('SIGINT', async() => {
-      await shutdown();
-      logger.info('Done. Shutting down server.');
-      process.exit(0);
-    });
   } catch (error) {
     logger.error('Failed to start bootstrapper!', error);
     throw error;
@@ -117,15 +85,50 @@ async function start(): Promise<void> {
 }
 
 /**
- * Shuts the bootstrapper down and clears all fixtures from the database.
- *
- * @function shutdown
- * @async
+ * Imports the sample process into the database.
  */
-async function shutdown(): Promise<void> {
-  logger.info('Cleaning fixtures...');
-  await bootstrapper.reset();
-  await bootstrapper.shutdown();
+async function importSampleProcess(): Promise<void> {
+
+  const processFileName: string = 'sample_process';
+
+  const dummyIdentity: IIdentity = {
+    token: 'defaultUser',
+  };
+
+  const xml: string = readProcessModelFromFile(processFileName);
+
+  // Get the ProcessModelService, which ahndles the import of ProcessModels.
+  const processModelService: IProcessModelService = await container.resolveAsync<IProcessModelService>('ProcessModelService');
+
+  // Save the ProcessModel.
+  await processModelService.persistProcessDefinitions(dummyIdentity, processFileName, xml, true);
+}
+
+/**
+ * Reads the content of the given ProcessModelFile and imports it into the
+ * database.
+ *
+ * @param fileName The name of the ProcessModelFile to read.
+ */
+function readProcessModelFromFile(fileName: string): string {
+
+  const bpmnFolderLocation: string = getBpmnDirectoryPath();
+  const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+
+  const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+
+  return processModelAsXml;
+}
+
+/**
+ * Generate an absoulte path, which points to the bpmn directory of this sample.
+ */
+function getBpmnDirectoryPath(): string {
+
+  const bpmnDirectoryName: string = 'bpmn';
+  const rootDirPath: string = process.cwd();
+
+  return path.join(rootDirPath, bpmnDirectoryName);
 }
 
 start();

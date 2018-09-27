@@ -124,7 +124,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
     await testFixtureProvider
       .consumerApiClientService
-      .finishUserTask(defaultIdentity, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'Task_13ppr5w', userTaskResult);
+      .finishUserTask(defaultIdentity, processModelIdCallActivitySubprocess, correlationIdCallActivity, 'UserTaskTestCallActivity_1', userTaskResult);
   });
 
   it('should return an empty user task list, if the given correlation does not have any user tasks', async () => {
@@ -178,12 +178,12 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/user_tasks', ()
 
   it('should fail to retrieve the correlation\'s user tasks, when the user forbidden to retrieve it', async () => {
 
-    const restrictedContext = testFixtureProvider.identities.restrictedUser;
+    const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
     try {
       const userTaskList = await testFixtureProvider
         .consumerApiClientService
-        .getUserTasksForCorrelation(restrictedContext, correlationId);
+        .getUserTasksForCorrelation(restrictedIdentity, correlationId);
 
       should.fail(userTaskList, undefined, 'This request should have failed!');
     } catch (error) {

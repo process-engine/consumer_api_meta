@@ -15,8 +15,7 @@ process engine without using IoC, as this is would be completely impractical.
 
 This sample has the following minimal requirements:
 - NodeJS v8.9.x
-- Globally installed `gulp` 
-- A running postgres server
+- Globally installed `gulp`
 
 If you do not have `gulp` installed, you can do so by using the
 `npm install -g gulp` command.
@@ -24,17 +23,14 @@ If you do not have `gulp` installed, you can do so by using the
 ## Setup
 
 Run the following commands in sequence:
-- `npm install`
+- `npm install` or
+- `npm install --no-package-lock` if you do not want npm to create a lockfile
 - `npm run build`
 
-Also make sure that the connection settings to your postgres instance
-are accurate and that the database exists!
-You can find the postgres config file at the following location:
-`config/demo/data_sources/postgres.json`.
+The sample uses SQLite as its datastorage. The database file will be placed
+directly into the sample folder and bears the name `processengine.sqlite`.
 
-Note:
-The datatables required by the ProcessEngine will be created automatically
-at startup.
+There is no need to configure anything.
 
 ## Executing the sample
 
@@ -64,9 +60,7 @@ In short, the sample will perform the following actions:
 - Initialize an IoC container that contains a complete setup for the
   ProcessEngine and the consumer api
   - The `ConsumerApiClientService` will be given an accessor for accessing the
-    ProcessEngine included in this sample application 
-- Create fixtures for a sample user
-  - The sample user will be removed when the program has finished
+    ProcessEngine included in this sample application
 - Use the `ConsumerApiClientService` to
   - start the sample process
   - retrieve the waiting user task for the sample process when it is reached
