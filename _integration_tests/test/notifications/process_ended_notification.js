@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 const StartCallbackType = require('@process-engine/consumer_api_contracts').StartCallbackType;
 
-const TestFixtureProvider = require('../../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
 describe('Consumer API:   Receive Process Ended Notification', () => {
 
@@ -43,6 +43,10 @@ describe('Consumer API:   Receive Process Ended Notification', () => {
       const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
 
       const onProcessEndCallback = (processEndedMessage) => {
+
+        if (processEndedMessage.correlationId !== payload.correlationId) {
+          return;
+        }
 
         should.exist(processEndedMessage);
         should(processEndedMessage).have.property('correlationId');
