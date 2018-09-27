@@ -17,7 +17,7 @@ describe('Consumer API:   Receive Process Ended Notification', () => {
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
-    consumerContext = testFixtureProvider.context.defaultUser;
+    consumerContext = testFixtureProvider.identities.defaultUser;
 
     const processModelsToImport = [
       processModelId,
