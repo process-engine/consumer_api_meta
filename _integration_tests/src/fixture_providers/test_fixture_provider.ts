@@ -54,7 +54,7 @@ export class TestFixtureProvider {
 
     this._consumerApiClientService = await this.resolveAsync<IConsumerApi>('ConsumerApiClientService');
 
-    const accessConsumerApiExternally: boolean = process.env.CONSUMER_API_ACCESS_TYPE !== 'internal';
+    const accessConsumerApiExternally: boolean = process.env.CONSUMER_API_ACCESS_TYPE === 'external';
 
     if (accessConsumerApiExternally) {
       const consumerApiExternalAccessor: any = await this.resolveAsync<IConsumerApi>('ConsumerApiExternalAccessor');
