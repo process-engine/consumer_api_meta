@@ -4,7 +4,7 @@ const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
-describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations/:correlation_id/events/:event_id/trigger', () => {
+describe.skip('Consumer API: POST  ->  /process_models/:process_model_id/correlations/:correlation_id/events/:event_id/trigger', () => {
 
   let testFixtureProvider;
   let defaultIdentity;
@@ -29,7 +29,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
 
     await testFixtureProvider
       .consumerApiClientService
-      .triggerEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
+      .triggerMessageEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
   });
 
   it('should fail trigger the event, when the user is unauthorized', async () => {
@@ -42,7 +42,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent({}, processModelId, correlationId, eventId, eventTriggerPayload);
+        .triggerMessageEvent({}, processModelId, correlationId, eventId, eventTriggerPayload);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -53,8 +53,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail trigger the event, when the user forbidden to retrieve it', async () => {
+  it('should fail trigger the event, when the user forbidden to retrieve it', async () => {
 
     const processModelId = 'test_consumer_api_trigger_event';
     const correlationId = 'correlationId';
@@ -66,7 +65,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent(restrictedIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
+        .triggerMessageEvent(restrictedIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -77,8 +76,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to trigger the event, if the given process_model_id does not exist', async () => {
+  it('should fail to trigger the event, if the given process_model_id does not exist', async () => {
 
     // TODO: Replace with real values
     const processModelId = 'invalidprocessModelId';
@@ -89,7 +87,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
+        .triggerMessageEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -100,8 +98,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to trigger the event, if the given correlation_id does not exist', async () => {
+  it('should fail to trigger the event, if the given correlation_id does not exist', async () => {
 
     // TODO: Replace with real values
     const processModelId = 'test_consumer_api_trigger_event';
@@ -112,7 +109,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
+        .triggerMessageEvent(defaultIdentity, processModelId, correlationId, eventId, eventTriggerPayload);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -123,8 +120,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     }
   });
 
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to trigger the event, if the given event_id does not exist', async () => {
+  it('should fail to trigger the event, if the given event_id does not exist', async () => {
 
     // TODO: Replace with real values
     const processModelId = 'test_consumer_api_trigger_event';
@@ -135,7 +131,7 @@ describe('Consumer API: POST  ->  /process_models/:process_model_id/correlations
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .triggerEvent(defaultIdentity, processModelId, correlationId, invalidEventId, eventTriggerPayload);
+        .triggerMessageEvent(defaultIdentity, processModelId, correlationId, invalidEventId, eventTriggerPayload);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
