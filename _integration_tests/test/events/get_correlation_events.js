@@ -5,7 +5,7 @@ const should = require('should');
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
-describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => {
+describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -14,7 +14,6 @@ describe.only('Consumer API:   GET  ->  /correlations/:correlation_id/events', (
 
   const processModelIdSignalEvent = 'test_consumer_api_signal_event';
   const processModelIdMessageEvent = 'test_consumer_api_message_event';
-  const processModelIdUnauthorizedEvent = 'test_consumer_api_events_unauthorized';
 
   let correlationId;
 
