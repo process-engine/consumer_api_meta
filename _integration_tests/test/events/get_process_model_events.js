@@ -39,12 +39,26 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     });
   });
 
+  it.skip('should return an empty Array, if the process_model_id does not exist', async () => {
+
+    const invalidprocessModelId = 'invalidprocessModelId';
+
+    const eventList = await testFixtureProvider
+      .consumerApiClientService
+      .getEventsForProcessModel(defaultIdentity, invalidprocessModelId);
+
+    should(eventList).have.property('events');
+
+    should(eventList.events).be.instanceOf(Array);
+    should(eventList.events.length).be.equal(0);
+  });
+
   it('should fail to retrieve the process model\'s events, when the user is unauthorized', async () => {
 
     const processModelId = 'test_get_events_for_process_model';
 
     try {
-      const eventList = await testFixtureProvider
+      await testFixtureProvider
         .consumerApiClientService
         .getEventsForProcessModel({}, processModelId);
 
@@ -57,7 +71,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     }
   });
 
-  // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the process model\'s events, when the user forbidden to retrieve it', async () => {
 
     const processModelId = 'test_get_events_for_process_model';
@@ -65,7 +78,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
     try {
-      const eventList = await testFixtureProvider
+      await testFixtureProvider
         .consumerApiClientService
         .getEventsForProcessModel(restrictedIdentity, processModelId);
 
@@ -73,25 +86,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code).be.match(expectedErrorCode);
-      should(error.message).be.match(expectedErrorMessage);
-    }
-  });
-
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the process model\'s events, if the process_model_id does not exist', async () => {
-
-    const invalidprocessModelId = 'invalidprocessModelId';
-
-    try {
-      const processModel = await testFixtureProvider
-        .aconsumerApiClientService
-        .getEventsForProcessModel(defaultIdentity, invalidprocessModelId);
-
-      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
     }

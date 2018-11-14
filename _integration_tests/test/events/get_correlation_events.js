@@ -38,13 +38,26 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
     });
   });
 
+  it.skip('should return an empty Array, if the correlation_id does not exist', async () => {
+
+    const invalidCorrelationId = 'invalidCorrelationId';
+
+    const eventList = await testFixtureProvider
+      .consumerApiClientService
+      .getEventsForCorrelation(defaultIdentity, invalidCorrelationId);
+
+    should(eventList).have.property('events');
+
+    should(eventList.events).be.instanceOf(Array);
+    should(eventList.events.length).be.equal(0);
+  });
+
   it('should fail to retrieve the correlation\'s events, when the user is unauthorized', async () => {
 
     const correlationId = 'test_get_events_for_process_model';
 
     try {
-      const eventList =
-        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation({}, correlationId);
+      await testFixtureProvider.consumerApiClientService.getEventsForCorrelation({}, correlationId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -55,7 +68,6 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
     }
   });
 
-  // TODO: Bad Path not implemented yet
   it.skip('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
 
     const correlationId = 'test_get_events_for_process_model';
@@ -63,31 +75,12 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
     const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
     try {
-      const eventList =
-        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(restrictedIdentity, correlationId);
+      await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(restrictedIdentity, correlationId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access denied/i;
-      should(error.code).be.match(expectedErrorCode);
-      should(error.message).be.match(expectedErrorMessage);
-    }
-  });
-
-  // TODO: Bad Path not implemented yet
-  it.skip('should fail to retrieve the correlation\'s events, if the correlation_id does not exist', async () => {
-
-    const invalidCorrelationId = 'invalidCorrelationId';
-
-    try {
-      const processModel =
-        await testFixtureProvider.consumerApiClientService.getEventsForCorrelation(defaultIdentity, invalidCorrelationId);
-
-      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 404;
-      const expectedErrorMessage = /not found/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
     }
