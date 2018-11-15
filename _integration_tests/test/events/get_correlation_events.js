@@ -80,7 +80,7 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/events', () => 
     should(eventList.events.length).be.equal(0);
   });
 
-  it('should retieve empty list, when the user has no access to the events', async () => {
+  it('should return an empty Array, when the user has no access to any of the events', async () => {
 
     const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
