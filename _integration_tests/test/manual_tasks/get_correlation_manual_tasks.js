@@ -98,8 +98,10 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
     manualTasksToFinishAfterTest.push(manualTask);
 
     should(manualTask).have.property('id');
+    should(manualTask).have.property('name');
     should(manualTask).have.property('correlationId');
     should(manualTask).have.property('processModelId');
+    should(manualTask).have.property('processInstanceId');
     should(manualTask).have.property('tokenPayload');
   });
 
