@@ -3,31 +3,50 @@
 const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
+const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
 
 describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:correlation_id/events', () => {
 
+  let processInstanceHandler;
   let testFixtureProvider;
+
   let defaultIdentity;
 
-  const processModelId = 'test_consumer_api_correlation_result';
+  const processModelIdSignalEvent = 'test_consumer_api_signal_event';
+
+  let correlationId;
+  let eventNameToTriggerAfterTest;
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
     defaultIdentity = testFixtureProvider.identities.defaultUser;
+
+    await testFixtureProvider.importProcessFiles([processModelIdSignalEvent]);
+
+    processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
+
+    correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdSignalEvent);
+    await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
   });
 
   after(async () => {
+    await triggerWaitingEventAfterTest();
     await testFixtureProvider.tearDown();
   });
 
-  it('should return a list of events for a given process model in a given correlation', async () => {
+  async function triggerWaitingEventAfterTest() {
 
-    const correlationId = 'correlationId';
+    await testFixtureProvider
+      .consumerApiClientService
+      .triggerSignalEvent(defaultIdentity, eventNameToTriggerAfterTest, {});
+  }
+
+  it('should return a list of events for a given process model in a given correlation', async () => {
 
     const eventList = await testFixtureProvider
       .consumerApiClientService
-      .getEventsForProcessModelInCorrelation(defaultIdentity, processModelId, correlationId);
+      .getEventsForProcessModelInCorrelation(defaultIdentity, processModelIdSignalEvent, correlationId);
 
     should(eventList).have.property('events');
 
@@ -37,18 +56,23 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     eventList.events.forEach((event) => {
       should(event).have.property('id');
       should(event).have.property('processInstanceId');
-      should(event).have.property('data');
+      should(event).have.property('flowNodeInstanceId');
+      should(event).have.property('correlationId');
+      should(event).have.property('processModelId');
+      should(event).have.property('bpmnType');
+      should(event).have.property('eventType');
+      should(event).have.property('eventName');
+      eventNameToTriggerAfterTest = event.eventName;
     });
   });
 
-  it.skip('should return an empty Array, if the process_model_id does not exist', async () => {
+  it('should return an empty Array, if the process_model_id does not exist', async () => {
 
-    const invalidprocessModelId = 'invalidprocessModelId';
-    const correlationId = 'correlationId';
+    const invalidProcessModelId = 'invalidprocessModelId';
 
     const eventList = await testFixtureProvider
       .consumerApiClientService
-      .getEventsForProcessModelInCorrelation(defaultIdentity, invalidprocessModelId, correlationId);
+      .getEventsForProcessModelInCorrelation(defaultIdentity, invalidProcessModelId, correlationId);
 
     should(eventList).have.property('events');
 
@@ -56,13 +80,13 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     should(eventList.events.length).be.equal(0);
   });
 
-  it.skip('should return an empty Array, if the correlation_id does not exist', async () => {
+  it('should return an empty Array, if the correlation_id does not exist', async () => {
 
     const invalidCorrelationId = 'invalidCorrelationId';
 
     const eventList = await testFixtureProvider
       .consumerApiClientService
-      .getEventsForProcessModelInCorrelation(defaultIdentity, processModelId, invalidCorrelationId);
+      .getEventsForProcessModelInCorrelation(defaultIdentity, processModelIdSignalEvent, invalidCorrelationId);
 
     should(eventList).have.property('events');
 
@@ -72,12 +96,10 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
 
   it('should fail to retrieve the correlation\'s events, when the user is unauthorized', async () => {
 
-    const correlationId = 'correlationId';
-
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .getEventsForProcessModelInCorrelation({}, processModelId, correlationId);
+        .getEventsForProcessModelInCorrelation({}, processModelIdSignalEvent, correlationId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
@@ -88,16 +110,14 @@ describe('Consumer API GET  ->  /process_models/:process_model_id/correlations/:
     }
   });
 
-  it.skip('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
-
-    const correlationId = 'correlationId';
+  it('should fail to retrieve the correlation\'s events, when the user forbidden to retrieve it', async () => {
 
     const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .getEventsForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
+        .getEventsForProcessModelInCorrelation(restrictedIdentity, processModelIdSignalEvent, correlationId);
 
       should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
