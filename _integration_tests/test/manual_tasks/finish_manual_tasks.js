@@ -28,249 +28,106 @@ describe(`Consumer API: ${testCase}`, () => {
     await testFixtureProvider.tearDown();
   });
 
-  // it('should successfully finish the given manual task.', async () => {
-
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
-
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
-
-  //   await testFixtureProvider
-  //     .consumerApiClientService
-  //     .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);
-  // });
-
-  it('should successfully finish the manual task, if no result is provided', async () => {
+  it('should successfully finish the manual task.', async () => {
 
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-    console.log(correlationId);
     await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
     const manualTaskId = 'Task_0gmd1s3';
-    console.log(manualTaskId);
 
     await testFixtureProvider
       .consumerApiClientService
       .finishManualTask(defaultIdentity, processModelId, correlationId, manualTaskId);
   });
 
-  // it('should fail to finish the user task, if the given process_model_id does not exist', async () => {
+  it('should fail to finish the manual task, if the given process_model_id does not exist', async () => {
 
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
+    const manualTaskId = 'Task_0gmd1s3';
 
-  //   const invalidprocessModelId = 'invalidprocessModelId';
+    const invalidprocessModelId = 'invalidprocessModelId';
 
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, invalidprocessModelId, correlationId, userTaskId, userTaskResult);
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishManualTask(defaultIdentity, invalidprocessModelId, correlationId, manualTaskId);
 
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 404;
-  //     const expectedErrorMessage = /no process instance.*?found/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      const expectedErrorMessage = /does not have a manual task/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+    }
+  });
 
-  // it('should fail to finish the user task, if the given correlation_id does not exist', async () => {
+  it('should fail to finish an already finished manual task.', async () => {
 
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
-  //   const invalidCorrelationId = 'invalidCorrelationId';
+    const manualTaskId = 'Task_0gmd1s3';
 
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
+    await testFixtureProvider
+      .consumerApiClientService
+      .finishManualTask(defaultIdentity, processModelId, correlationId, manualTaskId);
 
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, processModelId, invalidCorrelationId, userTaskId, userTaskResult);
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishManualTask(defaultIdentity, processModelId, correlationId, manualTaskId);
 
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 404;
-  //     const expectedErrorMessage = /no correlation.*?found/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 404;
+      should(error.code).be.match(expectedErrorCode);
+    }
+  });
 
-  // it('should fail to finish the user task, if the given user_task_id does not exist', async () => {
+  it('should fail to finish the manual task, when the user is unauthorized', async () => {
 
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
-  //   const invalidUserTaskId = 'invalidUserTaskId';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
+    const manualTaskId = 'Task_0gmd1s3';
 
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, processModelId, correlationId, invalidUserTaskId, userTaskResult);
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishManualTask({}, processModelId, correlationId, manualTaskId);
 
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 404;
-  //     const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 401;
+      const expectedErrorMessage = /no auth token provided/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+    }
+  });
 
-  // it('should fail to finish an already finished user task.', async () => {
+  it('should fail to finish the manual task, when the user is forbidden to retrieve it', async () => {
 
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
+    const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
+    await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
+    const manualTaskId = 'Task_0gmd1s3';
 
-  //   await testFixtureProvider
-  //     .consumerApiClientService
-  //     .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);
+    const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);
+    try {
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishManualTask(restrictedIdentity, processModelId, correlationId, manualTaskId);
 
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 404;
-  //     const expectedErrorMessage = /process model.*?in correlation.*?does not have.*?user task/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
-
-  // it('should fail to finish the user task, if the provided result is not an object, but a String', async () => {
-
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
-
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: 'i am invalid',
-  //   };
-
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);
-
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 400;
-  //     const expectedErrorMessage = /not.*?an object/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
-
-  // it('should fail to finish the user task, if the provided result is not an object, but an Array', async () => {
-
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
-
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: ['i am invalid'],
-  //   };
-
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(defaultIdentity, processModelId, correlationId, userTaskId, userTaskResult);
-
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 400;
-  //     const expectedErrorMessage = /not.*?an object/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
-
-  // it('should fail to finish the user task, when the user is unauthorized', async () => {
-
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
-
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
-
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask({}, processModelId, correlationId, userTaskId, userTaskResult);
-
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 401;
-  //     const expectedErrorMessage = /no auth token provided/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
-
-  // it('should fail to finish the user task, when the user is forbidden to retrieve it', async () => {
-
-  //   const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
-  //   await processInstanceHandler.waitForProcessInstanceToReachUserTask(correlationId);
-
-  //   const userTaskId = 'Task_1vdwmn1';
-  //   const userTaskResult = {
-  //     formFields: {
-  //       Form_XGSVBgio: true,
-  //     },
-  //   };
-
-  //   const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-
-  //   try {
-  //     await testFixtureProvider
-  //       .consumerApiClientService
-  //       .finishUserTask(restrictedIdentity, processModelId, correlationId, userTaskId, userTaskResult);
-
-  //     should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
-  //   } catch (error) {
-  //     const expectedErrorCode = 403;
-  //     const expectedErrorMessage = /access.*?denied/i;
-  //     should(error.code).be.match(expectedErrorCode);
-  //     should(error.message).be.match(expectedErrorMessage);
-  //   }
-  // });
+      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorCode = 403;
+      const expectedErrorMessage = /access.*?denied/i;
+      should(error.code).be.match(expectedErrorCode);
+      should(error.message).be.match(expectedErrorMessage);
+    }
+  });
 
 });
