@@ -13,7 +13,6 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
   let defaultIdentity;
 
   const processModelIdSignalEvent = 'test_consumer_api_signal_event';
-  const processModelIdMessageEvent = 'test_consumer_api_message_event';
 
   let correlationId;
   let eventNameToTriggerAfterTest;
@@ -23,10 +22,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/events', ()
     await testFixtureProvider.initializeAndStart();
     defaultIdentity = testFixtureProvider.identities.defaultUser;
 
-    await testFixtureProvider.importProcessFiles([
-      processModelIdMessageEvent,
-      processModelIdSignalEvent,
-    ]);
+    await testFixtureProvider.importProcessFiles([processModelIdSignalEvent]);
 
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
