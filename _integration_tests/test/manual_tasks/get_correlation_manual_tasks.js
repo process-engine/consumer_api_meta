@@ -47,12 +47,12 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
   async function finishWaitingManualTasksAfterTests() {
 
     for (const manualTask of manualTasksToFinishAfterTest) {
-      const processModelId = manualTask.processModelId;
-      const manualTaskId = manualTask.id;
+      const processInstanceId = manualTask.processInstanceId;
+      const manualTaskId = manualTask.flowNodeInstanceId;
 
       await testFixtureProvider
         .consumerApiClientService
-        .finishManualTask(defaultIdentity, processModelId, manualTask.correlationId, manualTaskId);
+        .finishManualTask(defaultIdentity, processInstanceId, manualTask.correlationId, manualTaskId);
     }
   }
 
