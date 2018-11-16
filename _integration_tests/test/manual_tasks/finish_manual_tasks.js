@@ -57,7 +57,7 @@ describe(`Consumer API: ${testCase}`, () => {
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
-      const expectedErrorMessage = /does not have a manual task/i;
+      const expectedErrorMessage = /does not have a ManualTask/i;
       should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
     }
