@@ -47,12 +47,10 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
   async function finishWaitingManualTasksAfterTests() {
 
     for (const manualTask of manualTasksToFinishAfterTest) {
-      const processInstanceId = manualTask.processInstanceId;
-      const manualTaskId = manualTask.flowNodeInstanceId;
 
       await testFixtureProvider
         .consumerApiClientService
-        .finishManualTask(defaultIdentity, processInstanceId, manualTask.correlationId, manualTaskId);
+        .finishManualTask(defaultIdentity, manualTask.processInstanceId, manualTask.correlationId, manualTask.flowNodeInstanceId);
     }
   }
 
@@ -72,6 +70,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
     manualTasksToFinishAfterTest.push(manualTask);
 
     should(manualTask).have.property('id');
+    should(manualTask).have.property('flowNodeInstanceId');
     should(manualTask).have.property('name');
     should(manualTask).have.property('correlationId');
     should(manualTask).have.property('processModelId');
@@ -98,6 +97,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
     manualTasksToFinishAfterTest.push(manualTask);
 
     should(manualTask).have.property('id');
+    should(manualTask).have.property('flowNodeInstanceId');
     should(manualTask).have.property('name');
     should(manualTask).have.property('correlationId');
     should(manualTask).have.property('processModelId');

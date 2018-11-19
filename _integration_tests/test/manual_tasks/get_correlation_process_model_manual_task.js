@@ -40,11 +40,11 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   async function finishWaitingManualTasksAfterTests() {
-    const {id, processModelId, correlationId} = manualTaskToFinishAfterTest;
+    const {flowNodeInstanceId, processInstanceId, correlationId} = manualTaskToFinishAfterTest;
 
     await testFixtureProvider
       .consumerApiClientService
-      .finishManualTask(defaultIdentity, processModelId, correlationId, id);
+      .finishManualTask(defaultIdentity, processInstanceId, correlationId, flowNodeInstanceId);
   }
 
   it('should return a list of ManualTasks for a given process model in a given correlation', async() => {
@@ -63,6 +63,7 @@ describe(`Consumer API: ${testCase}`, () => {
     manualTaskToFinishAfterTest = manualTask;
 
     should(manualTask).have.property('id');
+    should(manualTask).have.property('flowNodeInstanceId');
     should(manualTask).have.property('name');
     should(manualTask).have.property('correlationId');
     should(manualTask).have.property('processModelId');
