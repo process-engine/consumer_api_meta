@@ -14,8 +14,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
 
   const processModelId = 'test_consumer_api_manualtask';
   const processModelIdNoManualTasks = 'test_consumer_api_manualtask_empty';
-  const processModelIdCallActivity = 'test_consumer_api_manualtask_call_acvtivity';
-  const processModelIdCallActivitySubprocess = 'test_consumer_api_manualtask_call_acvtivity_subprocess';
+  const processModelIdCallActivity = 'test_consumer_api_manualtask_call_activity';
+  const processModelIdCallActivitySubprocess = 'test_consumer_api_manualtask_call_activity_subprocess';
 
   let correlationId;
 

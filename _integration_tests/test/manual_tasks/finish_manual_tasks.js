@@ -46,7 +46,7 @@ describe(`Consumer API: ${testCase}`, () => {
     const manualTask = await createWaitingManualTask();
     const {correlationId, flowNodeInstanceId, processInstanceId} = manualTask;
 
-    console.log('manueltask from testfile', manualTask);
+    console.log('manualtask from testfile', manualTask);
 
     await testFixtureProvider
       .consumerApiClientService
@@ -65,7 +65,7 @@ describe(`Consumer API: ${testCase}`, () => {
         .consumerApiClientService
         .finishManualTask(defaultIdentity, invalidprocessInstanceId, correlationId, flowNodeInstanceId);
 
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /does not have a ManualTask/i;
@@ -88,7 +88,7 @@ describe(`Consumer API: ${testCase}`, () => {
         .consumerApiClientService
         .finishManualTask(defaultIdentity, processInstanceId, correlationId, flowNodeInstanceId);
 
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 404;
       should(error.code).be.match(expectedErrorCode);
@@ -105,7 +105,7 @@ describe(`Consumer API: ${testCase}`, () => {
         .consumerApiClientService
         .finishManualTask({}, processInstanceId, correlationId, flowNodeInstanceId);
 
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
@@ -126,7 +126,7 @@ describe(`Consumer API: ${testCase}`, () => {
         .consumerApiClientService
         .finishManualTask(restrictedIdentity, processInstanceId, correlationId, flowNodeInstanceId);
 
-      should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
+      should.fail('unexpectedSuccessResult', undefined, 'This request should have failed!');
     } catch (error) {
       const expectedErrorCode = 403;
       const expectedErrorMessage = /access.*?denied/i;
