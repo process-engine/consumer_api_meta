@@ -106,7 +106,7 @@ describe('Consumer API:   Receive User Task Notifications', () => {
         resolve();
       };
 
-      testFixtureProvider.consumerApiClientService.onUserTaskFinished(defaultIdentiy, messageReceivedCallback);
+      testFixtureProvider.consumerApiClientService.onUserTaskFinished(defaultIdentity, messageReceivedCallback);
 
       await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId, correlationId);
       await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
