@@ -10,7 +10,7 @@ export class IamServiceMock implements IIAMService {
         'can_write_process_model',
         'can_trigger_messages',
         'can_trigger_signals',
-        'can_subscribe_events',
+        'can_subscribe_to_events',
         'Default_Test_Lane',
         'LaneA',
         'LaneB',
