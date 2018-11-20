@@ -113,7 +113,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
 
     const manualTaskList = await testFixtureProvider
       .consumerApiClientService
-      .getManualTasksForProcessModel(defaultIdentity, processModelIdNoManualTasks);
+      .getManualTasksForCorrelation(defaultIdentity, processModelIdNoManualTasks);
 
     should(manualTaskList).have.property('manualTasks');
     should(manualTaskList.manualTasks).be.instanceOf(Array);
