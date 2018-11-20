@@ -29,8 +29,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
   async function createWaitingManualTask() {
 
-    console.log('started');
-
     const correlationId = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId);
     await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId);
 
@@ -46,15 +44,13 @@ describe(`Consumer API: ${testCase}`, () => {
     const manualTask = await createWaitingManualTask();
     const {correlationId, flowNodeInstanceId, processInstanceId} = manualTask;
 
-    console.log('manualtask from testfile', manualTask);
-
     await testFixtureProvider
       .consumerApiClientService
       .finishManualTask(defaultIdentity, processInstanceId, correlationId, flowNodeInstanceId);
   });
 
   it('should fail to finish the manual task, if the given process_model_id does not exist', async () => {
-    
+
     const manualTask = await createWaitingManualTask();
     const {correlationId, flowNodeInstanceId} = manualTask;
 
