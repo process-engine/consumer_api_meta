@@ -66,7 +66,7 @@ describe('Consumer API:   Receive Process Started Notification', () => {
     });
   });
 
-  it.only('should send a notification when a process with a given ProcessModelId was started', async () => {
+  it('should send a notification when a process with a given ProcessModelId was started', async () => {
     return new Promise((resolve, reject) => {
 
       const startEventId = 'StartEvent_1';
