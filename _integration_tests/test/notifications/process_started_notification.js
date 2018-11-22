@@ -42,13 +42,14 @@ describe('Consumer API:   Receive Process Started Notification', () => {
       const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
       const onProcessStartedCallback = (processStartedEvent) => {
+        should.exist(processStartedEvent);
+        should(processStartedEvent).have.property('correlationId');
+
         if (processStartedEvent.correlationId !== payload.correlationId) {
 
           return;
         }
 
-        should.exist(processStartedEvent);
-        should(processStartedEvent).have.property('correlationId');
         should(processStartedEvent.correlationId).be.equal(payload.correlationId);
         should(processStartedEvent).have.property('flowNodeId');
         should(processStartedEvent.flowNodeId).be.equal(startEventId);
@@ -76,17 +77,17 @@ describe('Consumer API:   Receive Process Started Notification', () => {
       const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
       const onProcessStartedCallback = (processStartedEvent) => {
-        console.log('called');
+        should.exist(processStartedEvent);
+        should(processStartedEvent).have.property('correlationId');
+
         if (processStartedEvent.correlationId !== payload.correlationId) {
 
           return;
         }
 
-        /* should.exist(processStartedEvent);
-        should(processStartedEvent).have.property('correlationId');
         should(processStartedEvent.correlationId).be.equal(payload.correlationId);
         should(processStartedEvent).have.property('flowNodeId');
-        should(processStartedEvent.flowNodeId).be.equal(startEventId);*/
+        should(processStartedEvent.flowNodeId).be.equal(startEventId);
 
         resolve();
       };
