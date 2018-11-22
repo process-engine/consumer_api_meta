@@ -30,21 +30,20 @@ describe('Consumer API:   Receive Process Started Notification', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it.only('should send a notification when a process is finished', async () => {
+  it('should send a notification when a process was started', async () => {
 
     return new Promise((resolve, reject) => {
 
       const startEventId = 'StartEvent_1';
-      const endEventId = 'EndEvent_Success';
       const payload = {
         correlationId: uuid.v4(),
         inputValues: {},
       };
-      const startCallbackType = StartCallbackType.CallbackOnEndEventReached;
+      const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
 
       const onProcessStartedCallback = (processStartedEvent) => {
-
         if (processStartedEvent.correlationId !== payload.correlationId) {
+
           return;
         }
 
@@ -52,18 +51,52 @@ describe('Consumer API:   Receive Process Started Notification', () => {
         should(processStartedEvent).have.property('correlationId');
         should(processStartedEvent.correlationId).be.equal(payload.correlationId);
         should(processStartedEvent).have.property('flowNodeId');
-        should(processStartedEvent.flowNodeId).be.equal(endEventId);
+        should(processStartedEvent.flowNodeId).be.equal(startEventId);
 
         resolve();
       };
 
-      testFixtureProvider.consumerApiClientService.onProcessStarted(onProcessStartedCallback);
+      testFixtureProvider.consumerApiClientService.onProcessStarted(defaultIdentity, onProcessStartedCallback);
 
       testFixtureProvider
         .consumerApiClientService
-        .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType, endEventId);
+        .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
 
     });
   });
 
+  it.only('should send a notification when a process with a given ProcessModelId was started', async () => {
+    return new Promise((resolve, reject) => {
+
+      const startEventId = 'StartEvent_1';
+      const payload = {
+        correlationId: uuid.v4(),
+        inputValues: {},
+      };
+      const startCallbackType = StartCallbackType.CallbackOnProcessInstanceFinished;
+
+      const onProcessStartedCallback = (processStartedEvent) => {
+        console.log('called');
+        if (processStartedEvent.correlationId !== payload.correlationId) {
+
+          return;
+        }
+
+        /* should.exist(processStartedEvent);
+        should(processStartedEvent).have.property('correlationId');
+        should(processStartedEvent.correlationId).be.equal(payload.correlationId);
+        should(processStartedEvent).have.property('flowNodeId');
+        should(processStartedEvent.flowNodeId).be.equal(startEventId);*/
+
+        resolve();
+      };
+
+      testFixtureProvider.consumerApiClientService.onProcessWithProcessModelIdStarted(defaultIdentity, onProcessStartedCallback, processModelId);
+
+      testFixtureProvider
+        .consumerApiClientService
+        .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
+
+    });
+  });
 });
