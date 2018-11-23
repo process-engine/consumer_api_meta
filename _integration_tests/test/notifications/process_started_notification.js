@@ -46,7 +46,6 @@ describe('Consumer API:   Receive Process Started Notification', () => {
         should(processStartedEvent).have.property('correlationId');
 
         if (processStartedEvent.correlationId !== payload.correlationId) {
-
           return;
         }
 
@@ -62,7 +61,6 @@ describe('Consumer API:   Receive Process Started Notification', () => {
       testFixtureProvider
         .consumerApiClientService
         .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
-
     });
   });
 
@@ -81,7 +79,6 @@ describe('Consumer API:   Receive Process Started Notification', () => {
         should(processStartedEvent).have.property('correlationId');
 
         if (processStartedEvent.correlationId !== payload.correlationId) {
-
           return;
         }
 
@@ -97,7 +94,6 @@ describe('Consumer API:   Receive Process Started Notification', () => {
       testFixtureProvider
         .consumerApiClientService
         .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType);
-
     });
   });
 });
