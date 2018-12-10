@@ -3,8 +3,7 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
-const ProcessInstanceHandler = require('../../dist/commonjs').ProcessInstanceHandler;
+const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks', () => {
 
