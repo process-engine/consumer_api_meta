@@ -54,9 +54,13 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    return new Promise(async (resolve, reject) => {
+      processInstanceHandler.waitForProcessInstanceToEnd(userTask.correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    });
   });
 
   it('should successfully finish the UserTask, if no result is provided', async () => {
@@ -99,10 +103,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 404;
       const expectedErrorMessage = /processinstance.*?in correlation.*?does not have.*?UserTask/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 404;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -126,10 +130,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 404;
       const expectedErrorMessage = /processinstance.*?invalidprocessModelId.*?does not have a usertask/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 404;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -153,10 +157,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 404;
       const expectedErrorMessage = /correlation.*?invalidCorrelationId.*?does not have a usertask/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 404;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -179,10 +183,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 404;
       const expectedErrorMessage = /processinstance.*?in correlation.*?does not have.*?usertask/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 404;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -203,10 +207,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 400;
       const expectedErrorMessage = /not.*?an object/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 400;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -227,10 +231,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 400;
       const expectedErrorMessage = /not.*?an object/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 400;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -253,10 +257,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 401;
       const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 401;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -281,10 +285,10 @@ describe(`Consumer API: ${testCase}`, () => {
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
-      const expectedErrorCode = 403;
       const expectedErrorMessage = /access.*?denied/i;
-      should(error.code).be.match(expectedErrorCode);
+      const expectedErrorCode = 403;
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -307,5 +311,4 @@ describe(`Consumer API: ${testCase}`, () => {
         .finishUserTask(defaultIdentity, processInstanceId, userTaskForBadPathTests.correlationId, userTaskId, userTaskResult);
     });
   }
-
 });

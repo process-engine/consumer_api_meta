@@ -34,17 +34,9 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   after(async () => {
-    await finishWaitingManualTasksAfterTests();
+    await cleanup();
     await testFixtureProvider.tearDown();
   });
-
-  async function finishWaitingManualTasksAfterTests() {
-    const {flowNodeInstanceId, processInstanceId, correlationId} = manualTaskToFinishAfterTest;
-
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishManualTask(defaultIdentity, processInstanceId, correlationId, flowNodeInstanceId);
-  }
 
   it('should return a list of ManualTasks for a given process model in a given correlation', async () => {
 
@@ -145,4 +137,16 @@ describe(`Consumer API: ${testCase}`, () => {
     }
   });
 
+  async function cleanup() {
+    return new Promise(async (resolve, reject) => {
+      const processInstanceId = manualTaskToFinishAfterTest.processInstanceId;
+      const userTaskId = manualTaskToFinishAfterTest.flowNodeInstanceId;
+
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishManualTask(defaultIdentity, processInstanceId, manualTaskToFinishAfterTest.correlationId, userTaskId);
+    });
+  }
 });
