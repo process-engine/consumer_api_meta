@@ -95,7 +95,6 @@ describe('Consumer API: POST  ->  /messages/:message_name/trigger', () => {
         .consumerApiClientService
         .triggerMessageEvent(defaultIdentity, messageEventName, payload);
     });
-
   });
 
 });
