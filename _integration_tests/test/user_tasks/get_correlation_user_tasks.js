@@ -19,8 +19,6 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
 
   let correlationId;
 
-  const userTasksToFinishAfterTest = [];
-
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
@@ -40,27 +38,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
   });
 
   after(async () => {
-    await finishWaitingUserTasksAfterTests();
     await testFixtureProvider.tearDown();
   });
-
-  async function finishWaitingUserTasksAfterTests() {
-
-    for (const userTask of userTasksToFinishAfterTest) {
-
-      const processInstanceId = userTask.processInstanceId;
-      const userTaskId = userTask.flowNodeInstanceId;
-      const userTaskResult = {
-        formFields: {
-          Form_XGSVBgio: true,
-        },
-      };
-
-      await testFixtureProvider
-        .consumerApiClientService
-        .finishUserTask(defaultIdentity, processInstanceId, userTask.correlationId, userTaskId, userTaskResult);
-    }
-  }
 
   it('should return a Correlation\'s UserTasks by its CorrelationId through the ConsumerAPI', async () => {
 
@@ -74,8 +53,6 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     const userTask = userTaskList.userTasks[0];
-
-    userTasksToFinishAfterTest.push(userTask);
 
     should(userTask).have.property('id');
     should(userTask).have.property('flowNodeInstanceId');
@@ -96,6 +73,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(formField).have.property('enumValues');
     should(formField).have.property('label');
     should(formField).have.property('defaultValue');
+
+    await cleanup(userTask);
   });
 
   it('should return a list of UserTasks from a call activity, by the given correlationId through the ConsumerAPI', async () => {
@@ -114,8 +93,6 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
 
     const userTask = userTaskList.userTasks[0];
 
-    userTasksToFinishAfterTest.push(userTask);
-
     should(userTask).have.property('id');
     should(userTask).have.property('correlationId');
     should(userTask).have.property('processModelId');
@@ -131,6 +108,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(formField).have.property('type');
     should(formField).have.property('label');
     should(formField).have.property('defaultValue');
+
+    await cleanup(userTask);
   });
 
   it('should return an empty Array, if the given correlation does not have any UserTasks', async () => {
@@ -194,5 +173,24 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
       should(error.message).be.match(expectedErrorMessage);
     }
   });
+
+  async function cleanup(userTaskToFinishAfterTest) {
+
+    return new Promise(async (resolve, reject) => {
+      const processInstanceId = userTaskToFinishAfterTest.processInstanceId;
+      const userTaskId = userTaskToFinishAfterTest.flowNodeInstanceId;
+      const userTaskResult = {
+        formFields: {
+          Form_XGSVBgio: true,
+        },
+      };
+
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, processInstanceId, userTaskToFinishAfterTest.correlationId, userTaskId, userTaskResult);
+    });
+  }
 
 });

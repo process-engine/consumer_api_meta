@@ -35,24 +35,9 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   after(async () => {
-    await finishWaitingUserTasksAfterTests();
+    await cleanup();
     await testFixtureProvider.tearDown();
   });
-
-  async function finishWaitingUserTasksAfterTests() {
-
-    const processInstanceId = userTaskToFinishAfterTest.processInstanceId;
-    const userTaskId = userTaskToFinishAfterTest.flowNodeInstanceId;
-    const userTaskResult = {
-      formFields: {
-        Form_XGSVBgio: true,
-      },
-    };
-
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishUserTask(defaultIdentity, processInstanceId, correlationId, userTaskId, userTaskResult);
-  }
 
   it('should return a list of UserTasks for a given process model in a given correlation', async () => {
 
@@ -164,5 +149,24 @@ describe(`Consumer API: ${testCase}`, () => {
       should(error.message).be.match(expectedErrorMessage);
     }
   });
+
+  async function cleanup() {
+
+    return new Promise(async (resolve, reject) => {
+      const processInstanceId = userTaskToFinishAfterTest.processInstanceId;
+      const userTaskId = userTaskToFinishAfterTest.flowNodeInstanceId;
+      const userTaskResult = {
+        formFields: {
+          Form_XGSVBgio: true,
+        },
+      };
+
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, processInstanceId, userTaskToFinishAfterTest.correlationId, userTaskId, userTaskResult);
+    });
+  }
 
 });

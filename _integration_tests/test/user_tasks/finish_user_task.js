@@ -29,7 +29,7 @@ describe(`Consumer API: ${testCase}`, () => {
   });
 
   after(async () => {
-    await finishWaitingUserTasksAfterTests();
+    await cleanup();
     await testFixtureProvider.tearDown();
   });
 
@@ -43,22 +43,6 @@ describe(`Consumer API: ${testCase}`, () => {
       .getUserTasksForProcessModelInCorrelation(defaultIdentity, processModelId, correlationId);
 
     return userTaskList.userTasks[0];
-  }
-
-  async function finishWaitingUserTasksAfterTests() {
-
-    const correlationId = userTaskForBadPathTests.correlationId;
-    const processInstanceId = userTaskForBadPathTests.processInstanceId;
-    const userTaskId = userTaskForBadPathTests.flowNodeInstanceId;
-    const userTaskResult = {
-      formFields: {
-        Form_XGSVBgio: true,
-      },
-    };
-
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishUserTask(defaultIdentity, processInstanceId, correlationId, userTaskId, userTaskResult);
   }
 
   it('should successfully finish the given UserTask.', async () => {
@@ -82,9 +66,13 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const userTaskResult = {};
 
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    return new Promise(async (resolve, reject) => {
+      processInstanceHandler.waitForProcessInstanceToEnd(userTask.correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    });
   });
 
   it('should fail to finish an already finished UserTask.', async () => {
@@ -97,9 +85,13 @@ describe(`Consumer API: ${testCase}`, () => {
       },
     };
 
-    await testFixtureProvider
-      .consumerApiClientService
-      .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    await new Promise(async (resolve, reject) => {
+      processInstanceHandler.waitForProcessInstanceToEnd(userTask.correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, userTask.processInstanceId, userTask.correlationId, userTask.flowNodeInstanceId, userTaskResult);
+    });
 
     try {
       await testFixtureProvider
@@ -296,5 +288,25 @@ describe(`Consumer API: ${testCase}`, () => {
       should(error.message).be.match(expectedErrorMessage);
     }
   });
+
+  async function cleanup() {
+
+    return new Promise(async (resolve, reject) => {
+      const correlationId = userTaskForBadPathTests.correlationId;
+      const processInstanceId = userTaskForBadPathTests.processInstanceId;
+      const userTaskId = userTaskForBadPathTests.flowNodeInstanceId;
+      const userTaskResult = {
+        formFields: {
+          Form_XGSVBgio: true,
+        },
+      };
+
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, resolve);
+
+      await testFixtureProvider
+        .consumerApiClientService
+        .finishUserTask(defaultIdentity, processInstanceId, userTaskForBadPathTests.correlationId, userTaskId, userTaskResult);
+    });
+  }
 
 });
