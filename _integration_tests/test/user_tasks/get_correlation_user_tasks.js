@@ -41,6 +41,40 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     await testFixtureProvider.tearDown();
   });
 
+  it('should fail to retrieve the Correlation\'s UserTasks, when the user is unauthorized', async () => {
+
+    try {
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForCorrelation({}, correlationId);
+
+      should.fail(userTaskList, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorMessage = /no auth token provided/i;
+      const expectedErrorCode = 401;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
+  });
+
+  it('should fail to retrieve the Correlation\'s UserTasks, when the user is forbidden to retrieve it', async () => {
+
+    const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+
+    try {
+      const userTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getUserTasksForCorrelation(restrictedIdentity, correlationId);
+
+      should.fail(userTaskList, undefined, 'This request should have failed!');
+    } catch (error) {
+      const expectedErrorMessage = /access denied/i;
+      const expectedErrorCode = 403;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
+  });
+
   it('should return a Correlation\'s UserTasks by its CorrelationId through the ConsumerAPI', async () => {
 
     const userTaskList = await testFixtureProvider
@@ -140,43 +174,11 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(userTaskList.userTasks.length).be.equal(0);
   });
 
-  it('should fail to retrieve the Correlation\'s UserTasks, when the user is unauthorized', async () => {
-
-    try {
-      const userTaskList = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForCorrelation({}, correlationId);
-
-      should.fail(userTaskList, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 401;
-      const expectedErrorMessage = /no auth token provided/i;
-      should(error.code).be.match(expectedErrorCode);
-      should(error.message).be.match(expectedErrorMessage);
-    }
-  });
-
-  it('should fail to retrieve the Correlation\'s UserTasks, when the user forbidden to retrieve it', async () => {
-
-    const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-
-    try {
-      const userTaskList = await testFixtureProvider
-        .consumerApiClientService
-        .getUserTasksForCorrelation(restrictedIdentity, correlationId);
-
-      should.fail(userTaskList, undefined, 'This request should have failed!');
-    } catch (error) {
-      const expectedErrorCode = 403;
-      const expectedErrorMessage = /access denied/i;
-      should(error.code).be.match(expectedErrorCode);
-      should(error.message).be.match(expectedErrorMessage);
-    }
-  });
-
   async function cleanup(userTaskToFinishAfterTest) {
 
     return new Promise(async (resolve, reject) => {
+      const userTaskCorrelation = userTaskToFinishAfterTest.correlationId;
+      const userTaskProcessModel = userTaskToFinishAfterTest.processModelId;
       const processInstanceId = userTaskToFinishAfterTest.processInstanceId;
       const userTaskId = userTaskToFinishAfterTest.flowNodeInstanceId;
       const userTaskResult = {
@@ -185,12 +187,11 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
         },
       };
 
-      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, resolve);
+      processInstanceHandler.waitForProcessInstanceToEnd(userTaskCorrelation, userTaskProcessModel, resolve);
 
       await testFixtureProvider
         .consumerApiClientService
         .finishUserTask(defaultIdentity, processInstanceId, userTaskToFinishAfterTest.correlationId, userTaskId, userTaskResult);
     });
   }
-
 });
