@@ -1,8 +1,7 @@
 import * as jsonwebtoken from 'jsonwebtoken';
 
 import {ForbiddenError} from '@essential-projects/errors_ts';
-import {IIAMService, IIdentity} from '@essential-projects/iam_contracts';
-import {DecodedIdentityToken} from '@process-engine/consumer_api_contracts';
+import {IIAMService, IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 export class IamServiceMock implements IIAMService {
 
@@ -44,7 +43,7 @@ export class IamServiceMock implements IIAMService {
 
   public async ensureHasClaim(identity: IIdentity, claimName: string): Promise<void> {
 
-    const decodedToken: DecodedIdentityToken = this._decodeToken(identity.token);
+    const decodedToken: TokenBody = this._decodeToken(identity.token);
     const identityName: string = decodedToken.sub;
 
     const matchingUserConfig: Array<string> = this._claimConfigs[identityName];
@@ -62,8 +61,8 @@ export class IamServiceMock implements IIAMService {
     }
   }
 
-  private _decodeToken(token: string): DecodedIdentityToken {
-    const decodedToken: DecodedIdentityToken = <DecodedIdentityToken> jsonwebtoken.decode(token);
+  private _decodeToken(token: string): TokenBody {
+    const decodedToken: TokenBody = <TokenBody> jsonwebtoken.decode(token);
 
     return decodedToken;
   }

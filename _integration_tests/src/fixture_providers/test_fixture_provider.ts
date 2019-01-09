@@ -8,10 +8,10 @@ import {Logger} from 'loggerhythm';
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
-import {IIdentity} from '@essential-projects/iam_contracts';
+import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
-import {DecodedIdentityToken, IConsumerApi} from '@process-engine/consumer_api_contracts';
-import {IProcessModelService, Model} from '@process-engine/process_engine_contracts';
+import {IConsumerApi} from '@process-engine/consumer_api_contracts';
+import {IProcessModelService} from '@process-engine/process_engine_contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
 
@@ -139,7 +139,7 @@ export class TestFixtureProvider {
 
   private async _createIdentity(username: string): Promise<IIdentity> {
 
-    const tokenBody: any = {
+    const tokenBody: TokenBody = {
       sub: username,
       name: 'hellas',
     };
