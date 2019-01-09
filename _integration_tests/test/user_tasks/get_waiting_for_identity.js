@@ -44,7 +44,6 @@ describe('ConsumerAPI:   GET  ->  /user_tasks/own', () => {
       .getWaitingUserTasksByIdentity(defaultIdentity);
 
     should(userTaskList).have.property('userTasks');
-    console.log(userTaskList);
 
     should(userTaskList.userTasks).be.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
