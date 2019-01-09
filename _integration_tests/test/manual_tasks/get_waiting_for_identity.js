@@ -105,7 +105,7 @@ describe('ConsumerAPI:   GET  ->  /manual_tasks/own', () => {
 
       await testFixtureProvider
         .consumerApiClientService
-        .finishManualTask(defaultIdentity, processInstanceId, manualTaskToCleanupAfterTest.correlationId, manualTaskId);
+        .finishManualTask(defaultIdentity, processInstanceId, manualTaskCorrelation, manualTaskId);
     });
   }
 });

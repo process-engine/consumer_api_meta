@@ -44,6 +44,7 @@ describe('ConsumerAPI:   GET  ->  /user_tasks/own', () => {
       .getWaitingUserTasksByIdentity(defaultIdentity);
 
     should(userTaskList).have.property('userTasks');
+    console.log(userTaskList);
 
     should(userTaskList.userTasks).be.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
@@ -101,11 +102,11 @@ describe('ConsumerAPI:   GET  ->  /user_tasks/own', () => {
       const processInstanceId = userTaskToCleanupAfterTest.processInstanceId;
       const userTaskId = userTaskToCleanupAfterTest.flowNodeInstanceId;
 
-      processInstanceHandler.waitForProcessInstanceToEnd(userTaskCorrelation, userTaskProcessModel, resolve);
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId, userTaskProcessModel, resolve);
 
       await testFixtureProvider
         .consumerApiClientService
-        .finishUserTask(defaultIdentity, processInstanceId, userTaskToCleanupAfterTest.correlationId, userTaskId);
+        .finishUserTask(defaultIdentity, processInstanceId, correlationId, userTaskId);
     });
   }
 });
