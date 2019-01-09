@@ -46,6 +46,7 @@
     "@process-engine/process_model.repository.sequelize": "~4.1.0",
     "addict-ioc": "~2.5.1",
     "bluebird": "~3.5.2",
+    "jsonwebtoken": "~8.4.0",
     "loggerhythm": "~3.0.3",
     "moment": "~2.22.2",
     "pg": "~7.6.0",
