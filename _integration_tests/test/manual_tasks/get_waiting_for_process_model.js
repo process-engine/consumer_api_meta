@@ -7,6 +7,7 @@ const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/common
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_tasks', () => {
 
+  let eventAggregator;
   let processInstanceHandler;
   let testFixtureProvider;
 
@@ -31,6 +32,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_task
 
     await testFixtureProvider.importProcessFiles(processModelsToImport);
 
+    eventAggregator = await testFixtureProvider.resolveAsync('EventAggregator');
     processInstanceHandler = new ProcessInstanceHandler(testFixtureProvider);
 
     await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId, correlationId);
@@ -66,21 +68,29 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_task
     should(manualTask).have.property('processModelId');
     should(manualTask).have.property('processInstanceId');
     should(manualTask).have.property('tokenPayload');
+    should(manualTask).not.have.property('processInstanceOwner');
+    should(manualTask).not.have.property('identity');
   });
 
   it('should return an empty Array, if the given ProcessModel does not have any ManualTasks', async () => {
 
-    await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdNoManualTasks);
+    return new Promise(async (resolve, reject) => {
+      const correlationId2 = await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelIdNoManualTasks);
+      await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId2, processModelIdNoManualTasks);
 
-    await processInstanceHandler.wait(500);
+      // Wait for the ProcessInstance to finish, so it won't interfere with follow-up tests.
+      processInstanceHandler.waitForProcessInstanceToEnd(correlationId2, processModelIdNoManualTasks, resolve);
 
-    const manualTaskList = await testFixtureProvider
-      .consumerApiClientService
-      .getManualTasksForProcessModel(defaultIdentity, processModelIdNoManualTasks);
+      const manualTaskList = await testFixtureProvider
+        .consumerApiClientService
+        .getManualTasksForProcessModel(defaultIdentity, processModelIdNoManualTasks);
 
-    should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+      should(manualTaskList).have.property('manualTasks');
+      should(manualTaskList.manualTasks).be.instanceOf(Array);
+      should(manualTaskList.manualTasks.length).be.equal(0);
+
+      eventAggregator.publish('/processengine/process/signal/Continue', {});
+    });
   });
 
   it('should return an empty Array, if the process_model_id does not exist', async () => {
