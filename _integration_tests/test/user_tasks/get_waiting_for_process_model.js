@@ -85,7 +85,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
 
     should(userTask.data).have.property('description');
     should(userTask.data).have.property('finishedMessage');
-    should(userTask.data.description).is.eql('TestDescription');
+    should(userTask.data.description).is.eql('TestDescriptionFalsch');
     should(userTask.data.finishedMessage).is.eql('TestFinishedMessage');
   });
 
