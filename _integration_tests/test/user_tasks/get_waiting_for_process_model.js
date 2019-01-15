@@ -3,7 +3,7 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
+const { TestFixtureProvider, ProcessInstanceHandler } = require('../../dist/commonjs');
 
 describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks', () => {
 
@@ -82,6 +82,11 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
     should(formField).have.property('enumValues');
     should(formField).have.property('label');
     should(formField).have.property('defaultValue');
+
+    should(userTask.data).have.property('description');
+    should(userTask.data).have.property('finishedMessage');
+    should(userTask.data.description).is.eql('TestDescription');
+    should(userTask.data.finishedMessage).is.eql('TestFinishedMessage');
   });
 
   it('should return an empty Array, if the given ProcessModel does not have any UserTasks', async () => {
