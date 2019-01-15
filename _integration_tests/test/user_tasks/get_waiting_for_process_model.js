@@ -86,7 +86,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/userTasks',
     should(userTask.data).have.property('description');
     should(userTask.data).have.property('finishedMessage');
     should(userTask.data.description).be.eql('TestDescription');
-    should(userTask.data.finishedMessage).is.eql('TestFinishedMessage');
+    should(userTask.data.finishedMessage).be.eql('TestFinishedMessage');
   });
 
   it('should return an empty Array, if the given ProcessModel does not have any UserTasks', async () => {
