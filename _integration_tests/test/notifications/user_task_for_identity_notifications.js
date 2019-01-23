@@ -16,6 +16,8 @@ describe('Consumer API:   Receive identity specific UserTask Notifications', () 
   let correlationId;
   let userTaskToFinish;
 
+  const noopCallback = () => {};
+
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
@@ -81,13 +83,43 @@ describe('Consumer API:   Receive identity specific UserTask Notifications', () 
 
       const processFinishedCallback = () => {
         if (!notificationReceived) {
-          throw new Error('Did not receive the expected notification about the finished ManualTask!');
+          throw new Error('Did not receive the expected notification about the finished UserTask!');
         }
         resolve();
       };
       processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, processFinishedCallback);
       finishWaitingUserTask();
     });
+  });
+
+  it('should fail to subscribe for the UserTaskForIdentityWaiting notification, if the user is unauthorized', async () => {
+    try {
+      const subscribeOnce = true;
+      const subscription = await testFixtureProvider
+        .consumerApiClientService
+        .onUserTaskForIdentityWaiting({}, noopCallback, subscribeOnce);
+      should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
+    } catch (error) {
+      const expectedErrorMessage = /no auth token/i;
+      const expectedErrorCode = 401;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
+  });
+
+  it('should fail to subscribe for the UserTaskForIdentityFinished notification, if the user is unauthorized', async () => {
+    try {
+      const subscribeOnce = true;
+      const subscription = await testFixtureProvider
+        .consumerApiClientService
+        .onUserTaskForIdentityFinished({}, noopCallback, subscribeOnce);
+      should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
+    } catch (error) {
+      const expectedErrorMessage = /no auth token/i;
+      const expectedErrorCode = 401;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
   });
 
   async function finishWaitingUserTask() {

@@ -16,6 +16,8 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
   let correlationId;
   let userTaskToFinish;
 
+  const noopCallback = () => {};
+
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
@@ -32,7 +34,7 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should send a notification when user task is suspended', async () => {
+  it('should send a notification when UserTask is suspended', async () => {
 
     correlationId = uuid.v4();
 
@@ -66,7 +68,7 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
     });
   });
 
-  it('should send a notification when user task is finished', async () => {
+  it('should send a notification when UserTask is finished', async () => {
 
     return new Promise(async (resolve, reject) => {
 
@@ -84,13 +86,43 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
 
       const processFinishedCallback = () => {
         if (!notificationReceived) {
-          throw new Error('Did not receive the expected notification about the finished ManualTask!');
+          throw new Error('Did not receive the expected notification about the finished UserTask!');
         }
         resolve();
       };
       processInstanceHandler.waitForProcessInstanceToEnd(correlationId, processModelId, processFinishedCallback);
       finishWaitingUserTask();
     });
+  });
+
+  it('should fail to subscribe for the UserTaskWaiting notification, if the user is unauthorized', async () => {
+    try {
+      const subscribeOnce = true;
+      const subscription = await testFixtureProvider
+        .consumerApiClientService
+        .onUserTaskWaiting({}, noopCallback, subscribeOnce);
+      should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
+    } catch (error) {
+      const expectedErrorMessage = /no auth token/i;
+      const expectedErrorCode = 401;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
+  });
+
+  it('should fail to subscribe for the UserTaskFinished notification, if the user is unauthorized', async () => {
+    try {
+      const subscribeOnce = true;
+      const subscription = await testFixtureProvider
+        .consumerApiClientService
+        .onUserTaskFinished({}, noopCallback, subscribeOnce);
+      should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
+    } catch (error) {
+      const expectedErrorMessage = /no auth token/i;
+      const expectedErrorCode = 401;
+      should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
+    }
   });
 
   async function finishWaitingUserTask() {
