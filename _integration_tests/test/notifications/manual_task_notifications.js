@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe.only('Consumer API:   Receive global ManualTask Notifications', () => {
+describe('Consumer API:   Receive global ManualTask Notifications', () => {
 
   let eventAggregator;
   let processInstanceHandler;
@@ -211,7 +211,7 @@ describe.only('Consumer API:   Receive global ManualTask Notifications', () => {
     should(receivedNotifications).be.equal(expectedReceivedAmountOfNotifications);
   });
 
-  it('should continuosly receive ManualTaskWaiting notifications, if subscribeOnce is set to "false"', async () => {
+  it('should continuously receive ManualTaskWaiting notifications, if subscribeOnce is set to "false"', async () => {
 
     return new Promise(async (resolve, reject) => {
       let receivedNotifications = 0;
@@ -242,7 +242,7 @@ describe.only('Consumer API:   Receive global ManualTask Notifications', () => {
     });
   });
 
-  it('should continuosly receive ManualTaskFinished notifications, if subscribeOnce is set to "false"', async () => {
+  it('should continuously receive ManualTaskFinished notifications, if subscribeOnce is set to "false"', async () => {
 
     return new Promise(async (resolve, reject) => {
       let receivedNotifications = 0;
