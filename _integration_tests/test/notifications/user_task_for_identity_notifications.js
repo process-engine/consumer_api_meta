@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe('Consumer API:   Receive global UserTask Notifications', () => {
+describe('Consumer API:   Receive identity specific UserTask Notifications', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
@@ -32,7 +32,7 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should send a notification when user task is suspended', async () => {
+  it('should send a notification when a UserTask for the given identity is suspended', async () => {
 
     correlationId = uuid.v4();
 
@@ -57,16 +57,13 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
         resolve();
       };
 
-      const subscribeOnce = true;
-      await testFixtureProvider
-        .consumerApiClientService
-        .onUserTaskWaiting(defaultIdentity, notificationReceivedCallback, subscribeOnce);
+      testFixtureProvider.consumerApiClientService.onUserTaskForIdentityWaiting(defaultIdentity, notificationReceivedCallback);
 
       await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId, correlationId);
     });
   });
 
-  it('should send a notification when user task is finished', async () => {
+  it('should send a notification when a UserTask for the given identity is finished', async () => {
 
     return new Promise(async (resolve, reject) => {
 
@@ -80,7 +77,7 @@ describe('Consumer API:   Receive global UserTask Notifications', () => {
         notificationReceived = true;
       };
 
-      testFixtureProvider.consumerApiClientService.onUserTaskFinished(defaultIdentity, notificationReceivedCallback);
+      testFixtureProvider.consumerApiClientService.onUserTaskForIdentityFinished(defaultIdentity, notificationReceivedCallback);
 
       const processFinishedCallback = () => {
         if (!notificationReceived) {
