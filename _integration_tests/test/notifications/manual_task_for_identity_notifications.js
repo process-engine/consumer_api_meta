@@ -137,5 +137,4 @@ describe('Consumer API:   Receive identity specific ManualTask Notifications', (
       .consumerApiClientService
       .finishManualTask(defaultIdentity, processInstanceId, manualTaskToFinish.correlationId, manualTaskInstanceId);
   }
-
 });

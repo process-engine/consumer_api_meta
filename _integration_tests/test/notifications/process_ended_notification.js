@@ -84,5 +84,4 @@ describe('Consumer API:   Receive Process Ended Notification', () => {
       should(error.code).be.match(expectedErrorCode);
     }
   });
-
 });

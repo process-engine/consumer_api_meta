@@ -136,5 +136,4 @@ describe('Consumer API:   Receive identity specific UserTask Notifications', () 
       .consumerApiClientService
       .finishUserTask(defaultIdentity, processInstanceId, userTaskToFinish.correlationId, userTaskInstanceId, userTaskResult);
   }
-
 });
