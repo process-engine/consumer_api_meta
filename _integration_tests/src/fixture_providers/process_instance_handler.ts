@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import * as uuid from 'node-uuid';
 
 import {EventReceivedCallback, IEventAggregator} from '@essential-projects/event_aggregator_contracts';
 import {DataModels} from '@process-engine/consumer_api_contracts';
