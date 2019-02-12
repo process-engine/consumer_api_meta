@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "minstall --trust-local-modules ."
+    "postinstall": "minstall --trust-local-modules .",
+    "reinstall": "./reinstall.sh"
   },
   "author": "",
   "license": "ISC",
