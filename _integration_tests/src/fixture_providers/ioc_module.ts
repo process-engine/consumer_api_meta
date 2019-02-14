@@ -20,7 +20,7 @@ export function registerInContainer(container: any): void {
       .dependencies('ConsumerApiInternalAccessor');
   } else {
     container.register('ConsumerApiExternalAccessor', ExternalAccessor)
-      .dependencies('HttpService')
+      .dependencies('HttpClient')
       .configure('consumer_api:external_accessor')
       .singleton();
 
