@@ -129,9 +129,7 @@ pipeline {
           println(testresults);
           // Failure to send the slack message should not result in build failure.
           try {
-            echo "Sending test summary to slack";
             slack_send_summary(testresults, test_failed);
-            echo "Sending test log to slack";
             slack_send_testlog(testresults);
           } catch (Exception error) {
             echo "Failed to send slack report: $error";
