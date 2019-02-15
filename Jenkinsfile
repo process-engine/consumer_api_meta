@@ -51,12 +51,6 @@ def slack_send_summary(testlog, test_failed) {
     title_string =  "\"title\":\":boom: Consumer API Integration Tests for ${BRANCH_NAME} Failed!\"";
   }
 
-  println(color_string);
-  println(title_string);
-  println(markdown_string);
-  println(result_string);
-  println(action_string);
-
   slackSend(attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]");
 }
 
