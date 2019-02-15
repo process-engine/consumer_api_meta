@@ -27,20 +27,27 @@ def cleanup_docker() {
 }
 
 def slack_send_summary(testlog, test_failed) {
-  def cleaned_string = testlog.replace('\n', '\\n').replace('"', '\\"');
-  def passing = sh(script: "echo \"${cleaned_string}\" | grep passing || echo \"0 passing\"", returnStdout: true).trim();
-  def failing = sh(script: "echo \"${cleaned_string}\" | grep failing || echo \"0 failing\"", returnStdout: true).trim();
-  def pending = sh(script: "echo \"${cleaned_string}\" | grep pending || echo \"0 pending\"", returnStdout: true).trim();
+  def passing_regex = /\d+ passing/;
+  def failing_regex = /\d+ failing/;
+  def pending_regex = /\d+ pending/;
+
+  def passing_matcher = testlog =~ passing_regex;
+  def failing_matcher = testlog =~ failing_regex;
+  def pending_matcher = testlog =~ pending_regex;
+
+  def passing = passing_matcher.count > 0 ? passing_matcher[0] : '0 passing';
+  def failing = failing_matcher.count > 0 ? failing_matcher[0] : '0 failing';
+  def pending = pending_matcher.count > 0 ? pending_matcher[0] : '0 pending';
 
   def color_string     =  '"color":"good"';
   def markdown_string  =  '"mrkdwn_in":["text","title"]';
-  def title_string     =  "\"title\":\":white_check_mark: Consumer tests for ${env.BRANCH_NAME} succeeded!\"";
+  def title_string     =  "\"title\":\":white_check_mark: Process Engine Runtime Integration Tests for ${BRANCH_NAME} Succeeded!\"";
   def result_string    =  "\"text\":\"${passing}\\n${failing}\\n${pending}\"";
   def action_string    =  "\"actions\":[{\"name\":\"open_jenkins\",\"type\":\"button\",\"text\":\"Open this run\",\"url\":\"${RUN_DISPLAY_URL}\"}]";
 
   if (test_failed == true) {
     color_string = '"color":"danger"';
-    title_string =  "\"title\":\":boom: Consumer tests for ${env.BRANCH_NAME} failed!\"";
+    title_string =  "\"title\":\":boom: Process Engine Runtime Integration Tests for ${BRANCH_NAME} Failed!\"";
   }
 
   slackSend(attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]");
