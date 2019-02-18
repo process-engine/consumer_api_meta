@@ -11,7 +11,7 @@ import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 import {IConsumerApi} from '@process-engine/consumer_api_contracts';
-import {IProcessModelService} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_model.contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
 
