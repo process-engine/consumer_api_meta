@@ -21,9 +21,11 @@ const iocModuleNames = [
   '@essential-projects/timing',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/correlation.service',
   '@process-engine/correlations.repository.sequelize',
   '@process-engine/external_task.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
+  '@process-engine/flow_node_instance.service',
   '@process-engine/iam',
   '@process-engine/logging_api_core',
   '@process-engine/logging.repository.file_system',
@@ -31,7 +33,8 @@ const iocModuleNames = [
   '@process-engine/metrics.repository.file_system',
   '@process-engine/process_engine_core',
   '@process-engine/process_model.repository.sequelize',
-  '@process-engine/correlations.repository.sequelize',
+  '@process-engine/process_model.service',
+  '@process-engine/process_model.use_case',
   '.',
 ];
 
