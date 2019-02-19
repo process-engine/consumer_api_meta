@@ -43,11 +43,12 @@ export class IamServiceMock implements IIAMService {
 
   public async ensureHasClaim(identity: IIdentity, claimName: string): Promise<void> {
 
-    const decodedToken: TokenBody = this._decodeToken(identity.token);
-    const identityName: string = decodedToken.sub;
+    const isDummyToken: boolean = identity.userId === 'dummy_token';
+    if (isDummyToken) {
+        return Promise.resolve();
+    }
 
-    const matchingUserConfig: Array<string> = this._claimConfigs[identityName];
-
+    const matchingUserConfig: Array<string> = this._claimConfigs[identity.userId];
     if (!matchingUserConfig) {
       throw new ForbiddenError('access denied');
     }
