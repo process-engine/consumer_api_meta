@@ -11,7 +11,7 @@ import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 import {IConsumerApi} from '@process-engine/consumer_api_contracts';
-import {IProcessModelService} from '@process-engine/process_engine_contracts';
+import {IProcessModelService as IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
 
@@ -29,7 +29,7 @@ export class TestFixtureProvider {
   private container: InvocationContainer;
 
   private _consumerApiClientService: IConsumerApi;
-  private _processModelService: IProcessModelService;
+  private _processModelUseCases: IProcessModelUseCases;
 
   private _identities: IdentityCollection;
 
@@ -41,8 +41,8 @@ export class TestFixtureProvider {
     return this._consumerApiClientService;
   }
 
-  public get processModelService(): IProcessModelService {
-    return this._processModelService;
+  public get processModelUseCases(): IProcessModelUseCases {
+    return this._processModelUseCases;
   }
 
   public async initializeAndStart(): Promise<void> {
@@ -54,7 +54,7 @@ export class TestFixtureProvider {
     await this._createMockIdentities();
 
     this._consumerApiClientService = await this.resolveAsync<IConsumerApi>('ConsumerApiClientService');
-    this._processModelService = await this.resolveAsync<IProcessModelService>('ProcessModelService');
+    this._processModelUseCases = await this.resolveAsync<IProcessModelUseCases>('ProcessModelUseCases');
   }
 
   public async tearDown(): Promise<void> {
@@ -151,7 +151,7 @@ export class TestFixtureProvider {
 
   private async _registerProcess(processFileName: string): Promise<void> {
     const xml: string = this._readProcessModelFromFile(processFileName);
-    await this.processModelService.persistProcessDefinitions(this.identities.defaultUser, processFileName, xml, true);
+    await this.processModelUseCases.persistProcessDefinitions(this.identities.defaultUser, processFileName, xml, true);
   }
 
   private _readProcessModelFromFile(fileName: string): string {
