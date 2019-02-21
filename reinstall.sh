@@ -16,6 +16,6 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 # build all packages and schemas
-meta exec "npm run build" --exclude consumer_api_meta
+meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,consumer_api_client
 
 echo "done"
