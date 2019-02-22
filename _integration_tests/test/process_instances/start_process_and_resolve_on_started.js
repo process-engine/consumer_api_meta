@@ -96,7 +96,7 @@ describe(`Consumer API: ${testCase}`, () => {
     });
   });
 
-  it('should sucessfully execute a process with two different sublanes', async () => {
+  it('should successfully execute a process with two different sublanes', async () => {
 
     const startEventId = 'StartEvent_1';
 
