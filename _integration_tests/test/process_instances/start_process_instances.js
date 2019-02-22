@@ -87,8 +87,8 @@ describe(`Consumer API: ${testCase}`, () => {
     } catch (error) {
       const expectedErrorCode = 404;
       const expectedErrorMessage = /start.*event.*not found/i;
-      should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 
@@ -105,8 +105,8 @@ describe(`Consumer API: ${testCase}`, () => {
     } catch (error) {
       const expectedErrorCode = 400;
       const expectedErrorMessage = /multiple.*start.*events/i;
-      should(error.code).be.match(expectedErrorCode);
       should(error.message).be.match(expectedErrorMessage);
+      should(error.code).be.match(expectedErrorCode);
     }
   });
 });
