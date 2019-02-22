@@ -9,7 +9,7 @@ const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
 // eslint-disable-next-line
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start_events/:start_event_id/start?start_callback_type=3&end_event_id=value';
-describe(`Consumer API: ${testCase}`, () => {
+describe.only(`Consumer API: ${testCase}`, () => {
 
   let testFixtureProvider;
   let defaultIdentity;
@@ -47,7 +47,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(defaultIdentity, processModelId, payload, startCallbackType, startEventId, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.equal(payload.correlationId);
@@ -63,7 +63,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(defaultIdentity, processModelId, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(defaultIdentity, processModelId, payload, startCallbackType, startEventId, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -82,7 +82,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(defaultIdentity, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(defaultIdentity, processModelIdSublanes, payload, startCallbackType, startEventId, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
@@ -103,7 +103,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     const result = await testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(laneuserIdentity, processModelIdSublanes, startEventId, payload, startCallbackType, endEventId);
+      .startProcessInstance(laneuserIdentity, processModelIdSublanes, payload, startCallbackType, startEventId, endEventId);
 
     should(result).have.property('correlationId');
     should(result.correlationId).be.a.String();
