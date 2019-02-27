@@ -44,7 +44,7 @@ export class ProcessInstanceHandler {
 
     const result: DataModels.ProcessModels.ProcessStartResponsePayload = await this.testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, startEventId, payload, startCallbackType);
+      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
 
     return result.correlationId;
   }
@@ -64,7 +64,7 @@ export class ProcessInstanceHandler {
 
     const result: DataModels.ProcessModels.ProcessStartResponsePayload = await this.testFixtureProvider
       .consumerApiClientService
-      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, startEventId, payload, startCallbackType);
+      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
 
     return result;
   }
