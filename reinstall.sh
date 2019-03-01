@@ -16,6 +16,32 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 # build all packages and schemas
+echo "Building .TS packages"
 meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,consumer_api_client
+
+
+function install_and_build_package {
+  cd typescript
+  npm install --no-package-lock
+  npm run build
+  cd ../dotnet/src
+  dotnet restore && dotnet build
+  cd ..
+  cd ..
+}
+
+echo "-------------------------------------------------"
+echo "Installing Consumer API Contracts"
+echo "-------------------------------------------------"
+cd consumer_api_contracts
+install_and_build_package
+cd ..
+
+echo "-------------------------------------------------"
+echo "Installing Consumer API Client"
+echo "-------------------------------------------------"
+cd consumer_api_client
+install_and_build_package
+cd ..
 
 echo "done"
