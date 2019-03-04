@@ -104,7 +104,7 @@ describe(`Consumer API: ${testCase}`, () => {
     }
   });
 
-  it('should fail to finish the ManualTask, if the given CorrelationId does not exist', async () => {
+  it('should fail to finish the EmptyActivity, if the given CorrelationId does not exist', async () => {
 
     const invalidCorrelationId = 'invalidCorrelationId';
 
@@ -125,9 +125,9 @@ describe(`Consumer API: ${testCase}`, () => {
     }
   });
 
-  it('should fail to finish the ManualTask, if the given ManualTaskInstanceId does not exist', async () => {
+  it('should fail to finish the EmptyActivity, if the given EmptyActivityInstanceId does not exist', async () => {
 
-    const invalidManualTaskId = 'invalidManualTaskId';
+    const invalidEmptyActivityId = 'invalidEmptyActivityId';
 
     const processInstanceId = emptyActivityForBadPathTests.processInstanceId;
     const correlationId = emptyActivityForBadPathTests.correlationId;
@@ -135,7 +135,7 @@ describe(`Consumer API: ${testCase}`, () => {
     try {
       await testFixtureProvider
         .consumerApiClientService
-        .finishEmptyActivity(defaultIdentity, processInstanceId, correlationId, invalidManualTaskId);
+        .finishEmptyActivity(defaultIdentity, processInstanceId, correlationId, invalidEmptyActivityId);
 
       should.fail('unexpectedSuccesResult', undefined, 'This request should have failed!');
     } catch (error) {
