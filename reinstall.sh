@@ -23,7 +23,6 @@ meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,con
 function install_and_build_package {
   cd typescript
   npm install --no-package-lock
-  npm run build
   cd ../dotnet/src
   dotnet restore && dotnet build
   cd ..
