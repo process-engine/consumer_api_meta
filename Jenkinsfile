@@ -100,7 +100,7 @@ pipeline {
 
                 // Node environment settings
                 def node_env = 'NODE_ENV=sqlite';
-                def consumer_api_mode = 'MANAGEMENT_API_ACCESS_TYPE=internal ';
+                def consumer_api_mode = 'CONSUMER_API_ACCESS_TYPE=internal ';
                 def junit_report_path = 'JUNIT_REPORT_PATH=consumer_api_test_results_sqlite.xml';
                 def config_path = 'CONFIG_PATH=config';
 
@@ -137,7 +137,7 @@ pipeline {
 
                 // Node Environment settings
                 def node_env = 'NODE_ENV=postgres';
-                def consumer_api_mode = 'MANAGEMENT_API_ACCESS_TYPE=internal ';
+                def consumer_api_mode = 'CONSUMER_API_ACCESS_TYPE=internal ';
                 def junit_report_path = 'JUNIT_REPORT_PATH=consumer_api_test_results_postgres.xml';
                 def config_path = 'CONFIG_PATH=config';
 
