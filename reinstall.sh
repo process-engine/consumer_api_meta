@@ -23,10 +23,17 @@ meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,con
 function install_and_build_package {
   cd typescript
   npm install --no-package-lock
-  cd ../dotnet/src
-  dotnet restore && dotnet build
   cd ..
-  cd ..
+
+  if [ -x "$(command -v dotnet)" ]; then
+    cd dotnet/src
+    dotnet restore && dotnet build
+    cd ../..
+  else
+    echo ""
+    echo "WARNING: skipping dotnet (since it is not installed)."
+    echo ""
+  fi
 }
 
 echo "-------------------------------------------------"
