@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://www.npmjs.com"
   },
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This is the client application for the consumer api example on how to connect to an external process engine. This client does not use ioc containers.",
   "license": "MIT",
   "main": "dist/commonjs/program.js",
