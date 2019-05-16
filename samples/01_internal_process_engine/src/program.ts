@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import {Logger} from 'loggerhythm';
-import * as uuid from 'uuid';
+import * as uuid from 'node-uuid';
 
 import {DataModels, IConsumerApi} from '@process-engine/consumer_api_contracts';
 

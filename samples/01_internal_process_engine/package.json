@@ -3,13 +3,10 @@
   "publishConfig": {
     "registry": "https://www.npmjs.com"
   },
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This sample demonstrates how to use the consumer api to access an internal process engine",
   "license": "MIT",
   "main": "dist/commonjs/program.js",
-  "files": [
-    "tests"
-  ],
   "scripts": {
     "start": "cross-env NODE_ENV=demo CONFIG_PATH=config node dist/commonjs/program.js",
     "clean": "rm -rf dist",
@@ -17,8 +14,8 @@
     "build-commonjs": "tsc",
     "build-amd": "tsc --module amd --outDir ./dist/amd",
     "prepare": "npm run build",
-    "lint": "eslint src/**/**/*.ts src/**/*.ts src/*.ts",
-    "lint-fix": "eslint --fix src/**/**/*.ts src/**/*.ts src/*.ts",
+    "lint": "eslint src/*.ts",
+    "lint-fix": "eslint --fix src/*.ts",
     "test": ":"
   },
   "dependencies": {
@@ -27,11 +24,8 @@
     "@essential-projects/event_aggregator": "~4.0.0",
     "@essential-projects/http": "~2.3.0",
     "@essential-projects/http_extension": "~6.5.0",
-    "@essential-projects/iam_contracts": "~3.4.0",
-    "@essential-projects/sequelize_connection_manager": "3.0.0-df349f85-b4",
     "@essential-projects/timing": "~4.1.0",
     "@process-engine/consumer_api_client": "~5.0.0",
-    "@process-engine/consumer_api_contracts": "~5.1.0",
     "@process-engine/consumer_api_core": "~5.2.0",
     "@process-engine/consumer_api_http": "~4.1.0",
     "@process-engine/correlation.service": "~1.2.0",
@@ -57,8 +51,7 @@
     "socket.io-client": "^2.2.0",
     "sqlite3": "^4.0.3",
     "tsconfig": "^7.0.0",
-    "umzug": "^2.2.0",
-    "uuid": "^3.3.2"
+    "umzug": "^2.2.0"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",
