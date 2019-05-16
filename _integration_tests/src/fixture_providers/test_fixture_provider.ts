@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-naming */
 import * as fs from 'fs';
 import * as jsonwebtoken from 'jsonwebtoken';
 import * as path from 'path';
@@ -5,15 +6,17 @@ import * as path from 'path';
 import {InvocationContainer} from 'addict-ioc';
 
 import {Logger} from 'loggerhythm';
-const logger: Logger = Logger.createLogger('test:bootstrapper');
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
+import {HttpExtension} from '@essential-projects/http_extension';
 import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 import {IConsumerApi} from '@process-engine/consumer_api_contracts';
 import {IProcessModelService as IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
+
+const logger: Logger = Logger.createLogger('test:bootstrapper');
 
 export type IdentityCollection = {
   defaultUser: IIdentity;
@@ -47,52 +50,52 @@ export class TestFixtureProvider {
 
   public async initializeAndStart(): Promise<void> {
 
-    await this._initializeBootstrapper();
+    await this.initializeBootstrapper();
 
     await this.bootstrapper.start();
 
-    await this._createMockIdentities();
+    await this.createMockIdentities();
 
     this._consumerApiClientService = await this.resolveAsync<IConsumerApi>('ConsumerApiClientService');
     this._processModelUseCases = await this.resolveAsync<IProcessModelUseCases>('ProcessModelUseCases');
   }
 
   public async tearDown(): Promise<void> {
-    const httpExtension: any = await this.container.resolveAsync('HttpExtension');
+    const httpExtension = await this.container.resolveAsync<HttpExtension>('HttpExtension');
     await httpExtension.close();
     await this.bootstrapper.stop();
   }
 
-  public resolve<T>(moduleName: string, args?: any): T {
-    return this.container.resolve<T>(moduleName, args);
+  public resolve<TModule>(moduleName: string, args?: any): TModule {
+    return this.container.resolve<TModule>(moduleName, args);
   }
 
-  public async resolveAsync<T>(moduleName: string, args?: any): Promise<T> {
-    return this.container.resolveAsync<T>(moduleName, args);
+  public async resolveAsync<TModule>(moduleName: string, args?: any): Promise<TModule> {
+    return this.container.resolveAsync<TModule>(moduleName, args);
   }
 
   public async importProcessFiles(processFileNames: Array<string>): Promise<void> {
 
     for (const processFileName of processFileNames) {
-      await this._registerProcess(processFileName);
+      await this.registerProcess(processFileName);
     }
   }
 
   public readProcessModelFile(processFileName: string): string {
 
-    const bpmnFolderPath: string = this.getBpmnDirectoryPath();
-    const fullFilePath: string = path.join(bpmnFolderPath, `${processFileName}.bpmn`);
+    const bpmnFolderPath = this.getBpmnDirectoryPath();
+    const fullFilePath = path.join(bpmnFolderPath, `${processFileName}.bpmn`);
 
-    const fileContent: string = fs.readFileSync(fullFilePath, 'utf-8');
+    const fileContent = fs.readFileSync(fullFilePath, 'utf-8');
 
     return fileContent;
   }
 
   public getBpmnDirectoryPath(): string {
 
-    const bpmnDirectoryName: string = 'bpmn';
-    let rootDirPath: string = process.cwd();
-    const integrationTestDirName: string = '_integration_tests';
+    const bpmnDirectoryName = 'bpmn';
+    let rootDirPath = process.cwd();
+    const integrationTestDirName = '_integration_tests';
 
     if (!rootDirPath.endsWith(integrationTestDirName)) {
       rootDirPath = path.join(rootDirPath, integrationTestDirName);
@@ -101,12 +104,12 @@ export class TestFixtureProvider {
     return path.join(rootDirPath, bpmnDirectoryName);
   }
 
-  private async _initializeBootstrapper(): Promise<void> {
+  private async initializeBootstrapper(): Promise<void> {
 
     try {
       this.container = await initializeBootstrapper();
 
-      const appPath: string = path.resolve(__dirname);
+      const appPath = path.resolve(__dirname);
       this.bootstrapper = await this.container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
       logger.info('Bootstrapper started.');
@@ -116,21 +119,21 @@ export class TestFixtureProvider {
     }
   }
 
-  private async _createMockIdentities(): Promise<void> {
+  private async createMockIdentities(): Promise<void> {
 
     this._identities = {
       // all access user
-      defaultUser: await this._createIdentity('defaultUser'),
+      defaultUser: await this.createIdentity('defaultUser'),
       // no access user
-      restrictedUser: await this._createIdentity('restrictedUser'),
+      restrictedUser: await this.createIdentity('restrictedUser'),
       // partially restricted users
-      userWithAccessToSubLaneC: await this._createIdentity('userWithAccessToSubLaneC'),
-      userWithAccessToLaneA: await this._createIdentity('userWithAccessToLaneA'),
-      userWithNoAccessToLaneA: await this._createIdentity('userWithNoAccessToLaneA'),
+      userWithAccessToSubLaneC: await this.createIdentity('userWithAccessToSubLaneC'),
+      userWithAccessToLaneA: await this.createIdentity('userWithAccessToLaneA'),
+      userWithNoAccessToLaneA: await this.createIdentity('userWithNoAccessToLaneA'),
     };
   }
 
-  private async _createIdentity(userId: string): Promise<IIdentity> {
+  private async createIdentity(userId: string): Promise<IIdentity> {
 
     const tokenBody: TokenBody = {
       sub: userId,
@@ -141,25 +144,25 @@ export class TestFixtureProvider {
       expiresIn: 60,
     };
 
-    const encodedToken: string = jsonwebtoken.sign(tokenBody, 'randomkey', signOptions);
+    const encodedToken = jsonwebtoken.sign(tokenBody, 'randomkey', signOptions);
 
-    return <IIdentity> {
+    return {
       token: encodedToken,
       userId: userId,
     };
   }
 
-  private async _registerProcess(processFileName: string): Promise<void> {
-    const xml: string = this._readProcessModelFromFile(processFileName);
+  private async registerProcess(processFileName: string): Promise<void> {
+    const xml = this.readProcessModelFromFile(processFileName);
     await this.processModelUseCases.persistProcessDefinitions(this.identities.defaultUser, processFileName, xml, true);
   }
 
-  private _readProcessModelFromFile(fileName: string): string {
+  private readProcessModelFromFile(fileName: string): string {
 
-    const bpmnFolderLocation: string = this.getBpmnDirectoryPath();
-    const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+    const bpmnFolderLocation = this.getBpmnDirectoryPath();
+    const processModelPath = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
 
-    const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+    const processModelAsXml = fs.readFileSync(processModelPath, 'utf-8');
 
     return processModelAsXml;
   }

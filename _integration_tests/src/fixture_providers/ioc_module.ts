@@ -1,14 +1,13 @@
-'use strict';
-
-import {IamServiceMock} from '../mocks/index';
+import {IContainer} from 'addict-ioc';
 
 import {
   ConsumerApiClientService,
   ExternalAccessor,
   InternalAccessor,
 } from '@process-engine/consumer_api_client';
+import {IamServiceMock} from '../mocks/index';
 
-export function registerInContainer(container: any): void {
+export function registerInContainer(container: IContainer): void {
 
   const accessConsumerApiInternally: boolean = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
 
