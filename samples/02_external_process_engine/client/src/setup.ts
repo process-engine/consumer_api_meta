@@ -5,18 +5,19 @@ import * as path from 'path';
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-const logger: Logger = Logger.createLogger('test:bootstrapper');
+const logger = Logger.createLogger('test:bootstrapper');
 
 // These are the names of the modules, whose ioc_modules will be included in the ioc container.
-const iocModuleNames: Array<string> = [
+const iocModuleNames = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
-  '@essential-projects/services',
+  '@essential-projects/http',
   '.',
 ];
 
 // This imports all the listed ioc modules and stores them.
-const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
+const iocModules = iocModuleNames.map((moduleName: string): any => {
+  // eslint-disable-next-line
   return require(`${moduleName}/ioc_module`);
 });
 
@@ -51,7 +52,7 @@ export async function start(): Promise<void> {
     // with the registered components, like circular-dependencies.
     container.validateDependencies();
 
-    const appPath: string = path.resolve(__dirname);
+    const appPath = path.resolve(__dirname);
 
     bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
@@ -89,7 +90,8 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
  */
 export async function createIdentity(): Promise<IIdentity> {
 
-  return <IIdentity> {
-    token: 'defaultUser',
+  return {
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 }

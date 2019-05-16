@@ -8,7 +8,7 @@ import {
 export function registerInContainer(container: InvocationContainer): void {
 
   container.register('ConsumerApiExternalAccessor', ExternalAccessor)
-    .dependencies('HttpService');
+    .dependencies('HttpClient');
 
   container.register('ConsumerApiClientService', ConsumerApiClientService)
     .dependencies('ConsumerApiExternalAccessor');
