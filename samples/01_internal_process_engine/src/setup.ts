@@ -10,10 +10,10 @@ import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IProcessModelService} from '@process-engine/process_model.contracts';
 
-const logger: Logger = Logger.createLogger('ssample:internal:setup');
+const logger = Logger.createLogger('ssample:internal:setup');
 
 // These are the names of the packages, whose ioc_modules will be registered at the ioc container.
-const iocModuleNames: Array<string> = [
+const iocModuleNames = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
   '@essential-projects/event_aggregator',
@@ -128,8 +128,8 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
 export function createIdentity(): IIdentity {
 
   return {
-    token: 'someSampleToken',
-    userId: 'defaultUser',
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 }
 
@@ -141,8 +141,8 @@ export function createIdentity(): IIdentity {
 export async function registerProcess(processFileName: string): Promise<void> {
 
   const dummyIdentity = {
-    token: 'someSampleToken',
-    userId: 'defaultUser',
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 
   const xml = readProcessModelFromFile(processFileName);

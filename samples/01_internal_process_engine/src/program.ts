@@ -14,7 +14,7 @@ Bluebird.config({
 
 global.Promise = Bluebird;
 
-const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
+const logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
 /**
  * This sample will use the ConsumerApiClientService to do the following:
