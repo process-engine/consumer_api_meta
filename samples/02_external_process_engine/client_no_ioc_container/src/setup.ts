@@ -22,7 +22,7 @@ export function initialize(): void {
     url: 'http://localhost:9999',
   };
 
-  logger.info('Creating new ConsumerApiClientService instance with an external accessor.');
+  logger.info('Creating new ConsumerApiClient instance with an external accessor.');
   httpClient = new HttpClient();
   httpClient.config = httpConfig;
 
@@ -31,7 +31,7 @@ export function initialize(): void {
 }
 
 /**
- * Returns the ConsumerApiClientService.
+ * Returns the ConsumerApiClient.
  */
 export function getConsumerApiClient(): ConsumerApiClientService {
   return consumerApiClient;
@@ -39,7 +39,7 @@ export function getConsumerApiClient(): ConsumerApiClientService {
 
 /**
  * This will create and return an identity for a sample user.
- * The identity is required for accessing process models
+ * The identity is required for accessing ProcessModels
  * and must be provided to ALL consumer api functions.
  *
  * @function createIdentity

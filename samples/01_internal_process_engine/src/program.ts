@@ -26,7 +26,7 @@ const logger = Logger.createLogger('consumer_api_sample:internal_process_engine'
 // tslint:disable:no-magic-numbers
 async function executeSample(): Promise<void> {
 
-  // The id of the process model to start.
+  // The id of the ProcessModel to start.
   const processModelId = 'sample_process';
 
   // Wait for the setup to finish and the bootstrapper to start
@@ -79,7 +79,7 @@ async function executeSample(): Promise<void> {
   const userTask = waitingUserTasks.userTasks[0];
 
   // Set a UserTask result and finish the UserTask.
-  // Note that the keys contained in 'formFields' must each reflect a form field of the UserTask you want to finish.
+  // Note that the IDs contained in 'formFields' must each reflect a form field of the UserTask you want to finish.
   const userTaskResult: DataModels.UserTasks.UserTaskResult = {
     formFields: {
       TaskWasSuccessful: true,

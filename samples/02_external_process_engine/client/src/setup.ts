@@ -81,7 +81,7 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
 
 /**
  * This will create and return an identity for a sample user.
- * The identity is required for accessing process models
+ * The identity is required for accessing ProcessModels
  * and must be provided to ALL consumer api functions.
  *
  * @function createIdentity

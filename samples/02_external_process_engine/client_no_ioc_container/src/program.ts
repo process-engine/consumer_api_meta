@@ -25,7 +25,7 @@ async function executeSample(): Promise<void> {
 
   const identity = await setup.createIdentity();
 
-  // The ID of the process model to start.
+  // The ID of the ProcessModel to start.
   const processModelId = 'sample_process';
 
   // The ID of the StartEvent with which to start the ProcessInstance.
@@ -49,7 +49,7 @@ async function executeSample(): Promise<void> {
 
   // Start the ProcessInstance and wait for the service to resolve.
   // The result returns the id of the correlation that the ProcessInstance was added to.
-  logger.info(`Starting process ${processModelId}, using StartEventKey ${startEventId}`);
+  logger.info(`Starting process ${processModelId}, using StartEventId ${startEventId}`);
   const processStartResult = await consumerApiClient.startProcessInstance(identity, processModelId, payload, startCallbackType, startEventId);
 
   const correlationId = processStartResult.correlationId;
