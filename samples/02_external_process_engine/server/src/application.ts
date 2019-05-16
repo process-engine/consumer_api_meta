@@ -109,8 +109,8 @@ async function importSampleProcess(): Promise<void> {
   const processFileName = 'sample_process';
 
   const dummyIdentity: IIdentity = {
-    token: 'someSampleToken',
-    userId: 'defaultUser',
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 
   const xml = readProcessModelFromFile(processFileName);
