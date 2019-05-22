@@ -5,35 +5,44 @@ import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
+import {HttpExtension} from '@essential-projects/http_extension';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-import {IProcessModelService} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_model.contracts';
 
-const logger: Logger = Logger.createLogger('ssample:internal:setup');
+const logger = Logger.createLogger('ssample:internal:setup');
 
 // These are the names of the packages, whose ioc_modules will be registered at the ioc container.
-const iocModuleNames: Array<string> = [
+const iocModuleNames = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
   '@essential-projects/event_aggregator',
+  '@essential-projects/http',
   '@essential-projects/http_extension',
-  '@essential-projects/services',
+  '@essential-projects/sequelize_connection_manager',
   '@essential-projects/timing',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/correlation.service',
   '@process-engine/correlations.repository.sequelize',
+  '@process-engine/external_task.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
+  '@process-engine/flow_node_instance.service',
   '@process-engine/iam',
+  '@process-engine/logging_api_core',
+  '@process-engine/logging.repository.file_system',
   '@process-engine/metrics_api_core',
   '@process-engine/metrics.repository.file_system',
   '@process-engine/process_engine_core',
   '@process-engine/process_model.repository.sequelize',
-  '@process-engine/timers.repository.sequelize',
+  '@process-engine/process_model.service',
+  '@process-engine/process_model.use_case',
   '.', // This points to the top-level ioc module located in this sample.
 ];
 
 // This imports all the listed ioc modules.
-const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
+const iocModules = iocModuleNames.map((moduleName: string): any => {
+  // eslint-disable-next-line
   return require(`${moduleName}/ioc_module`);
 });
 
@@ -69,7 +78,7 @@ export async function start(): Promise<void> {
     // with the registered components, like circular-dependencies.
     container.validateDependencies();
 
-    const appPath: string = path.resolve(__dirname);
+    const appPath = path.resolve(__dirname);
 
     bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
@@ -89,7 +98,7 @@ export async function start(): Promise<void> {
  * @async
  */
 export async function shutdown(): Promise<void> {
-  const httpExtension: any = await container.resolveAsync('HttpExtension');
+  const httpExtension = await container.resolveAsync<HttpExtension>('HttpExtension');
   await httpExtension.close();
 }
 
@@ -109,7 +118,7 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
 
 /**
  * This will create and return an identity for a sample user.
- * The identity is required for accessing process models
+ * The identity is required for accessing ProcessModels
  * and must be provided to ALL consumer api functions.
  *
  * @function createIdentity
@@ -118,8 +127,9 @@ export async function resolveAsync<TTargetType>(moduleName: string): Promise<TTa
  */
 export function createIdentity(): IIdentity {
 
-  return <IIdentity> {
-    token: 'defaultUser',
+  return {
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 }
 
@@ -130,14 +140,15 @@ export function createIdentity(): IIdentity {
  */
 export async function registerProcess(processFileName: string): Promise<void> {
 
-  const dummyIdentity: IIdentity = {
-    token: 'defaultUser',
+  const dummyIdentity = {
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 
-  const xml: string = readProcessModelFromFile(processFileName);
+  const xml = readProcessModelFromFile(processFileName);
 
   // Get the ProcessModelService, which ahndles the import of ProcessModels.
-  const processModelService: IProcessModelService = await resolveAsync<IProcessModelService>('ProcessModelService');
+  const processModelService = await resolveAsync<IProcessModelService>('ProcessModelService');
 
   // Save the ProcessModel.
   await processModelService.persistProcessDefinitions(dummyIdentity, processFileName, xml, true);
@@ -151,10 +162,10 @@ export async function registerProcess(processFileName: string): Promise<void> {
  */
 function readProcessModelFromFile(fileName: string): string {
 
-  const bpmnFolderLocation: string = getBpmnDirectoryPath();
-  const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+  const bpmnFolderLocation = getBpmnDirectoryPath();
+  const processModelPath = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
 
-  const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+  const processModelAsXml = fs.readFileSync(processModelPath, 'utf-8');
 
   return processModelAsXml;
 }
@@ -164,8 +175,8 @@ function readProcessModelFromFile(fileName: string): string {
  */
 function getBpmnDirectoryPath(): string {
 
-  const bpmnDirectoryName: string = 'bpmn';
-  const rootDirPath: string = process.cwd();
+  const bpmnDirectoryName = 'bpmn';
+  const rootDirPath = process.cwd();
 
   return path.join(rootDirPath, bpmnDirectoryName);
 }

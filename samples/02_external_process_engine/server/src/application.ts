@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -7,7 +8,15 @@ import {Logger} from 'loggerhythm';
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-import {IProcessModelService} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_model.contracts';
+
+// The ProcessEngine uses Bluebird as its default Promise library.
+// So we need to override the global Promise variable with Bluebird here.
+Bluebird.config({
+  cancellation: true,
+});
+
+global.Promise = Bluebird;
 
 const logger: Logger = Logger.createLogger('ssample:external:server');
 
@@ -16,24 +25,32 @@ const iocModuleNames: Array<string> = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
   '@essential-projects/event_aggregator',
+  '@essential-projects/http',
   '@essential-projects/http_extension',
-  '@essential-projects/services',
+  '@essential-projects/sequelize_connection_manager',
   '@essential-projects/timing',
   '@process-engine/consumer_api_core',
   '@process-engine/consumer_api_http',
+  '@process-engine/correlation.service',
   '@process-engine/correlations.repository.sequelize',
+  '@process-engine/external_task.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
+  '@process-engine/flow_node_instance.service',
   '@process-engine/iam',
+  '@process-engine/logging_api_core',
+  '@process-engine/logging.repository.file_system',
   '@process-engine/metrics_api_core',
   '@process-engine/metrics.repository.file_system',
   '@process-engine/process_engine_core',
   '@process-engine/process_model.repository.sequelize',
-  '@process-engine/timers.repository.sequelize',
+  '@process-engine/process_model.service',
+  '@process-engine/process_model.use_case',
   '../../', // This points to the top-level ioc module located in this sample.
 ];
 
 // This imports all the listed ioc modules and stores them.
-const iocModules: Array<any> = iocModuleNames.map((moduleName: string) => {
+const iocModules: Array<any> = iocModuleNames.map((moduleName: string): void => {
+  // eslint-disable-next-line
   return require(`${moduleName}/ioc_module`);
 });
 
@@ -70,7 +87,7 @@ async function start(): Promise<void> {
     // with the registered components, like circular-dependencies.
     container.validateDependencies();
 
-    const appPath: string = path.resolve(__dirname);
+    const appPath = path.resolve(__dirname);
 
     bootstrapper = await container.resolveAsync<AppBootstrapper>('AppBootstrapper', [appPath]);
 
@@ -89,16 +106,17 @@ async function start(): Promise<void> {
  */
 async function importSampleProcess(): Promise<void> {
 
-  const processFileName: string = 'sample_process';
+  const processFileName = 'sample_process';
 
   const dummyIdentity: IIdentity = {
-    token: 'defaultUser',
+    token: 'ZHVtbXlfdG9rZW4=',
+    userId: 'dummy_token',
   };
 
-  const xml: string = readProcessModelFromFile(processFileName);
+  const xml = readProcessModelFromFile(processFileName);
 
   // Get the ProcessModelService, which ahndles the import of ProcessModels.
-  const processModelService: IProcessModelService = await container.resolveAsync<IProcessModelService>('ProcessModelService');
+  const processModelService = await container.resolveAsync<IProcessModelService>('ProcessModelService');
 
   // Save the ProcessModel.
   await processModelService.persistProcessDefinitions(dummyIdentity, processFileName, xml, true);
@@ -112,10 +130,10 @@ async function importSampleProcess(): Promise<void> {
  */
 function readProcessModelFromFile(fileName: string): string {
 
-  const bpmnFolderLocation: string = getBpmnDirectoryPath();
-  const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+  const bpmnFolderLocation = getBpmnDirectoryPath();
+  const processModelPath = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
 
-  const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+  const processModelAsXml = fs.readFileSync(processModelPath, 'utf-8');
 
   return processModelAsXml;
 }
@@ -125,8 +143,8 @@ function readProcessModelFromFile(fileName: string): string {
  */
 function getBpmnDirectoryPath(): string {
 
-  const bpmnDirectoryName: string = 'bpmn';
-  const rootDirPath: string = process.cwd();
+  const bpmnDirectoryName = 'bpmn';
+  const rootDirPath = process.cwd();
 
   return path.join(rootDirPath, bpmnDirectoryName);
 }

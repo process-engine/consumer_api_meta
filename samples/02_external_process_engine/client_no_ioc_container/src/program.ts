@@ -1,22 +1,11 @@
 import {Logger} from 'loggerhythm';
-import * as uuid from 'uuid';
+import * as uuid from 'node-uuid';
 
-import {IIdentity} from '@essential-projects/iam_contracts';
-
-import {
-  CorrelationResult,
-  IConsumerApi,
-  ProcessStartRequestPayload,
-  ProcessStartResponsePayload,
-  StartCallbackType,
-  UserTask,
-  UserTaskList,
-  UserTaskResult,
-} from '@process-engine/consumer_api_contracts';
+import {DataModels} from '@process-engine/consumer_api_contracts';
 
 import * as setup from './setup';
 
-const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
+const logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
 /**
  * This sample will use the ConsumerApiClientService to do the following:
@@ -25,29 +14,28 @@ const logger: Logger = Logger.createLogger('consumer_api_sample:internal_process
  * - Finish a waiting UserTask with the given result.
  * - Wait for the process to finish and the retrieve the result.
  */
-// tslint:disable:no-magic-numbers
 async function executeSample(): Promise<void> {
 
   // Initialize all required components.
   setup.initialize();
 
-  // Retrieve the consumerApiClientService.
+  // Retrieve the consumerApiClient.
   // It will be using an ExternalAccessor for accessing a ProcessEngine that is at a remote location.
-  const consumerApiClientService: IConsumerApi = setup.getConsumerApiClientService();
+  const consumerApiClient = setup.getConsumerApiClient();
 
-  const identity: IIdentity = await setup.createIdentity();
+  const identity = await setup.createIdentity();
 
-  // The key of the process model to start.
-  const processModelId: string = 'sample_process';
+  // The ID of the ProcessModel to start.
+  const processModelId = 'sample_process';
 
-  // The key of the start event with which to start the ProcessInstance.
-  const startEventKey: string = 'StartEvent_1';
+  // The ID of the StartEvent with which to start the ProcessInstance.
+  const startEventId = 'StartEvent_1';
 
   // The correlationId is used to associate multiple ProcessInstances with one another.
   // This is currently the case when using subprocesses.
   // Adding a correlationId here is optional. If none is provided, the Consumer API will generate one.
   // The property 'inputValues' can be used to provide parameters to the ProcessInstance's initial token.
-  const payload: ProcessStartRequestPayload = {
+  const payload: DataModels.ProcessModels.ProcessStartRequestPayload = {
     correlationId: uuid.v4(),
     inputValues: {},
   };
@@ -57,46 +45,44 @@ async function executeSample(): Promise<void> {
   // If you were to set this callback to 'CallbackOnProcessInstanceFinished' or 'CallbackOnEndEventReached',
   // the Consumer API would wait to resolve until the process is finished.
   // Which is not possible, if there is an interrupting UserTask.
-  const startCallbackType: StartCallbackType = StartCallbackType.CallbackOnProcessInstanceCreated;
+  const startCallbackType = DataModels.ProcessModels.StartCallbackType.CallbackOnProcessInstanceCreated;
 
   // Start the ProcessInstance and wait for the service to resolve.
   // The result returns the id of the correlation that the ProcessInstance was added to.
-  logger.info(`Starting process ${processModelId}, using StartEventKey ${startEventKey}`);
-  const processStartResult: ProcessStartResponsePayload =
-    await consumerApiClientService.startProcessInstance(identity, processModelId, startEventKey, payload, startCallbackType);
+  logger.info(`Starting process ${processModelId}, using StartEventId ${startEventId}`);
+  const processStartResult = await consumerApiClient.startProcessInstance(identity, processModelId, payload, startCallbackType, startEventId);
 
-  const correlationId: string = processStartResult.correlationId;
+  const correlationId = processStartResult.correlationId;
+  const processInstanceId = processStartResult.processInstanceId;
   logger.info(`ProcessInstance was started and belongs to correlation ${correlationId}`);
 
   // Allow for the ProcessInstance execution to reach the UserTask.
   await wait(500);
 
   // Get a list of all waiting UserTasks, using the processModelId and the correlationId.
-  const waitingUserTasks: UserTaskList =
-    await consumerApiClientService.getUserTasksForProcessModelInCorrelation(identity, processModelId, correlationId);
+  const waitingUserTasks = await consumerApiClient.getUserTasksForProcessModelInCorrelation(identity, processModelId, correlationId);
 
   // There should be one waiting UserTask.
-  const userTask: UserTask = waitingUserTasks.userTasks[0];
-  logger.info(`Found a wating UserTask with key ${userTask.id}`);
+  const userTask = waitingUserTasks.userTasks[0];
+  logger.info(`Found a wating UserTask with ID ${userTask.id}`);
 
   // Set a UserTask result and finish the UserTask.
-  // Note that the keys contained in 'formFields' must each reflect a form field of the UserTask you want to finish.
-  const userTaskResult: UserTaskResult = {
+  // Note that the IDs contained in 'formFields' must each reflect a form field of the UserTask you want to finish.
+  const userTaskResult: DataModels.UserTasks.UserTaskResult = {
     formFields: {
       TaskWasSuccessful: true,
     },
   };
 
   logger.info('Finishing the UserTask with payload:', userTaskResult);
-  await consumerApiClientService.finishUserTask(identity, processModelId, correlationId, userTask.id, userTaskResult);
+  await consumerApiClient.finishUserTask(identity, processInstanceId, correlationId, userTask.flowNodeInstanceId, userTaskResult);
   logger.info('Success! Waiting for the ProcessInstance to finish.');
 
   // Now wait for the process to finish´
   await wait(500);
 
   // Lastly, retrieve the ProcessInstance result through the Consumer API and print it.
-  const processInstanceResult: Array<CorrelationResult> =
-    await consumerApiClientService.getProcessResultForCorrelation(identity, correlationId, processModelId);
+  const processInstanceResult = await consumerApiClient.getProcessResultForCorrelation(identity, correlationId, processModelId);
 
   logger.info('The ProcessInstance was finished with the following result:', processInstanceResult);
 }
@@ -105,14 +91,14 @@ async function wait(timeoutDuration: number): Promise<void> {
 
   // Allow for the ProcessInstance to proceed to the UserTask.
   await new Promise((resolve: Function, reject: Function): void => {
-    setTimeout(() => {
+    setTimeout((): void => {
       resolve();
     }, timeoutDuration);
   });
 }
 
 executeSample()
-  .then(() => {
+  .then((): void => {
     process.exit(0);
   })
   .catch((error: Error): void => {
