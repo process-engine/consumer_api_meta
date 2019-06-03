@@ -49,7 +49,7 @@ describe('Consumer API:   Receive global IntermediateEvent Notifications', () =>
     await testFixtureProvider.tearDown();
   });
 
-  it('should send a notification via socket when IntermediateEvent is suspended', async () => {
+  it('should send a notification via socket when an IntermediateCatchEvent is suspended', async () => {
 
     correlationId = uuid.v4();
 
@@ -82,7 +82,7 @@ describe('Consumer API:   Receive global IntermediateEvent Notifications', () =>
     });
   });
 
-  it('should send a notification via socket when a IntermediateEvent is finished', async () => {
+  it('should send a notification via socket when an IntermediateCatchEvent is finished', async () => {
 
     return new Promise(async (resolve, reject) => {
 
@@ -116,7 +116,7 @@ describe('Consumer API:   Receive global IntermediateEvent Notifications', () =>
     });
   });
 
-  it('should fail to subscribe for the IntermediateEventTriggered notification, if the user is unauthorized', async () => {
+  it('should fail to subscribe for the IntermediateCatchEventReached notification, if the user is unauthorized', async () => {
     try {
       const subscribeOnce = true;
       const subscription = await testFixtureProvider
@@ -146,7 +146,7 @@ describe('Consumer API:   Receive global IntermediateEvent Notifications', () =>
     }
   });
 
-  it('should no longer receive IntermediateyEventWaiting notifications, after the subscription was removed', async () => {
+  it('should no longer receive IntermediateCatchEventReached notifications, after the subscription was removed', async () => {
 
     let receivedNotifications = 0;
 
