@@ -58,8 +58,6 @@ describe('Consumer API:   Receive global Activity Notifications', () => {
 
       const notificationReceivedCallback = async (activityReachedMessage) => {
 
-        console.log(activityReachedMessage);
-
         should.exist(activityReachedMessage);
 
         // Store this for use in the second test, where we wait for the activityFinished notification.
