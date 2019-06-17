@@ -88,9 +88,7 @@ pipeline {
           }
           nodejs(configId: NPM_RC_FILE, nodeJSInstallationName: NODE_JS_VERSION) {
             sh('node --version')
-            sh('npm cache clean --force')
-            sh('npm view @process-engine/consumer_api_contracts')
-            sh('npm install --no-package-lock')
+            sh('npm ci')
             sh('npm run build')
           }
 
