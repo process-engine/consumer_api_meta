@@ -69,6 +69,8 @@ def slack_send_summary(testlog, test_failed) {
   slackSend(attachments: "[{$color_string, $title_string, $markdown_string, $result_string, $action_string}]");
 }
 
+def npm_install_command = 'npm install --ignore-scripts'
+
 pipeline {
   agent any
   tools {
@@ -85,10 +87,15 @@ pipeline {
         dir('_integration_tests') {
           script {
             echo("Branch is '${BRANCH_NAME}'")
+
+            def run_clean_install = env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop';
+            if (run_clean_install) {
+              npm_install_command = 'npm ci --ignore-scripts'
+            }
           }
           nodejs(configId: NPM_RC_FILE, nodeJSInstallationName: NODE_JS_VERSION) {
             sh('node --version')
-            sh('npm ci')
+            sh(npm_install_command)
             sh('npm run build')
           }
 
