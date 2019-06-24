@@ -108,7 +108,7 @@ describe('Consumer API:   Receive global Activity Notifications', () => {
     });
   });
 
-  it('should fail to subscribe for the ActivityWaiting notification, if the user is unauthorized', async () => {
+  it('should fail to subscribe for the ActivityReached notification, if the user is unauthorized', async () => {
     try {
       const subscribeOnce = true;
       const subscription = await testFixtureProvider
