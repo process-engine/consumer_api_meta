@@ -50,7 +50,7 @@ describe('Consumer API:   Receive global Activity Notifications', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should send a notification via socket when an Activity is suspended', async () => {
+  it('should send a notification via socket when an Activity is reached', async () => {
 
     correlationId = uuid.v4();
 
