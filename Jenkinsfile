@@ -98,8 +98,8 @@ pipeline {
             sh(npm_install_command)
             sh('npm run build')
           }
-
           stash(includes: '*, **/**', name: 'post_build');
+          archiveArtifacts('package-lock.json');
         }
       }
     }
