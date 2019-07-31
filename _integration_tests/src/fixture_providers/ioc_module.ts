@@ -1,7 +1,7 @@
 import {IContainer} from 'addict-ioc';
 
 import {
-  ConsumerApiClientService,
+  ConsumerApiClient,
   ExternalAccessor,
   InternalAccessor,
 } from '@process-engine/consumer_api_client';
@@ -22,7 +22,7 @@ export function registerInContainer(container: IContainer): void {
         'ConsumerApiUserTaskService',
       );
 
-    container.register('ConsumerApiClient', ConsumerApiClientService)
+    container.register('ConsumerApiClient', ConsumerApiClient)
       .dependencies('ConsumerApiInternalAccessor');
   } else {
     container.register('ConsumerApiExternalAccessor', ExternalAccessor)
@@ -30,7 +30,7 @@ export function registerInContainer(container: IContainer): void {
       .configure('consumer_api:external_accessor')
       .singleton();
 
-    container.register('ConsumerApiClient', ConsumerApiClientService)
+    container.register('ConsumerApiClient', ConsumerApiClient)
       .dependencies('ConsumerApiExternalAccessor');
   }
 
