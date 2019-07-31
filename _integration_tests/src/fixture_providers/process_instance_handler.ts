@@ -32,7 +32,7 @@ export class ProcessInstanceHandler {
     };
 
     const result = await this.testFixtureProvider
-      .consumerApiClientService
+      .consumerApiClient
       .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
 
     return result.correlationId;
@@ -52,7 +52,7 @@ export class ProcessInstanceHandler {
     };
 
     const result = await this.testFixtureProvider
-      .consumerApiClientService
+      .consumerApiClient
       .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
 
     return result;
