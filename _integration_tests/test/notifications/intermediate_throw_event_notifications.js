@@ -70,7 +70,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
 
       const subscribeOnce = true;
       await testFixtureProvider
-        .consumerApiClientService
+        .consumerApiClient
         .onIntermediateThrowEventTriggered(defaultIdentity, notificationReceivedCallback, subscribeOnce);
 
       await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId, correlationId);
@@ -81,7 +81,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
     try {
       const subscribeOnce = true;
       const subscription = await testFixtureProvider
-        .consumerApiClientService
+        .consumerApiClient
         .onIntermediateThrowEventTriggered({}, noopCallback, subscribeOnce);
       should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
     } catch (error) {
@@ -96,7 +96,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
     try {
       const subscribeOnce = true;
       const subscription = await testFixtureProvider
-        .consumerApiClientService
+        .consumerApiClient
         .onIntermediateThrowEventTriggered({}, noopCallback, subscribeOnce);
       should.fail(subscription, undefined, 'This should not have been possible, because the user is unauthorized!');
     } catch (error) {
@@ -118,7 +118,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
     // Create the subscription
     const subscribeOnce = false;
     const subscription = await testFixtureProvider
-      .consumerApiClientService
+      .consumerApiClient
       .onIntermediateThrowEventTriggered(defaultIdentity, notificationReceivedCallback, subscribeOnce);
 
     // Publish the first notification
@@ -130,7 +130,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
 
     // Remove the subscription
     await testFixtureProvider
-      .consumerApiClientService
+      .consumerApiClient
       .removeSubscription(defaultIdentity, subscription);
 
     // Publish more events
@@ -153,7 +153,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
         // after receiving multiple events, this test was successful.
         if (receivedNotifications === 2) {
           await testFixtureProvider
-            .consumerApiClientService
+            .consumerApiClient
             .removeSubscription(defaultIdentity, subscription);
 
           resolve();
@@ -163,7 +163,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
       // Create the subscription
       const subscribeOnce = false;
       const subscription = await testFixtureProvider
-        .consumerApiClientService
+        .consumerApiClient
         .onIntermediateThrowEventTriggered(defaultIdentity, notificationReceivedCallback, subscribeOnce);
 
       // Publish a number of events
@@ -182,7 +182,7 @@ describe('Consumer API:   Receive global IntermediateThrowEvent Notifications', 
     // Create the subscription
     const subscribeOnce = true;
     await testFixtureProvider
-      .consumerApiClientService
+      .consumerApiClient
       .onIntermediateThrowEventTriggered(defaultIdentity, notificationReceivedCallback, subscribeOnce);
 
     // Publish a number of events
