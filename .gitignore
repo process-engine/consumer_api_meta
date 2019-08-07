@@ -7,8 +7,10 @@ processengine.sqlite
 logs
 metrics
 
-consumer_api*
-external_task*
+consumer_api.*
+consumer_api_*
+external_task.*
+external_task_*
 
 # OSX-finder info-files
 *.DS_Store
