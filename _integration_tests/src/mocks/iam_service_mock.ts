@@ -7,10 +7,14 @@ export class IamServiceMock implements IIAMService {
     // Can access everything
     defaultUser: [
       'can_read_process_model',
+      'can_delete_process_model',
       'can_write_process_model',
+      'can_access_external_tasks',
+      'can_subscribe_to_events',
+      'can_terminate_process',
       'can_trigger_messages',
       'can_trigger_signals',
-      'can_subscribe_to_events',
+      'can_read_cronjob_history',
       'Default_Test_Lane',
       'LaneA',
       'LaneB',
@@ -36,6 +40,10 @@ export class IamServiceMock implements IIAMService {
       'can_read_process_model',
       'LaneB',
       'LaneC',
+    ],
+    // Super Admin - Can see all ProcessModels, Tasks and Correlations
+    superAdmin: [
+      'can_manage_process_instances',
     ],
   };
 
