@@ -1,6 +1,8 @@
 # remove "node_modules"
 echo "Purging node_modules..."
 find . -name "node_modules" -exec rm -rf '{}' +
+echo "Purging bin & obj folders..."
+find . -iname "bin" | xargs rm -rf && find . -iname "obj" | xargs rm -rf
 echo "Done. Starting setup..."
 
 echo "Clearing npm cache"
@@ -17,7 +19,7 @@ fi
 
 # build all packages and schemas
 echo "Building .TS packages"
-meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,consumer_api_client
+meta exec "npm run build" --exclude consumer_api_meta,consumer_api_contracts,consumer_api_client,external_task_api_contracts,external_task_api_client
 
 
 function install_and_build_package {
@@ -47,6 +49,20 @@ echo "-------------------------------------------------"
 echo "Installing Consumer API Client"
 echo "-------------------------------------------------"
 cd consumer_api_client
+install_and_build_package
+cd ..
+
+echo "-------------------------------------------------"
+echo "Installing ExternalTask API Contracts"
+echo "-------------------------------------------------"
+cd external_task_api_contracts
+install_and_build_package
+cd ..
+
+echo "-------------------------------------------------"
+echo "Installing ExternalTask API Client"
+echo "-------------------------------------------------"
+cd external_task_api_client
 install_and_build_package
 cd ..
 
