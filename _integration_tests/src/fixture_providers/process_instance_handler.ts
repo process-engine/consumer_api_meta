@@ -1,7 +1,7 @@
 import * as uuid from 'node-uuid';
 
 import {EventReceivedCallback, IEventAggregator} from '@essential-projects/event_aggregator_contracts';
-import {DataModels} from '@process-engine/consumer_api_contracts';
+import {DataModels, IExternalTaskRepository} from '@process-engine/consumer_api_contracts';
 
 import {FlowNodeInstance, IFlowNodeInstanceService} from '@process-engine/flow_node_instance.contracts';
 
@@ -88,6 +88,27 @@ export class ProcessInstanceHandler {
     }
 
     throw new Error(`No process instance within correlation '${correlationId}' found! The process instance likely failed to start!`);
+  }
+
+  public async waitForExternalTaskToBeCreated(topicName: string, maxTask: number = 100): Promise<void> {
+
+    const maxNumberOfRetries = 60;
+    const delayBetweenRetriesInMs = 200;
+
+    const externalTaskRepository = this.testFixtureProvider.resolve<IExternalTaskRepository>('ExternalTaskRepository');
+
+    for (let i = 0; i < maxNumberOfRetries; i++) {
+
+      await this.wait(delayBetweenRetriesInMs);
+
+      const externalTasks = await externalTaskRepository.fetchAvailableForProcessing(topicName, maxTask);
+
+      if (externalTasks.length >= 1) {
+        return;
+      }
+    }
+
+    throw new Error(`No ExternalTasks for topic '${topicName}' found! It is likely that creating the ExternalTask failed!`);
   }
 
   /**
