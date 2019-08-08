@@ -53,13 +53,6 @@ install_and_build_package
 cd ..
 
 echo "-------------------------------------------------"
-echo "Installing ExternalTask API Contracts"
-echo "-------------------------------------------------"
-cd external_task_api_contracts
-install_and_build_package
-cd ..
-
-echo "-------------------------------------------------"
 echo "Installing ExternalTask API Client"
 echo "-------------------------------------------------"
 cd external_task_api_client
