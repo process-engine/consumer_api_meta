@@ -16,6 +16,7 @@ export function registerInContainer(container: IContainer): void {
       .dependencies(
         'ConsumerApiEmptyActivityService',
         'ConsumerApiEventService',
+        'ConsumerApiExternalTaskService',
         'ConsumerApiManualTaskService',
         'ConsumerApiNotificationService',
         'ConsumerApiProcessModelService',
