@@ -31,6 +31,17 @@ describe(`Consumer API: ${testCase}`, () => {
     await testFixtureProvider.tearDown();
   });
 
+  it('should start and finish a ProcessInstance with one start event, if the option parameters are not provided', async () => {
+    await testFixtureProvider
+      .consumerApiClient
+      .startProcessInstance(defaultIdentity, processModelId);
+
+    testFixtureProvider.consumerApiClient.onProcessEnded(defaultIdentity, (endEventReachedMessage) => {
+      should(endEventReachedMessage.currentToken).be.eql('process instance started');
+
+    }, true);
+  });
+
   it('should start and finish a ProcessInstance with one start event, if the StartEventId is not provided', async () => {
     const returnOn = StartCallbackType.CallbackOnProcessInstanceFinished;
     const payload = {
