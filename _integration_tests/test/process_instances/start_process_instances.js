@@ -1,16 +1,13 @@
-'use strict';
-
 const should = require('should');
 
 const StartCallbackType = require('@process-engine/consumer_api_contracts').DataModels.ProcessModels.StartCallbackType;
 
-const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
+const {TestFixtureProvider} = require('../../dist/commonjs');
 
 const testCase = 'Consumer API:   POST  ->  /process_models/:process_model_id/start?start_callback_type=1&start_event_id=:start_event_id';
 
 describe(`Consumer API: ${testCase}`, () => {
 
-  let processInstanceHandler;
   let testFixtureProvider;
   let defaultIdentity;
 
