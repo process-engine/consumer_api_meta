@@ -38,7 +38,6 @@ describe(`Consumer API: ${testCase}`, () => {
 
     testFixtureProvider.consumerApiClient.onProcessEnded(defaultIdentity, (endEventReachedMessage) => {
       should(endEventReachedMessage.currentToken).be.eql('process instance started');
-
     }, true);
   });
 
