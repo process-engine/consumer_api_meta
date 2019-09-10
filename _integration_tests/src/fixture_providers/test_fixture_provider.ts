@@ -12,7 +12,7 @@ import {HttpExtension} from '@essential-projects/http_extension';
 import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 import {IConsumerApiClient} from '@process-engine/consumer_api_contracts';
-import {IProcessModelService as IProcessModelUseCases} from '@process-engine/process_model.contracts';
+import {IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
 
@@ -24,6 +24,7 @@ export type IdentityCollection = {
   userWithAccessToSubLaneC: IIdentity;
   userWithAccessToLaneA: IIdentity;
   userWithNoAccessToLaneA: IIdentity;
+  superAdmin: IIdentity;
 };
 
 export class TestFixtureProvider {
@@ -61,6 +62,8 @@ export class TestFixtureProvider {
   }
 
   public async tearDown(): Promise<void> {
+    await this.clearDatabases();
+
     const httpExtension = await this.container.resolveAsync<HttpExtension>('HttpExtension');
     await httpExtension.close();
     await this.bootstrapper.stop();
@@ -104,6 +107,16 @@ export class TestFixtureProvider {
     return path.join(rootDirPath, bpmnDirectoryName);
   }
 
+  public async clearDatabases(): Promise<void> {
+
+    const processModels = await this.processModelUseCases.getProcessModels(this.identities.superAdmin);
+
+    for (const processModel of processModels) {
+      logger.info(`Removing ProcessModel ${processModel.id} and all related data`);
+      await this.processModelUseCases.deleteProcessModel(this.identities.superAdmin, processModel.id);
+    }
+  }
+
   private async initializeBootstrapper(): Promise<void> {
 
     try {
@@ -130,6 +143,7 @@ export class TestFixtureProvider {
       userWithAccessToSubLaneC: await this.createIdentity('userWithAccessToSubLaneC'),
       userWithAccessToLaneA: await this.createIdentity('userWithAccessToLaneA'),
       userWithNoAccessToLaneA: await this.createIdentity('userWithNoAccessToLaneA'),
+      superAdmin: await this.createIdentity('superAdmin'),
     };
   }
 
