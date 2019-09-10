@@ -164,7 +164,6 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
         .consumerApiClient
         .getUserTasksForCorrelation(defaultIdentity, result.correlationId);
 
-      console.log(userTaskList);
 
       should(userTaskList).have.property('userTasks');
       should(userTaskList.userTasks).be.instanceOf(Array);
