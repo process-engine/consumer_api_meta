@@ -24,6 +24,7 @@ export type IdentityCollection = {
   userWithAccessToSubLaneC: IIdentity;
   userWithAccessToLaneA: IIdentity;
   userWithNoAccessToLaneA: IIdentity;
+  superAdmin: IIdentity;
 };
 
 export class TestFixtureProvider {
@@ -104,6 +105,16 @@ export class TestFixtureProvider {
     return path.join(rootDirPath, bpmnDirectoryName);
   }
 
+  public async clearDatabases(): Promise<void> {
+
+    const processModels = await this.processModelUseCases.getProcessModels(this.identities.superAdmin);
+
+    for (const processModel of processModels) {
+      logger.info(`Removing ProcessModel ${processModel.id} and all related data`);
+      await this.processModelUseCases.deleteProcessDefinitionById(processModel.id);
+    }
+  }
+
   private async initializeBootstrapper(): Promise<void> {
 
     try {
@@ -130,6 +141,7 @@ export class TestFixtureProvider {
       userWithAccessToSubLaneC: await this.createIdentity('userWithAccessToSubLaneC'),
       userWithAccessToLaneA: await this.createIdentity('userWithAccessToLaneA'),
       userWithNoAccessToLaneA: await this.createIdentity('userWithNoAccessToLaneA'),
+      superAdmin: await this.createIdentity('superAdmin'),
     };
   }
 
