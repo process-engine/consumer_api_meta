@@ -62,8 +62,9 @@ export class TestFixtureProvider {
   }
 
   public async tearDown(): Promise<void> {
-    const httpExtension = await this.container.resolveAsync<HttpExtension>('HttpExtension');
     await this.clearDatabases();
+
+    const httpExtension = await this.container.resolveAsync<HttpExtension>('HttpExtension');
     await httpExtension.close();
     await this.bootstrapper.stop();
   }
