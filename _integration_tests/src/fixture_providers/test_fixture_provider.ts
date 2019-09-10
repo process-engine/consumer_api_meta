@@ -12,7 +12,7 @@ import {HttpExtension} from '@essential-projects/http_extension';
 import {IIdentity, TokenBody} from '@essential-projects/iam_contracts';
 
 import {IConsumerApiClient} from '@process-engine/consumer_api_contracts';
-import {IProcessModelService as IProcessModelUseCases} from '@process-engine/process_model.contracts';
+import {IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 import {initializeBootstrapper} from './setup_ioc_container';
 
@@ -63,6 +63,7 @@ export class TestFixtureProvider {
 
   public async tearDown(): Promise<void> {
     const httpExtension = await this.container.resolveAsync<HttpExtension>('HttpExtension');
+    await this.clearDatabases();
     await httpExtension.close();
     await this.bootstrapper.stop();
   }
@@ -111,7 +112,7 @@ export class TestFixtureProvider {
 
     for (const processModel of processModels) {
       logger.info(`Removing ProcessModel ${processModel.id} and all related data`);
-      await this.processModelUseCases.deleteProcessDefinitionById(processModel.id);
+      await this.processModelUseCases.deleteProcessModel(this.identities.superAdmin, processModel.id);
     }
   }
 
