@@ -15,7 +15,7 @@ describe('ConsumerAPI: GetUserTasksForCorrelation', () => {
 
   const processModelId = 'test_consumer_api_usertask';
   const processModelIdNoUserTasks = 'test_consumer_api_usertask_empty';
-  const processModelIdCallActivity = 'test_consumer_api_usertask_call_acvtivity';
+  const processModelIdCallActivity = 'test_consumer_api_usertask_call_activity';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
