@@ -49,9 +49,15 @@ export class IamServiceMock implements IIAMService {
 
   public async ensureHasClaim(identity: IIdentity, claimName: string): Promise<void> {
 
+    // The dummy token is used by the AutoStartService and must always be passed.
     const isDummyToken = identity.userId === 'dummy_token';
-    if (isDummyToken) {
-      return;
+    const isSuperAdmin = identity.userId === 'superAdmin';
+    if (isDummyToken || isSuperAdmin) {
+      return Promise.resolve();
+    }
+
+    if (identity.userId === 'forbiddenUser') {
+      throw new ForbiddenError('access denied');
     }
 
     const matchingUserConfig = this.claimConfigs[identity.userId];
@@ -66,6 +72,8 @@ export class IamServiceMock implements IIAMService {
     if (!userHasClaim) {
       throw new ForbiddenError('access denied');
     }
+
+    return Promise.resolve();
   }
 
 }
