@@ -5,7 +5,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe.only('Consumer API: GetEventsForProcessModel', () => {
+describe('Consumer API: GetEventsForProcessModel', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
