@@ -4,8 +4,7 @@ const should = require('should');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-const testCase = 'POST -> /process_models/:process_model_id/correlations/:correlation_id/empty_activities/:empty_activity_instance_id/finish';
-describe(`Consumer API: ${testCase}`, () => {
+describe(`Consumer API: FinishEmptyActivity`, () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
