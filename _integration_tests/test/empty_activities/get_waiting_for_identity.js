@@ -35,7 +35,6 @@ describe('ConsumerAPI: GetWaitingEmptyActivitiesByIdentity', () => {
 
   describe('Execution', () => {
 
-
     before(async () => {
       const correlationId = uuid.v4();
       await processInstanceHandler.startProcessInstanceAndReturnCorrelationId(processModelId, correlationId, undefined, defaultIdentity);
@@ -78,7 +77,6 @@ describe('ConsumerAPI: GetWaitingEmptyActivitiesByIdentity', () => {
       should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
       should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
     });
-
   });
 
   describe('Pagination', () => {
@@ -165,7 +163,6 @@ describe('ConsumerAPI: GetWaitingEmptyActivitiesByIdentity', () => {
       should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
       should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
     });
-
   });
 
   describe('Security Checks', () => {
