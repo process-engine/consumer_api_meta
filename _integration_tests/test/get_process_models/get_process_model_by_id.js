@@ -51,8 +51,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
     should(processModel).have.property('id');
     should(processModel).have.property('startEvents');
     should(processModel).have.property('endEvents');
-    should(processModel.startEvents.length).be.equal(0);
-    should(processModel.endEvents.length).be.equal(0);
+    should(processModel.startEvents).have.a.lengthOf(0);
+    should(processModel.endEvents).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve the process model, when the user is unauthorized', async () => {

@@ -82,7 +82,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
 
     should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     const userTask = userTaskList.userTasks[0];
@@ -98,8 +98,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(userTask).not.have.property('identity');
 
     should(userTask.data).have.property('formFields');
-    should(userTask.data.formFields).be.instanceOf(Array);
-    should(userTask.data.formFields.length).be.equal(1);
+    should(userTask.data.formFields).be.an.instanceOf(Array);
+    should(userTask.data.formFields).have.a.lengthOf(1);
 
     const formField = userTask.data.formFields[0];
 
@@ -121,7 +121,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
 
     should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     const userTask = userTaskList.userTasks[0];
@@ -132,8 +132,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
     should(userTask).have.property('data');
 
     should(userTask.data).have.property('formFields');
-    should(userTask.data.formFields).be.instanceOf(Array);
-    should(userTask.data.formFields.length).be.equal(1);
+    should(userTask.data.formFields).be.an.instanceOf(Array);
+    should(userTask.data.formFields).have.a.lengthOf(1);
 
     const formField = userTask.data.formFields[0];
 
@@ -166,8 +166,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
 
 
       should(userTaskList).have.property('userTasks');
-      should(userTaskList.userTasks).be.instanceOf(Array);
-      should(userTaskList.userTasks.length).be.equal(0);
+      should(userTaskList.userTasks).be.an.instanceOf(Array);
+      should(userTaskList.userTasks).have.a.lengthOf(0);
 
       eventAggregator.publish('/processengine/process/signal/Continue', {});
     });
@@ -182,7 +182,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/user_tasks', () 
       .getUserTasksForCorrelation(defaultIdentity, invalidCorrelationId);
 
     should(userTaskList).have.property('userTasks');
-    should(userTaskList.userTasks).be.instanceOf(Array);
-    should(userTaskList.userTasks.length).be.equal(0);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
+    should(userTaskList.userTasks).have.a.lengthOf(0);
   });
 });

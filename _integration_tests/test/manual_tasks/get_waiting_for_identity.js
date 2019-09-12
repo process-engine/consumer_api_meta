@@ -43,7 +43,7 @@ describe('ConsumerAPI:   GET  ->  /manual_tasks/own', () => {
 
     should(manualTaskList).have.property('manualTasks');
 
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
     should(manualTaskList.manualTasks.length).be.greaterThan(0);
 
     const manualTask = manualTaskList.manualTasks[0];
@@ -69,8 +69,8 @@ describe('ConsumerAPI:   GET  ->  /manual_tasks/own', () => {
       .getWaitingManualTasksByIdentity(restrictedIdentity);
 
     should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+    should(manualTaskList.manualTasks).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve a Users ManualTasks, when the user is unauthorized', async () => {

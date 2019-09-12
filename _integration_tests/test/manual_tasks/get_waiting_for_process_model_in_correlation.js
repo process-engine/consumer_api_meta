@@ -47,7 +47,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     should(manualTaskList).have.property('manualTasks');
 
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
     should(manualTaskList.manualTasks.length).be.greaterThan(0);
 
     const manualTask = manualTaskList.manualTasks[0];
@@ -79,8 +79,8 @@ describe(`Consumer API: ${testCase}`, () => {
         .getManualTasksForProcessModel(defaultIdentity, processModelIdNoManualTasks);
 
       should(manualTaskList).have.property('manualTasks');
-      should(manualTaskList.manualTasks).be.instanceOf(Array);
-      should(manualTaskList.manualTasks.length).be.equal(0);
+      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+      should(manualTaskList.manualTasks).have.a.lengthOf(0);
 
       eventAggregator.publish('/processengine/process/signal/Continue', {});
     });
@@ -95,8 +95,8 @@ describe(`Consumer API: ${testCase}`, () => {
       .getManualTasksForProcessModelInCorrelation(defaultIdentity, invalidProcessModelId, correlationId);
 
     should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+    should(manualTaskList.manualTasks).have.a.lengthOf(0);
   });
 
   it('should return an empty Array, if the correlationId does not exist', async () => {
@@ -108,8 +108,8 @@ describe(`Consumer API: ${testCase}`, () => {
       .getManualTasksForProcessModelInCorrelation(defaultIdentity, processModelId, invalidCorrelationId);
 
     should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+    should(manualTaskList.manualTasks).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve the correlation\'s ManualTasks, when the user is unauthorized', async () => {

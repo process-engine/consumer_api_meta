@@ -47,7 +47,7 @@ describe(`Consumer API: ${testCase}`, () => {
 
     should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     const userTask = userTaskList.userTasks[0];
@@ -65,8 +65,8 @@ describe(`Consumer API: ${testCase}`, () => {
     should(userTask).not.have.property('identity');
 
     should(userTask.data).have.property('formFields');
-    should(userTask.data.formFields).be.instanceOf(Array);
-    should(userTask.data.formFields.length).be.equal(1);
+    should(userTask.data.formFields).be.an.instanceOf(Array);
+    should(userTask.data.formFields).have.a.lengthOf(1);
 
     const formField = userTask.data.formFields[0];
 
@@ -91,8 +91,8 @@ describe(`Consumer API: ${testCase}`, () => {
         .getUserTasksForProcessModelInCorrelation(defaultIdentity, processModelIdNoUserTasks, correlationId);
 
       should(userTaskList).have.property('userTasks');
-      should(userTaskList.userTasks).be.instanceOf(Array);
-      should(userTaskList.userTasks.length).be.equal(0);
+      should(userTaskList.userTasks).be.an.instanceOf(Array);
+      should(userTaskList.userTasks).have.a.lengthOf(0);
 
       eventAggregator.publish('/processengine/process/signal/Continue', {});
     });
@@ -107,8 +107,8 @@ describe(`Consumer API: ${testCase}`, () => {
       .getUserTasksForProcessModelInCorrelation(defaultIdentity, invalidProcessModelId, correlationId);
 
     should(userTaskList).have.property('userTasks');
-    should(userTaskList.userTasks).be.instanceOf(Array);
-    should(userTaskList.userTasks.length).be.equal(0);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
+    should(userTaskList.userTasks).have.a.lengthOf(0);
   });
 
   it('should return an empty Array, if the correlationId does not exist', async () => {
@@ -120,8 +120,8 @@ describe(`Consumer API: ${testCase}`, () => {
       .getUserTasksForProcessModelInCorrelation(defaultIdentity, processModelId, invalidCorrelationId);
 
     should(userTaskList).have.property('userTasks');
-    should(userTaskList.userTasks).be.instanceOf(Array);
-    should(userTaskList.userTasks.length).be.equal(0);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
+    should(userTaskList.userTasks).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve the correlation\'s UserTasks, when the user is unauthorized', async () => {

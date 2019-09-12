@@ -82,7 +82,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
 
     should(manualTaskList).have.property('manualTasks');
 
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
     should(manualTaskList.manualTasks.length).be.greaterThan(0);
 
     const manualTask = manualTaskList.manualTasks[0];
@@ -109,7 +109,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
 
     should(manualTaskList).have.property('manualTasks');
 
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
     should(manualTaskList.manualTasks.length).be.greaterThan(0);
 
     const manualTask = manualTaskList.manualTasks[0];
@@ -145,8 +145,8 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
         .getManualTasksForCorrelation(defaultIdentity, processModelIdNoManualTasks);
 
       should(manualTaskList).have.property('manualTasks');
-      should(manualTaskList.manualTasks).be.instanceOf(Array);
-      should(manualTaskList.manualTasks.length).be.equal(0);
+      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+      should(manualTaskList.manualTasks).have.a.lengthOf(0);
 
       eventAggregator.publish('/processengine/process/signal/Continue', {});
     });
@@ -161,7 +161,7 @@ describe('ConsumerAPI:   GET  ->  /correlations/:correlation_id/manual_tasks', (
       .getManualTasksForCorrelation(defaultIdentity, invalidCorrelationId);
 
     should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+    should(manualTaskList.manualTasks).have.a.lengthOf(0);
   });
 });

@@ -43,7 +43,7 @@ describe('ConsumerAPI:   GET  ->  /user_tasks/own', () => {
 
     should(userTaskList).have.property('userTasks');
 
-    should(userTaskList.userTasks).be.instanceOf(Array);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
     should(userTaskList.userTasks.length).be.greaterThan(0);
 
     const userTask = userTaskList.userTasks[0];
@@ -69,8 +69,8 @@ describe('ConsumerAPI:   GET  ->  /user_tasks/own', () => {
       .getWaitingUserTasksByIdentity(restrictedIdentity);
 
     should(userTaskList).have.property('userTasks');
-    should(userTaskList.userTasks).be.instanceOf(Array);
-    should(userTaskList.userTasks.length).be.equal(0);
+    should(userTaskList.userTasks).be.an.instanceOf(Array);
+    should(userTaskList.userTasks).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve a Users UserTasks, when the user is unauthorized', async () => {

@@ -65,8 +65,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       .consumerApiClient
       .getProcessResultForCorrelation(defaultIdentity, correlationId, processModelIdDefault);
 
-    should(correlationResults).be.instanceof(Array);
-    should(correlationResults.length).be.equal(1);
+    should(correlationResults).be.an.instanceOf(Array);
+    should(correlationResults).have.a.lengthOf(1);
 
     const correlationResult = correlationResults[0];
 
@@ -90,8 +90,8 @@ describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/
       .consumerApiClient
       .getProcessResultForCorrelation(defaultIdentity, correlationIdMultipleResults, processModelIdMultipleEndEvents);
 
-    should(correlationResults).be.instanceof(Array);
-    should(correlationResults.length).be.equal(2);
+    should(correlationResults).be.an.instanceOf(Array);
+    should(correlationResults).have.a.lengthOf(2);
 
     const expectedResults = {
       EndEvent_1: {

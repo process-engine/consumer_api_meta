@@ -51,7 +51,7 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_task
 
     should(manualTaskList).have.property('manualTasks');
 
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
     should(manualTaskList.manualTasks.length).be.greaterThan(0);
 
     const manualTask = manualTaskList.manualTasks[0];
@@ -85,8 +85,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_task
         .getManualTasksForProcessModel(defaultIdentity, processModelIdNoManualTasks);
 
       should(manualTaskList).have.property('manualTasks');
-      should(manualTaskList.manualTasks).be.instanceOf(Array);
-      should(manualTaskList.manualTasks.length).be.equal(0);
+      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+      should(manualTaskList.manualTasks).have.a.lengthOf(0);
 
       eventAggregator.publish('/processengine/process/signal/Continue', {});
     });
@@ -101,8 +101,8 @@ describe('Consumer API:   GET  ->  /process_models/:process_model_id/manual_task
       .getManualTasksForProcessModel(defaultIdentity, invalidprocessModelId);
 
     should(manualTaskList).have.property('manualTasks');
-    should(manualTaskList.manualTasks).be.instanceOf(Array);
-    should(manualTaskList.manualTasks.length).be.equal(0);
+    should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+    should(manualTaskList.manualTasks).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve the ProcessModel\'s ManualTasks, when the user is unauthorized', async () => {

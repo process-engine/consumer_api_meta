@@ -44,7 +44,7 @@ describe('ConsumerAPI:   GET  ->  /process_instances/own', () => {
       .consumerApiClient
       .getProcessInstancesByIdentity(defaultIdentity);
 
-    should(processInstances).be.instanceOf(Array);
+    should(processInstances).be.an.instanceOf(Array);
     should(processInstances.length).be.greaterThan(0);
 
     for (const processInstance of processInstances) {
@@ -65,8 +65,8 @@ describe('ConsumerAPI:   GET  ->  /process_instances/own', () => {
       .consumerApiClient
       .getProcessInstancesByIdentity(someOtherIdentity);
 
-    should(processInstances).be.instanceOf(Array);
-    should(processInstances.length).be.equal(0);
+    should(processInstances).be.an.instanceOf(Array);
+    should(processInstances).have.a.lengthOf(0);
   });
 
   it('should return an empty Array, if no accessible running ProcessInstances were found', async () => {
@@ -75,8 +75,8 @@ describe('ConsumerAPI:   GET  ->  /process_instances/own', () => {
       .consumerApiClient
       .getProcessInstancesByIdentity(restrictedIdentity);
 
-    should(processInstances).be.instanceOf(Array);
-    should(processInstances.length).be.equal(0);
+    should(processInstances).be.an.instanceOf(Array);
+    should(processInstances).have.a.lengthOf(0);
   });
 
   it('should fail to retrieve a Users ProcessInstances, when the user is unauthorized', async () => {
