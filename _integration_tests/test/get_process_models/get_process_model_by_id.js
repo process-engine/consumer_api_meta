@@ -4,7 +4,7 @@ const should = require('should');
 
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
-describe('Consumer API:   GET  ->  /process_models/:process_model_id', () => {
+describe('Consumer API: GetProcessModelById', () => {
 
   let testFixtureProvider;
   let defaultIdentity;
