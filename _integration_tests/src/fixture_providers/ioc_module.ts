@@ -21,6 +21,7 @@ export function registerInContainer(container: IContainer): void {
         'ConsumerApiNotificationService',
         'ConsumerApiProcessModelService',
         'ConsumerApiUserTaskService',
+        'ConsumerApiTaskService',
       );
 
     container.register('ConsumerApiClient', ConsumerApiClient)
