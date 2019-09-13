@@ -1,6 +1,7 @@
 import * as uuid from 'node-uuid';
 
 import {EventReceivedCallback, IEventAggregator} from '@essential-projects/event_aggregator_contracts';
+import {IIdentity} from '@essential-projects/iam_contracts';
 import {DataModels, IExternalTaskRepository} from '@process-engine/consumer_api_contracts';
 
 import {FlowNodeInstance, IFlowNodeInstanceService} from '@process-engine/flow_node_instance.contracts';
@@ -22,7 +23,12 @@ export class ProcessInstanceHandler {
     this.eventAggregator = this.testFixtureProvider.resolve<IEventAggregator>('EventAggregator');
   }
 
-  public async startProcessInstanceAndReturnCorrelationId(processModelId: string, correlationId?: string, inputValues?: any): Promise<string> {
+  public async startProcessInstanceAndReturnCorrelationId(
+    processModelId: string,
+    correlationId?: string,
+    inputValues?: any,
+    identity?: IIdentity,
+  ): Promise<string> {
 
     const startEventId = 'StartEvent_1';
     const startCallbackType = DataModels.ProcessModels.StartCallbackType.CallbackOnProcessInstanceCreated;
@@ -30,10 +36,11 @@ export class ProcessInstanceHandler {
       correlationId: correlationId || uuid.v4(),
       inputValues: inputValues || {},
     };
+    const identityToUse = identity || this.testFixtureProvider.identities.defaultUser;
 
     const result = await this.testFixtureProvider
       .consumerApiClient
-      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
+      .startProcessInstance(identityToUse, processModelId, payload, startCallbackType, startEventId);
 
     return result.correlationId;
   }
@@ -42,6 +49,7 @@ export class ProcessInstanceHandler {
     processModelId: string,
     correlationId?: string,
     inputValues?: any,
+    identity?: IIdentity,
   ): Promise<DataModels.ProcessModels.ProcessStartResponsePayload> {
 
     const startEventId = 'StartEvent_1';
@@ -50,10 +58,11 @@ export class ProcessInstanceHandler {
       correlationId: correlationId || uuid.v4(),
       inputValues: inputValues || {},
     };
+    const identityToUse = identity || this.testFixtureProvider.identities.defaultUser;
 
     const result = await this.testFixtureProvider
       .consumerApiClient
-      .startProcessInstance(this.testFixtureProvider.identities.defaultUser, processModelId, payload, startCallbackType, startEventId);
+      .startProcessInstance(identityToUse, processModelId, payload, startCallbackType, startEventId);
 
     return result;
   }
