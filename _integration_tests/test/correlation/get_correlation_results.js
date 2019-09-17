@@ -7,7 +7,7 @@ const startCallbackType = require('@process-engine/consumer_api_contracts').Data
 
 const TestFixtureProvider = require('../../dist/commonjs').TestFixtureProvider;
 
-describe('Consumer API:   GET  ->  /correlations/:correlation_id/process_models/:process_model_id/results', () => {
+describe('Consumer API: GetProcessResultForCorrelation', () => {
 
   let testFixtureProvider;
   let defaultIdentity;

@@ -6,7 +6,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe('ConsumerAPI:   GET  ->  /process_instances/own', () => {
+describe('ConsumerAPI: GetProcessInstancesByIdentity', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;
