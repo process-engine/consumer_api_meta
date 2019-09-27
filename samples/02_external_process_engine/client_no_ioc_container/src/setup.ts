@@ -3,13 +3,13 @@ import {Logger} from 'loggerhythm';
 import {IIdentity} from '@essential-projects/iam_contracts';
 import {HttpClient} from '@essential-projects/http';
 
-import {ConsumerApiClientService, ExternalAccessor} from '@process-engine/consumer_api_client';
+import {ConsumerApiClient, ExternalAccessor} from '@process-engine/consumer_api_client';
 
 const logger = Logger.createLogger('test:bootstrapper');
 
 let httpClient: HttpClient;
 let externalAccessor: ExternalAccessor;
-let consumerApiClient: ConsumerApiClientService;
+let consumerApiClient: ConsumerApiClient;
 
 /**
  * Creates the consumer api client and all its required components.
@@ -27,13 +27,13 @@ export function initialize(): void {
   httpClient.config = httpConfig;
 
   externalAccessor = new ExternalAccessor(httpClient);
-  consumerApiClient = new ConsumerApiClientService(externalAccessor);
+  consumerApiClient = new ConsumerApiClient(externalAccessor);
 }
 
 /**
  * Returns the ConsumerApiClient.
  */
-export function getConsumerApiClient(): ConsumerApiClientService {
+export function getConsumerApiClient(): ConsumerApiClient {
   return consumerApiClient;
 }
 

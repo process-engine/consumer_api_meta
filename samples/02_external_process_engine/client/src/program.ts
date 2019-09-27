@@ -1,14 +1,14 @@
 import {Logger} from 'loggerhythm';
 import * as uuid from 'node-uuid';
 
-import {DataModels, IConsumerApi} from '@process-engine/consumer_api_contracts';
+import {DataModels, IConsumerApiClient} from '@process-engine/consumer_api_contracts';
 
 import * as setup from './setup';
 
 const logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
 /**
- * This sample will use the ConsumerApiClientService to do the following:
+ * This sample will use the ConsumerApiClient to do the following:
  * - Start a ProcessInstance with the given processModelId.
  * - Retrieve a list of waiting UserTasks.
  * - Finish a waiting UserTask with the given result.
@@ -25,7 +25,7 @@ async function executeSample(): Promise<void> {
   // Retrieve the consumerApiClient.
   // It will be using an InternalAccessor for accessing a ProcessEngine
   // that is included with the application.
-  const consumerApiClient = await setup.resolveAsync<IConsumerApi>('ConsumerApiClientService');
+  const consumerApiClient = await setup.resolveAsync<IConsumerApiClient>('ConsumerApiClient');
 
   // The ID of the ProcessModel to start.
   const processModelId = 'sample_process';

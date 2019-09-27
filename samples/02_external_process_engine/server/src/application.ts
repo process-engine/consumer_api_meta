@@ -18,10 +18,10 @@ Bluebird.config({
 
 global.Promise = Bluebird;
 
-const logger: Logger = Logger.createLogger('ssample:external:server');
+const logger = Logger.createLogger('ssample:external:server');
 
 // These are the names of the modules, whose ioc_modules will be included in the ioc container.
-const iocModuleNames: Array<string> = [
+const iocModuleNames = [
   '@essential-projects/bootstrapper',
   '@essential-projects/bootstrapper_node',
   '@essential-projects/event_aggregator',
@@ -33,6 +33,8 @@ const iocModuleNames: Array<string> = [
   '@process-engine/consumer_api_http',
   '@process-engine/correlation.service',
   '@process-engine/correlations.repository.sequelize',
+  '@process-engine/cronjob_history.service',
+  '@process-engine/cronjob_history.repository.sequelize',
   '@process-engine/external_task.repository.sequelize',
   '@process-engine/flow_node_instance.repository.sequelize',
   '@process-engine/flow_node_instance.service',
@@ -49,7 +51,7 @@ const iocModuleNames: Array<string> = [
 ];
 
 // This imports all the listed ioc modules and stores them.
-const iocModules: Array<any> = iocModuleNames.map((moduleName: string): void => {
+const iocModules = iocModuleNames.map<any>((moduleName: string): void => {
   // eslint-disable-next-line
   return require(`${moduleName}/ioc_module`);
 });
