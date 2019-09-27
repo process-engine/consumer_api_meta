@@ -2,7 +2,7 @@ import * as Bluebird from 'bluebird';
 import {Logger} from 'loggerhythm';
 import * as uuid from 'node-uuid';
 
-import {DataModels, IConsumerApi} from '@process-engine/consumer_api_contracts';
+import {DataModels, IConsumerApiClient} from '@process-engine/consumer_api_contracts';
 
 import * as setup from './setup';
 
@@ -17,7 +17,7 @@ global.Promise = Bluebird;
 const logger = Logger.createLogger('consumer_api_sample:internal_process_engine');
 
 /**
- * This sample will use the ConsumerApiClientService to do the following:
+ * This sample will use the ConsumerApiClient to do the following:
  * - Start a ProcessInstance with the given processModelId.
  * - Retrieve a list of waiting UserTasks.
  * - Finish a waiting UserTask with the given result.
@@ -37,10 +37,10 @@ async function executeSample(): Promise<void> {
 
   const identity = await setup.createIdentity();
 
-  // Retrieve the consumerApiClientService.
+  // Retrieve the consumerApiClient.
   // It will be using an InternalAccessor for accessing a ProcessEngine
   // that is included with the application.
-  const consumerApiClientService = await setup.resolveAsync<IConsumerApi>('ConsumerApiClientService');
+  const consumerApiClient = await setup.resolveAsync<IConsumerApiClient>('ConsumerApiClient');
 
   // The id of the StartEvent with which to start the ProcessInstance.
   const startEventId = 'StartEvent_1';
@@ -64,7 +64,7 @@ async function executeSample(): Promise<void> {
   // Start the ProcessInstance and wait for the service to resolve.
   // The result returns the id of the correlation that the ProcessInstance was added to.
   const processStartResult =
-    await consumerApiClientService.startProcessInstance(identity, processModelId, payload, startCallbackType, startEventId);
+    await consumerApiClient.startProcessInstance(identity, processModelId, payload, startCallbackType, startEventId);
 
   const correlationId = processStartResult.correlationId;
   const processInstanceId = processStartResult.processInstanceId;
@@ -73,7 +73,7 @@ async function executeSample(): Promise<void> {
   await wait(500);
 
   // Get a list of all waiting UserTasks, using the ProcessModelId and the CorrelationId.
-  const waitingUserTasks = await consumerApiClientService.getUserTasksForProcessModelInCorrelation(identity, processModelId, correlationId);
+  const waitingUserTasks = await consumerApiClient.getUserTasksForProcessModelInCorrelation(identity, processModelId, correlationId);
 
   // There should be one waiting UserTask.
   const userTask = waitingUserTasks.userTasks[0];
@@ -86,13 +86,13 @@ async function executeSample(): Promise<void> {
     },
   };
 
-  await consumerApiClientService.finishUserTask(identity, processInstanceId, correlationId, userTask.flowNodeInstanceId, userTaskResult);
+  await consumerApiClient.finishUserTask(identity, processInstanceId, correlationId, userTask.flowNodeInstanceId, userTaskResult);
 
   // Now wait for the process to finish
   await wait(500);
 
   // Lastly, retrieve the result through the Consumer API and print it.
-  const processInstanceResult = await consumerApiClientService.getProcessResultForCorrelation(identity, correlationId, processModelId);
+  const processInstanceResult = await consumerApiClient.getProcessResultForCorrelation(identity, correlationId, processModelId);
 
   logger.info('The ProcessInstance was finished with the following result:', processInstanceResult);
 }
