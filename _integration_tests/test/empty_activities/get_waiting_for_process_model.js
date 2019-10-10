@@ -116,6 +116,18 @@ describe('Consumer API: GetEmptyActivitiesForProcessModel', () => {
       should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
       should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
     });
+
+    it('should return an empty Array, if the user not allowed to access any suspended EmptyActivities', async () => {
+
+      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+      const emptyActivityList = await testFixtureProvider
+        .consumerApiClient
+        .getEmptyActivitiesForProcessModel(restrictedIdentity, processModelId);
+
+      should(emptyActivityList).have.property('emptyActivities');
+      should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
+      should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
+    });
   });
 
   describe('Pagination', () => {
@@ -217,24 +229,6 @@ describe('Consumer API: GetEmptyActivitiesForProcessModel', () => {
       } catch (error) {
         const expectedErrorMessage = /no auth token provided/i;
         const expectedErrorCode = 401;
-        should(error.message).be.match(expectedErrorMessage);
-        should(error.code).be.match(expectedErrorCode);
-      }
-    });
-
-    it('should fail to retrieve the ProcessModel\'s EmptyActivities, when the user is forbidden to retrieve it', async () => {
-
-      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-
-      try {
-        const emptyActivityList = await testFixtureProvider
-          .consumerApiClient
-          .getEmptyActivitiesForProcessModel(restrictedIdentity, processModelId);
-
-        should.fail(emptyActivityList, undefined, 'This request should have failed!');
-      } catch (error) {
-        const expectedErrorMessage = /access denied/i;
-        const expectedErrorCode = 403;
         should(error.message).be.match(expectedErrorMessage);
         should(error.code).be.match(expectedErrorCode);
       }
