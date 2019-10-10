@@ -110,6 +110,18 @@ describe(`Consumer API: GetManualTasksForProcessModelInCorrelation`, () => {
       should(manualTaskList.manualTasks).be.an.instanceOf(Array);
       should(manualTaskList.manualTasks).have.a.lengthOf(0);
     });
+
+    it('should return an empty Array, if the user not allowed to access any suspended ManualTasks', async () => {
+
+      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+      const manualTaskList = await testFixtureProvider
+        .consumerApiClient
+        .getManualTasksForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
+
+      should(manualTaskList).have.property('manualTasks');
+      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+      should(manualTaskList.manualTasks).have.a.lengthOf(0);
+    });
   });
 
   describe('Pagination', () => {
@@ -219,24 +231,6 @@ describe(`Consumer API: GetManualTasksForProcessModelInCorrelation`, () => {
       } catch (error) {
         const expectedErrorMessage = /no auth token provided/i;
         const expectedErrorCode = 401;
-        should(error.message).be.match(expectedErrorMessage);
-        should(error.code).be.match(expectedErrorCode);
-      }
-    });
-
-    it('should fail to retrieve the correlation\'s ManualTasks, when the user is forbidden to retrieve it', async () => {
-
-      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-
-      try {
-        const manualTaskList = await testFixtureProvider
-          .consumerApiClient
-          .getManualTasksForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
-
-        should.fail(manualTaskList, undefined, 'This request should have failed!');
-      } catch (error) {
-        const expectedErrorMessage = /access denied/i;
-        const expectedErrorCode = 403;
         should(error.message).be.match(expectedErrorMessage);
         should(error.code).be.match(expectedErrorCode);
       }
