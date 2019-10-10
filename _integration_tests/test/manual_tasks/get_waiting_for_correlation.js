@@ -135,18 +135,6 @@ describe('ConsumerAPI: GetManualTasksForCorrelation', () => {
       should(manualTaskList.manualTasks).be.an.instanceOf(Array);
       should(manualTaskList.manualTasks).have.a.lengthOf(0);
     });
-
-    it('should return an empty Array, if the user not allowed to access any suspended ManualTasks', async () => {
-
-      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-      const manualTaskList = await testFixtureProvider
-        .consumerApiClient
-        .getManualTasksForCorrelation(restrictedIdentity, correlationId);
-
-      should(manualTaskList).have.property('manualTasks');
-      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
-      should(manualTaskList.manualTasks).have.a.lengthOf(0);
-    });
   });
 
   describe('Pagination', () => {
@@ -259,6 +247,18 @@ describe('ConsumerAPI: GetManualTasksForCorrelation', () => {
         should(error.message).be.match(expectedErrorMessage);
         should(error.code).be.match(expectedErrorCode);
       }
+    });
+
+    it('should return an empty Array, if the user not allowed to access any suspended ManualTasks', async () => {
+
+      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+      const manualTaskList = await testFixtureProvider
+        .consumerApiClient
+        .getManualTasksForCorrelation(restrictedIdentity, correlationId);
+
+      should(manualTaskList).have.property('manualTasks');
+      should(manualTaskList.manualTasks).be.an.instanceOf(Array);
+      should(manualTaskList.manualTasks).have.a.lengthOf(0);
     });
   });
 });

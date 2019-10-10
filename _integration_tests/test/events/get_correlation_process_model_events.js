@@ -87,19 +87,6 @@ describe('Consumer API: GetEventsForProcessModelInCorrelation', () => {
       should(eventList.events).be.an.instanceOf(Array);
       should(eventList.events).have.a.lengthOf(0);
     });
-
-    it('should return an empty Array, if the user is not allowed to access any suspended events', async () => {
-
-      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-      const eventList = await testFixtureProvider
-        .consumerApiClient
-        .getEventsForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
-
-      should(eventList).have.property('events');
-
-      should(eventList.events).be.an.instanceOf(Array);
-      should(eventList.events).have.a.lengthOf(0);
-    });
   });
 
   describe('Pagination', () => {
@@ -212,6 +199,19 @@ describe('Consumer API: GetEventsForProcessModelInCorrelation', () => {
         should(error.code).be.match(expectedErrorCode);
         should(error.message).be.match(expectedErrorMessage);
       }
+    });
+
+    it('should return an empty Array, if the user is not allowed to access any suspended events', async () => {
+
+      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+      const eventList = await testFixtureProvider
+        .consumerApiClient
+        .getEventsForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
+
+      should(eventList).have.property('events');
+
+      should(eventList.events).be.an.instanceOf(Array);
+      should(eventList.events).have.a.lengthOf(0);
     });
   });
 });

@@ -110,18 +110,6 @@ describe(`Consumer API: GetEmptyActivitiesForProcessModelInCorrelation`, () => {
       should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
       should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
     });
-
-    it('should return an empty Array, if the user not allowed to access any suspended EmptyActivities', async () => {
-
-      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
-      const emptyActivityList = await testFixtureProvider
-        .consumerApiClient
-        .getEmptyActivitiesForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
-
-      should(emptyActivityList).have.property('emptyActivities');
-      should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
-      should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
-    });
   });
 
   describe('Pagination', () => {
@@ -234,6 +222,18 @@ describe(`Consumer API: GetEmptyActivitiesForProcessModelInCorrelation`, () => {
         should(error.message).be.match(expectedErrorMessage);
         should(error.code).be.match(expectedErrorCode);
       }
+    });
+
+    it('should return an empty Array, if the user not allowed to access any suspended EmptyActivities', async () => {
+
+      const restrictedIdentity = testFixtureProvider.identities.restrictedUser;
+      const emptyActivityList = await testFixtureProvider
+        .consumerApiClient
+        .getEmptyActivitiesForProcessModelInCorrelation(restrictedIdentity, processModelId, correlationId);
+
+      should(emptyActivityList).have.property('emptyActivities');
+      should(emptyActivityList.emptyActivities).be.an.instanceOf(Array);
+      should(emptyActivityList.emptyActivities).have.a.lengthOf(0);
     });
   });
 });
