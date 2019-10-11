@@ -5,7 +5,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe('Consumer API: GetEventsForCorrelation', () => {
+describe('ConsumerAPI: GetEventsForCorrelation', () => {
 
   let processInstanceHandler;
   let testFixtureProvider;

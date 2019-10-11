@@ -5,7 +5,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe(`Consumer API: GetManualTasksForProcessModelInCorrelation`, () => {
+describe(`ConsumerAPI: GetManualTasksForProcessModelInCorrelation`, () => {
 
   let eventAggregator;
   let processInstanceHandler;

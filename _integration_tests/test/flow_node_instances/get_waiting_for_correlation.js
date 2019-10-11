@@ -3,7 +3,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe('Consumer API: GetSuspendedTasksForCorrelation', () => {
+describe('ConsumerAPI: GetSuspendedTasksForCorrelation', () => {
 
   let eventAggregator;
   let processInstanceHandler;
@@ -43,7 +43,7 @@ describe('Consumer API: GetSuspendedTasksForCorrelation', () => {
       await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(correlationId, processModelId, 3);
     });
 
-    it('should return a Correlation\'s Tasks by its CorrelationId through the Consumer API', async () => {
+    it('should return a Correlation\'s Tasks by its CorrelationId through the ConsumerAPI', async () => {
 
       const taskList = await testFixtureProvider
         .consumerApiClient
@@ -67,7 +67,7 @@ describe('Consumer API: GetSuspendedTasksForCorrelation', () => {
       should(task).not.have.property('identity');
     });
 
-    it('should return a list of Tasks from a call activity, by the given correlationId through the Consumer API', async () => {
+    it('should return a list of Tasks from a call activity, by the given correlationId through the ConsumerAPI', async () => {
 
       const processStartResult = await processInstanceHandler.startProcessInstanceAndReturnResult(processModelIdCallActivity);
       await processInstanceHandler.waitForProcessInstanceToReachSuspendedTask(processStartResult.correlationId, processModelId, 3);

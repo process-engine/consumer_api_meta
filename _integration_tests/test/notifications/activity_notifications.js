@@ -3,7 +3,7 @@ const uuid = require('node-uuid');
 
 const {ProcessInstanceHandler, TestFixtureProvider} = require('../../dist/commonjs');
 
-describe('Consumer API:   Receive global Activity Notifications', () => {
+describe('ConsumerAPI:   Receive global Activity Notifications', () => {
 
   let eventAggregator;
   let processInstanceHandler;

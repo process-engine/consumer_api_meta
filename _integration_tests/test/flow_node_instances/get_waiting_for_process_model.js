@@ -3,7 +3,7 @@ const uuid = require('node-uuid');
 
 const {TestFixtureProvider, ProcessInstanceHandler} = require('../../dist/commonjs');
 
-describe('Consumer API: GetSuspendedTasksForProcessModel', () => {
+describe('ConsumerAPI: GetSuspendedTasksForProcessModel', () => {
 
   let eventAggregator;
   let processInstanceHandler;
@@ -52,7 +52,7 @@ describe('Consumer API: GetSuspendedTasksForProcessModel', () => {
       await testFixtureProvider.importProcessFiles(processModelsToImport);
     });
 
-    it('should return a ProcessModel\'s Tasks by its ProcessModelId through the Consumer API', async () => {
+    it('should return a ProcessModel\'s Tasks by its ProcessModelId through the ConsumerAPI', async () => {
 
       const taskList = await testFixtureProvider
         .consumerApiClient
