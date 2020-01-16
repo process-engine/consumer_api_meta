@@ -20,6 +20,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
   const workerId = 'handle_bpmn_error_sample_worker';
   const topicName = 'external_task_sample_topic';
   const errorCode = 'Red alert';
+  const errorMessage = 'Red alert';
 
   before(async () => {
     testFixtureProvider = new TestFixtureProvider();
@@ -44,9 +45,9 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
 
     await testFixtureProvider
       .consumerApiClient
-      .handleBpmnError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorCode);
+      .handleBpmnError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorCode, errorMessage);
 
-    await assertThatErrorHandlingWasSuccessful(externalTaskHappyPathTest.id, errorCode);
+    await assertThatErrorHandlingWasSuccessful(externalTaskHappyPathTest.id);
   });
 
   it('should fail to abort the given ExternalTask, if the ExernalTask is already aborted', async () => {
@@ -54,7 +55,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleBpmnError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorCode);
+        .handleBpmnError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorCode, errorMessage);
 
       should.fail(externalTaskHappyPathTest.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -73,7 +74,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleBpmnError(defaultIdentity, workerId, invalidExternalTaskId, errorCode);
+        .handleBpmnError(defaultIdentity, workerId, invalidExternalTaskId, errorCode, errorMessage);
 
       should.fail(invalidExternalTaskId, undefined, 'This request should have failed!');
     } catch (error) {
@@ -91,7 +92,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleBpmnError(defaultIdentity, invalidworkerId, externalTaskBadPathTests.id, errorCode);
+        .handleBpmnError(defaultIdentity, invalidworkerId, externalTaskBadPathTests.id, errorCode, errorMessage);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -107,7 +108,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleBpmnError({}, workerId, externalTaskBadPathTests.id, errorCode);
+        .handleBpmnError({}, workerId, externalTaskBadPathTests.id, errorCode, errorMessage);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -123,7 +124,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_bpmn
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleBpmnError(restrictedIdentity, workerId, externalTaskBadPathTests.id, errorCode);
+        .handleBpmnError(restrictedIdentity, workerId, externalTaskBadPathTests.id, errorCode, errorMessage);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {

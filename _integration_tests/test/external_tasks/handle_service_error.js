@@ -19,6 +19,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
   const processModelId = 'test_consumer_api_external_task_sample';
   const workerId = 'handle_service_error_sample_worker';
   const topicName = 'external_task_sample_topic';
+  const errorCode = 'trololol';
   const errorMessage = 'Red alert';
   const errorDetails = 'Critical error encountered';
 
@@ -45,9 +46,9 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
 
     await testFixtureProvider
       .consumerApiClient
-      .handleServiceError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorMessage, errorDetails);
+      .handleServiceError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorMessage, errorDetails, errorCode);
 
-    await assertThatErrorHandlingWasSuccessful(externalTaskHappyPathTest.id, errorMessage, errorDetails);
+    await assertThatErrorHandlingWasSuccessful(externalTaskHappyPathTest.id);
   });
 
   it('should fail to abort the given ExternalTask, if the ExernalTask is already aborted', async () => {
@@ -55,7 +56,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleServiceError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorMessage, errorDetails);
+        .handleServiceError(defaultIdentity, workerId, externalTaskHappyPathTest.id, errorMessage, errorDetails, errorCode);
 
       should.fail(externalTaskHappyPathTest.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -74,7 +75,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleServiceError(defaultIdentity, workerId, invalidExternalTaskId, errorMessage, errorDetails);
+        .handleServiceError(defaultIdentity, workerId, invalidExternalTaskId, errorMessage, errorDetails, errorCode);
 
       should.fail(invalidExternalTaskId, undefined, 'This request should have failed!');
     } catch (error) {
@@ -92,7 +93,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleServiceError(defaultIdentity, invalidworkerId, externalTaskBadPathTests.id, errorMessage, errorDetails);
+        .handleServiceError(defaultIdentity, invalidworkerId, externalTaskBadPathTests.id, errorMessage, errorDetails, errorCode);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -108,7 +109,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleServiceError({}, workerId, externalTaskBadPathTests.id, errorMessage, errorDetails);
+        .handleServiceError({}, workerId, externalTaskBadPathTests.id, errorMessage, errorDetails, errorCode);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -124,7 +125,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     try {
       await testFixtureProvider
         .consumerApiClient
-        .handleServiceError(restrictedIdentity, workerId, externalTaskBadPathTests.id, errorMessage, errorDetails);
+        .handleServiceError(restrictedIdentity, workerId, externalTaskBadPathTests.id, errorMessage, errorDetails, errorCode);
 
       should.fail(externalTaskBadPathTests.id, undefined, 'This request should have failed!');
     } catch (error) {
@@ -165,6 +166,7 @@ describe('ConsumerAPI:   POST  ->  /external_tasks/:external_task_id/handle_serv
     should(externalTask.topic).be.equal(topicName);
     should(externalTask.state).be.equal('finished');
     should(externalTask).have.property('error');
+    should(externalTask.error.code).be.match(errorCode);
     should(externalTask.error.message).be.match(/red alert/i);
     should(externalTask.error.additionalInformation).be.equal(errorDetails); //eslint-disable-line
 
