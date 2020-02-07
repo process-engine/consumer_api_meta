@@ -7,6 +7,8 @@ import {
 } from '@process-engine/consumer_api_client';
 import {IamServiceMock} from '../mocks/index';
 
+import {ServiceTaskTestService} from '../test_services/index';
+
 export function registerInContainer(container: IContainer): void {
 
   const accessConsumerApiInternally: boolean = process.env.CONSUMER_API_ACCESS_TYPE === 'internal';
@@ -38,4 +40,6 @@ export function registerInContainer(container: IContainer): void {
 
   // This removes the necessity for having a running IdentityServer during testing.
   container.register('IamService', IamServiceMock);
+
+  container.register('ServiceTaskTestService', ServiceTaskTestService);
 }
