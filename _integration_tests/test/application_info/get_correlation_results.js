@@ -25,7 +25,7 @@ describe('ConsumerAPI: getApplicationInfo', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('Should get the name and version of the ProcessEngineRuntime, when providing an auth token', async () => {
+  it('Should get the name and version of the ConsumerApi meta package, when providing an auth token', async () => {
 
     const result = await testFixtureProvider
       .consumerApiClient
@@ -34,7 +34,7 @@ describe('ConsumerAPI: getApplicationInfo', () => {
     assertResponse(result);
   });
 
-  it('Should get the name and version of the ProcessEngineRuntime, when not providing an auth token', async () => {
+  it('Should get the name and version of the ConsumerApi meta package, when not providing an auth token', async () => {
 
     const result = await testFixtureProvider
       .consumerApiClient
